@@ -171,6 +171,12 @@ import { uploadBusinessFile } from '@/api/FileApi'
 import { generateUUID } from '@/utils/uuidUtils'
 import RichTextEditor from '@/components/common/RichTextEditor.vue'
 
+const knowledgePhotoModules = import.meta.glob('@/knowledgephoto/*.{jpg,jpeg,png,webp,gif}', {
+  eager: true,
+  import: 'default'
+})
+const knowledgePhotoUrls = Object.values(knowledgePhotoModules)
+
 // Props & Emits
 const props = defineProps({
   modelValue: {
@@ -286,6 +292,10 @@ const initForm = () => {
   } else {
     // 新建模式：生成新的UUID
     initBusinessId()
+    if (knowledgePhotoUrls.length > 0) {
+      const randomIndex = Math.floor(Math.random() * knowledgePhotoUrls.length)
+      form.coverImage = knowledgePhotoUrls[randomIndex]
+    }
     console.log('🆕 初始化新建表单，业务ID:', businessId.value)
   }
   

@@ -515,57 +515,55 @@ onBeforeUnmount(() => {
 <style scoped>
 .psychological-test-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #fafbfc 0%, #f7f9fc 50%, #f2f6fa 100%);
+  background: #f5f7fb;
 }
 
 .header-section {
-  background: linear-gradient(135deg, #7ED321 0%, #F5A623 100%);
-  color: white;
-  padding: 3rem 0;
+  background: #ffffff;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 2rem 0;
 }
 
 .header-content {
-  max-width: 1200px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1rem;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .breathing-animation i {
-  font-size: 2.5rem;
-  animation: breathing 4s ease-in-out infinite;
-}
-
-@keyframes breathing {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.07); }
+  font-size: 1.9rem;
+  color: #2563eb;
 }
 
 .header-text h2 {
   margin: 0 0 0.5rem 0;
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: 1.85rem;
+  font-weight: 700;
 }
 
 .header-text p {
   margin: 0;
-  font-size: 1rem;
-  opacity: 0.95;
+  font-size: 0.96rem;
+  color: #4b5563;
 }
 
 .main-content {
-  max-width: 1200px;
+  max-width: 1160px;
   margin: 0 auto;
   padding: 1.5rem 1rem 3rem;
 }
 
 .card-section {
-  border-radius: 16px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
 }
 
 .card-title {
@@ -586,20 +584,22 @@ onBeforeUnmount(() => {
 
 .test-card {
   cursor: pointer;
-  border-radius: 14px;
+  border-radius: 12px;
   border: 1px solid #e5e7eb;
-  padding: 14px;
+  padding: 12px;
   transition: all 0.2s ease;
+  background: #ffffff;
 }
 
 .test-card.active {
-  border-color: #4096ff;
-  box-shadow: 0 10px 25px rgba(64, 150, 255, 0.15);
+  border-color: #2563eb;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.13);
+  background: #f8fbff;
 }
 
 .test-icon i {
-  font-size: 1.5rem;
-  color: #4096ff;
+  font-size: 1.4rem;
+  color: #2563eb;
 }
 
 .test-name {
@@ -634,8 +634,8 @@ onBeforeUnmount(() => {
 .question-item {
   padding: 12px;
   border-radius: 12px;
-  border: 1px solid #eef2ff;
-  background: white;
+  border: 1px solid #e5e7eb;
+  background: #fbfdff;
 }
 
 .question-text {
@@ -677,17 +677,18 @@ onBeforeUnmount(() => {
 }
 
 .report-content {
-  border: 1px solid #eef2ff;
+  border: 1px solid #e5e7eb;
   padding: 12px;
   border-radius: 12px;
-  background: #fafbff;
+  background: #fbfdff;
 }
 
 .loading-hint {
   padding: 14px;
   color: #6b7280;
-  border: 1px dashed #d1d5db;
+  border: 1px dashed #cbd5e1;
   border-radius: 12px;
+  background: #f8fafc;
 }
 
 .error-hint {

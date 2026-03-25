@@ -1,34 +1,34 @@
 <template>
   <div class="auth-layout">
-    <!-- 主要内容区域 -->
+    <div class="bg-slides">
+      <div
+        v-for="(img, idx) in bgImages"
+        :key="img"
+        class="bg-slide"
+        :class="{ active: idx === currentSlide }"
+        :style="{ backgroundImage: `url(${img})` }"
+      ></div>
+    </div>
+    <div class="bg-overlay"></div>
+    <div class="snow-layer" aria-hidden="true">
+      <span
+        v-for="flake in snowflakes"
+        :key="flake.id"
+        class="snowflake"
+        :style="{
+          left: flake.left,
+          animationDuration: flake.duration,
+          animationDelay: flake.delay,
+          opacity: flake.opacity,
+          fontSize: flake.size
+        }"
+      >
+        ❄
+      </span>
+    </div>
+
     <div class="auth-content">
       <div class="auth-container">
-        <!-- 左侧背景区域 -->
-        <div class="left-section">
-          <div class="left-overlay"></div>
-          <div class="left-content">
-            <!-- 文字内容区域 -->
-            <div class="welcome-content">
-              <div class="breathing-animation">
-              
-                <h2 class="welcome-title">{{ welcomeText.title }}</h2>
-                <p class="welcome-text">
-                  {{ welcomeText.description }}
-                </p>
-              </div>
-            </div>
-            <!-- 机器人图标区域 -->
-            <div class="robot-section">
-              <div class="robot-wrapper">
-                <div class="robot-icon">
-                  <i class="fas fa-robot"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 右侧表单区域 -->
         <div class="right-section">
           <router-view />
         </div>
@@ -38,270 +38,135 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, onUnmounted, ref } from 'vue'
+import cataImg from '@/assets/cata.jpg'
+import catbImg from '@/assets/catb.jpg'
+import catcImg from '@/assets/catc.jpg'
+import catdImg from '@/assets/catd.jpg'
 
-const route = useRoute()
+const bgImages = [cataImg, catbImg, catcImg, catdImg]
+const currentSlide = ref(0)
+const snowflakes = Array.from({ length: 18 }, (_, index) => ({
+  id: index + 1,
+  left: `${Math.random() * 100}%`,
+  duration: `${10 + Math.random() * 10}s`,
+  delay: `${Math.random() * 6}s`,
+  opacity: `${0.2 + Math.random() * 0.45}`,
+  size: `${10 + Math.random() * 12}px`
+}))
 
-// 根据路由动态设置欢迎文本
-const welcomeText = computed(() => {
-  switch (route.name) {
-    case 'Login':
-      return {
-        title: '心理AI助手',
-        description: '每个深夜，每个焦虑的时刻，我们都在这里。不必独自承受，让心与心的连接温暖您的每一天'
-      }
-    case 'Register':
-      return {
-        title: '加入我们',
-        description: '一次温暖的对话，化孤独为慰藉。让我们陪伴您每一步成长，用爱温暖每一颗心灵'
-      }
-    default:
-      return {
-        title: '心理健康助手',
-        description: '用心倾听每一个故事，用爱温暖每一颗心灵。让心与心的连接温暖您的每一天'
-      }
+let slideTimer = null
+
+onMounted(() => {
+  slideTimer = window.setInterval(() => {
+    currentSlide.value = (currentSlide.value + 1) % bgImages.length
+  }, 6000)
+})
+
+onUnmounted(() => {
+  if (slideTimer) {
+    window.clearInterval(slideTimer)
+    slideTimer = null
   }
 })
 </script>
 
 <style scoped>
-/* 基础样式 */
 .auth-layout {
-  background-color: #f9fafb;
+  background-color: #0f172a;
   min-height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
 
+.bg-slides {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
 
-/* 主内容区域 */
+.bg-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 1.2s ease, transform 6s linear;
+}
+
+.bg-slide.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(15, 23, 42, 0.42);
+}
+
+.snow-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.snowflake {
+  position: absolute;
+  top: -8vh;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.28);
+  animation-name: snowfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
 .auth-content {
   height: 100vh;
+  position: relative;
+  z-index: 3;
 }
 
 .auth-container {
   height: 100%;
-  display: flex;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
 }
 
-/* 左侧背景区域 */
-.left-section {
-  display: none;
-  width: 50%;
-
-  background: linear-gradient(135deg, #4A90E2 0%, #7ED321 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-@media (min-width: 1024px) {
-  .left-section {
-    display: flex;
-  }
-}
-
-.left-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-.left-content {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  color: white;
-
-  gap: 2rem;
-}
-
-/* 文字内容区域 */
-.welcome-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.breathing-animation {
-  max-width: 28rem;
-}
-
-
-
-.welcome-title {
-  font-size: 2.25rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  margin-top: 0;
-  line-height: 1.2;
-}
-
-.welcome-text {
-  font-size: 1.125rem;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.6;
-  margin: 0;
-}
-
-/* 机器人图标区域 */
-.robot-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.robot-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.robot-icon {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 
-    0 15px 35px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-}
-
-.robot-icon:hover {
-  transform: translateY(-5px);
-}
-
-.robot-icon::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-  transform: rotate(45deg);
-  animation: shine 4s ease-in-out infinite;
-}
-
-.robot-icon i {
-  font-size: 4rem;
-  color: rgba(255, 255, 255, 0.95);
-  position: relative;
-  z-index: 1;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-}
-
-@keyframes shine {
-  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-  50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-  100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-}
-
-/* 呼吸动画 */
-.breathing-animation {
-  animation: breathing 4s ease-in-out infinite;
-}
-
-@keyframes breathing {
-  0%, 100% { 
-    transform: scale(1); 
-  }
-  50% { 
-    transform: scale(1.02); 
-  }
-}
-
-/* 右侧表单区域 */
 .right-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 3rem 1rem;
+  width: 100%;
+  max-width: 520px;
+  background: rgba(255, 255, 255, 0.26);
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.28);
+  padding: 1.8rem 1.4rem;
 }
 
 @media (min-width: 640px) {
   .right-section {
-    padding: 3rem 1.5rem;
+    padding: 2.2rem 1.8rem;
   }
 }
 
 @media (min-width: 1024px) {
   .right-section {
-    padding: 3rem 5rem;
+    max-width: 560px;
   }
 }
 
-@media (min-width: 1280px) {
-  .right-section {
-    padding: 3rem 6rem;
+@keyframes snowfall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
   }
-}
-
-/* 左侧区域响应式设计 */
-@media (max-width: 1023px) {
-  .left-content {
-    padding: 2rem;
+  100% {
+    transform: translate3d(30px, 110vh, 0) rotate(360deg);
   }
-  
-  .welcome-title {
-    font-size: 2rem;
-  }
-  
-  .welcome-text {
-    font-size: 1rem;
-  }
-  
-
-  
-  .robot-icon {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .robot-icon i {
-    font-size: 3rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .robot-section {
-    padding-top: 1rem;
-  }
-  
-  .robot-icon {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .robot-icon i {
-    font-size: 2.5rem;
-  }
-  
-  .welcome-title {
-    font-size: 1.75rem;
-  }
-  
-
-}
-
-/* 全局链接效果 */
-a {
-  transition: color 0.3s ease;
 }
 </style>

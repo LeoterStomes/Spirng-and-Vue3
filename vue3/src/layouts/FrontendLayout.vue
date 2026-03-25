@@ -7,8 +7,7 @@
             <!-- 左侧品牌区域 -->
             <div class="brand-section">
               <div class="brand-logo">
-                <i class="fas fa-robot brand-icon"></i>
-                <h1 class="brand-title">心理健康AI助手</h1>
+                <h1 class="brand-title">小暖知你</h1>
               </div>
             </div>
             
@@ -26,8 +25,17 @@
               <!-- 认证区域 -->
               <div class="auth-section">
                 <template v-if="isLoggedIn">
-                  <router-link to="/profile" class="profile-link">个人中心</router-link>
-                  <button @click="handleLogout" class="logout-btn">退出登录</button>
+                  <router-link to="/profile" class="profile-avatar-link" title="个人中心">
+                    <img
+                      v-if="avatarUrl"
+                      :src="avatarUrl"
+                      alt="用户头像"
+                      class="profile-avatar"
+                    >
+                    <span v-else class="profile-avatar avatar-fallback">
+                      {{ avatarInitial }}
+                    </span>
+                  </router-link>
                 </template>
                 <template v-else>
                   <router-link to="/auth/login" class="login-link">登录</router-link>
@@ -58,33 +66,15 @@
   <script setup>
   import { computed } from 'vue'
   import { useUserStore } from '@/store/user'
-  import { useRouter } from 'vue-router'
-  import { ElMessageBox } from 'element-plus'
   
   const userStore = useUserStore()
-  const router = useRouter()
   
   const isLoggedIn = computed(() => !!userStore.token)
-  
-  const handleLogout = () => {
-    ElMessageBox.confirm('确定要退出登录吗?', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }).then(async () => {
-      try {
-        await userStore.logout()
-        router.push('/auth/login')
-      } catch (error) {
-        console.error('退出登录失败:', error)
-        // 即使后端接口失败，也要清除本地状态并跳转
-        userStore.clearUserInfo()
-        router.push('/auth/login')
-      }
-    }).catch(() => {
-      // 用户取消退出，不做任何操作
-    })
-  }
+  const avatarUrl = computed(() => userStore.userInfo?.avatar || '')
+  const avatarInitial = computed(() => {
+    const name = userStore.userInfo?.nickname || userStore.userInfo?.username || 'U'
+    return String(name).charAt(0).toUpperCase()
+  })
   </script>
   
 <style scoped>
@@ -100,8 +90,10 @@
 
 /* 导航栏样式 */
 .navbar {
-  background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid #e5e7eb;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -131,17 +123,12 @@
   align-items: center;
 }
 
-.brand-icon {
-  font-size: 1.875rem;
-  color: #4A90E2;
-  margin-right: 0.75rem;
-}
-
 .brand-title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.18rem;
+  font-weight: 700;
   color: #1f2937;
   margin: 0;
+  letter-spacing: 0.01em;
 }
 
 /* 导航区域 */
@@ -158,21 +145,23 @@
 }
 
 .nav-link {
-  color: #4b5563;
+  color: #475569;
   text-decoration: none;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.55rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   transition: all 0.3s ease;
 }
 
 .nav-link:hover {
-  color: #4A90E2;
+  color: #2563eb;
+  background: #eff6ff;
 }
 
 .nav-link.router-link-active {
-  color: #4A90E2;
+  color: #2563eb;
+  background: #eff6ff;
 }
 
 /* 认证区域 */
@@ -182,7 +171,6 @@
   gap: 1rem;
 }
 
-.profile-link,
 .login-link {
   color: #4b5563;
   text-decoration: none;
@@ -193,25 +181,39 @@
   transition: all 0.3s ease;
 }
 
-.profile-link:hover,
 .login-link:hover {
   color: #4A90E2;
 }
 
-.logout-btn {
-  background: rgba(74, 144, 226, 0.1);
-  color: #4A90E2;
-  border: 1px solid rgba(74, 144, 226, 0.2);
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
+.profile-avatar-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
-.logout-btn:hover {
-  background: rgba(74, 144, 226, 0.2);
+.profile-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #dbeafe;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.avatar-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #2563eb;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.profile-avatar-link:hover .profile-avatar {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.26);
 }
 
 .register-btn {

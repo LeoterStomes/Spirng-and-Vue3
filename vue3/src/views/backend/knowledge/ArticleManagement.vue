@@ -14,6 +14,13 @@
           >
             新建文章
           </el-button>
+          <el-button
+            type="success"
+            @click="handleOpenImportDialog"
+            size="default"
+          >
+            快速导入
+          </el-button>
           <el-button 
             type="danger" 
             :disabled="!selectedRows.length"
@@ -280,6 +287,76 @@
       @success="handleEditSuccess"
     />
 
+    <!-- 快速导入对话框 -->
+    <el-dialog
+      v-model="importDialogVisible"
+      title="快速导入本地知识库"
+      width="640px"
+      :close-on-click-modal="false"
+    >
+      <el-form label-width="110px">
+        <el-form-item label="文章分类">
+          <el-select
+            v-model="importForm.categoryId"
+            placeholder="请选择分类"
+            style="width: 100%"
+            filterable
+          >
+            <el-option
+              v-for="category in categories"
+              :key="category.id"
+              :label="category.categoryName"
+              :value="category.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="发布状态">
+          <el-radio-group v-model="importForm.status">
+            <el-radio :label="0">草稿</el-radio>
+            <el-radio :label="1">立即发布</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item label="统一标签">
+          <el-input
+            v-model="importForm.tags"
+            placeholder="可选，多个标签用英文逗号分隔"
+          />
+        </el-form-item>
+
+        <el-form-item label="导入文件">
+          <div class="import-actions">
+            <el-button type="primary" plain @click="triggerImportFileSelect">
+              选择本地文件/文件夹
+            </el-button>
+            <span class="import-tip">支持 .txt / .md / .json，可多选</span>
+          </div>
+          <input
+            ref="importInputRef"
+            type="file"
+            multiple
+            accept=".txt,.md,.json"
+            webkitdirectory
+            directory
+            style="display: none"
+            @change="handleImportFilesSelect"
+          >
+          <div class="import-files">
+            <p v-if="importFiles.length === 0" class="import-empty">尚未选择文件</p>
+            <p v-else class="import-count">已选择 {{ importFiles.length }} 个文件</p>
+          </div>
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <el-button @click="importDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="importing" @click="handleQuickImport">
+          开始导入
+        </el-button>
+      </template>
+    </el-dialog>
+
     <!-- 文章预览对话框 -->
     <ArticlePreviewDialog
       v-model="previewDialogVisible"
@@ -296,7 +373,7 @@ import {
 } from '@element-plus/icons-vue'
 import ArticleEditDialog from './ArticleEditDialog.vue'
 import ArticlePreviewDialog from './ArticlePreviewDialog.vue'
-import { getArticlePage, deleteArticle, updateArticleStatus, batchDeleteArticles, getArticleById } from '@/api/knowledgeArticle'
+import { getArticlePage, deleteArticle, updateArticleStatus, batchDeleteArticles, getArticleById, createArticle } from '@/api/knowledgeArticle'
 import { getCategoryTree } from '@/api/knowledgeCategory'
 import { formatDateTime } from '@/utils/dateUtils'
 
@@ -312,6 +389,15 @@ const editDialogVisible = ref(false)
 const previewDialogVisible = ref(false)
 const currentArticle = ref(null)
 const previewArticle = ref(null)
+const importDialogVisible = ref(false)
+const importInputRef = ref(null)
+const importFiles = ref([])
+const importing = ref(false)
+const importForm = reactive({
+  categoryId: null,
+  status: 0,
+  tags: ''
+})
 
 // 搜索表单
 const searchForm = reactive({
@@ -418,6 +504,141 @@ const handleSortChange = ({ prop, order }) => {
 const handleCreate = () => {
   currentArticle.value = null
   editDialogVisible.value = true
+}
+
+const handleOpenImportDialog = () => {
+  if (!categories.value.length) {
+    ElMessage.warning('请先创建文章分类后再导入')
+    return
+  }
+  importForm.categoryId = importForm.categoryId || categories.value[0].id
+  importDialogVisible.value = true
+}
+
+const triggerImportFileSelect = () => {
+  if (!importInputRef.value) return
+  importInputRef.value.value = ''
+  importInputRef.value.click()
+}
+
+const handleImportFilesSelect = (event) => {
+  const files = Array.from(event.target?.files || [])
+  importFiles.value = files.filter(file => /\.(txt|md|json)$/i.test(file.name))
+}
+
+const readFileAsText = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader()
+  reader.onload = () => resolve(reader.result || '')
+  reader.onerror = () => reject(new Error(`读取文件失败: ${file.name}`))
+  reader.readAsText(file, 'utf-8')
+})
+
+const plainTextSummary = (content) => {
+  const text = String(content || '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return text.length > 180 ? `${text.substring(0, 180)}...` : text
+}
+
+const titleFromFile = (fileName, text) => {
+  const lines = String(text || '').split(/\r?\n/).map(line => line.trim()).filter(Boolean)
+  const markdownTitle = lines.find(line => /^#{1,6}\s+/.test(line))
+  if (markdownTitle) return markdownTitle.replace(/^#{1,6}\s+/, '').trim()
+  if (lines.length) return lines[0].substring(0, 200)
+  return fileName.replace(/\.[^.]+$/, '').substring(0, 200)
+}
+
+const parseJsonArticles = (jsonObj, fileName) => {
+  const toArticle = (item, index = 0) => {
+    const content = String(item?.content || '').trim()
+    if (!content) return null
+    const baseTitle = String(item?.title || '').trim()
+    const title = (baseTitle || `${fileName.replace(/\.[^.]+$/, '')}-${index + 1}`).substring(0, 200)
+    return {
+      title,
+      content,
+      summary: String(item?.summary || plainTextSummary(content)).substring(0, 1000),
+      tags: String(item?.tags || importForm.tags || '').substring(0, 500)
+    }
+  }
+
+  if (Array.isArray(jsonObj)) {
+    return jsonObj.map((item, idx) => toArticle(item, idx)).filter(Boolean)
+  }
+  if (Array.isArray(jsonObj?.articles)) {
+    return jsonObj.articles.map((item, idx) => toArticle(item, idx)).filter(Boolean)
+  }
+  const single = toArticle(jsonObj, 0)
+  return single ? [single] : []
+}
+
+const createArticleRequest = (payload) => new Promise((resolve, reject) => {
+  createArticle(payload, {
+    showDefaultMsg: false,
+    onSuccess: resolve,
+    onError: reject
+  })
+})
+
+const handleQuickImport = async () => {
+  if (!importForm.categoryId) {
+    ElMessage.warning('请先选择导入分类')
+    return
+  }
+  if (!importFiles.value.length) {
+    ElMessage.warning('请先选择要导入的文件')
+    return
+  }
+
+  importing.value = true
+  let successCount = 0
+  let failCount = 0
+
+  try {
+    for (const file of importFiles.value) {
+      try {
+        const text = await readFileAsText(file)
+        let articlePayloads = []
+        if (/\.json$/i.test(file.name)) {
+          const jsonObj = JSON.parse(String(text || '{}'))
+          articlePayloads = parseJsonArticles(jsonObj, file.name)
+        } else {
+          const content = String(text || '').trim()
+          if (!content) continue
+          articlePayloads = [{
+            title: titleFromFile(file.name, content),
+            content,
+            summary: plainTextSummary(content),
+            tags: importForm.tags
+          }]
+        }
+
+        for (const payload of articlePayloads) {
+          await createArticleRequest({
+            categoryId: importForm.categoryId,
+            status: importForm.status,
+            ...payload
+          })
+          successCount += 1
+        }
+      } catch (error) {
+        failCount += 1
+        console.error('导入失败文件:', file.name, error)
+      }
+    }
+
+    if (successCount > 0) {
+      ElMessage.success(`导入完成：成功 ${successCount} 篇，失败 ${failCount} 个文件`)
+      importDialogVisible.value = false
+      importFiles.value = []
+      fetchData()
+    } else {
+      ElMessage.error('导入失败，未成功创建任何文章')
+    }
+  } finally {
+    importing.value = false
+  }
 }
 
 const handleEdit = (row) => {
@@ -658,6 +879,28 @@ onMounted(() => {
 .header-actions {
   display: flex;
   gap: 1rem;
+}
+
+.import-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.import-tip {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.import-files {
+  margin-top: 0.5rem;
+}
+
+.import-empty,
+.import-count {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #6b7280;
 }
 
 /* 按钮样式优化 */

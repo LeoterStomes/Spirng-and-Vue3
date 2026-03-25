@@ -1,663 +1,563 @@
 <template>
-  <div class="home">
-    <div
-      class="snow-layer"
-      aria-hidden="true"
-    >
-      <span
-        v-for="flake in snowflakes"
-        :key="flake.id"
-        class="snowflake"
-        :style="{
-          left: flake.left,
-          animationDuration: flake.duration,
-          animationDelay: flake.delay,
-          opacity: flake.opacity,
-          fontSize: flake.size
-        }"
-      >
-        ❄
-      </span>
-    </div>
+  <div class="home-blog">
+    <section class="blog-hero">
+      <div class="hero-carousel">
+        <button class="hero-nav prev" @click="prevHero">‹</button>
+        <button class="hero-nav next" @click="nextHero">›</button>
 
-    <div class="home-background">
-      <div
-        v-for="(img, idx) in heroImages"
-        :key="`home-${img}`"
-        class="home-bg-slide"
-        :class="{ active: idx === currentSlide }"
-        :style="{ backgroundImage: `url(${img})` }"
-      />
-    </div>
-
-    <section class="hero-section">
-      <div class="hero-overlay" />
-
-      <div class="hero-container">
-        <div class="hero-content">
-          <div class="hero-text">
-            <h2 class="hero-title">
-              一次温暖的对话<br>
-              <span class="highlight-text">化孤独为慰藉</span>
-            </h2>
-            <p class="hero-description">
-              每个深夜，每个焦虑时刻，我们都在这里。不必独自承受，让心与心的连接温暖你的每一天。
-            </p>
-            <div class="hero-actions">
-              <router-link
-                v-if="isLoggedIn"
-                to="/consultation"
-                class="primary-btn"
-              >
-                <i class="fas fa-heart" />
-                开始倾诉，获得陪伴
-              </router-link>
-              <router-link
-                v-else
-                to="/auth/login"
-                class="primary-btn"
-              >
-                <i class="fas fa-heart" />
-                开始倾诉，获得陪伴
-              </router-link>
-
-              <router-link
-                v-if="isLoggedIn"
-                to="/emotion-diary"
-                class="secondary-btn"
-              >
-                <i class="fas fa-pen-fancy" />
-                记录心情，释放情感
-              </router-link>
-              <router-link
-                v-else
-                to="/auth/login"
-                class="secondary-btn"
-              >
-                <i class="fas fa-pen-fancy" />
-                记录心情，释放情感
-              </router-link>
-            </div>
-          </div>
-
-          <div class="hero-image">
-            <div class="hero-panel">
-              <div class="panel-badge">
-                24小时陪伴
+        <transition name="hero-slide" mode="out-in">
+          <div
+            v-if="activeHeroArticle"
+            :key="activeHeroArticle.id"
+            class="hero-slide-card"
+          >
+            <div class="hero-slide-text">
+              <p class="hero-kicker">MENTAL BLOG</p>
+              <h1>{{ activeHeroArticle.title }}</h1>
+              <p class="hero-desc">
+                {{ activeHeroArticle.summary || getAutoSummary(activeHeroArticle.content) }}
+              </p>
+              <div class="hero-meta">
+                <span>{{ activeHeroArticle.categoryName || '心理知识' }}</span>
+                <span>{{ formatDate(activeHeroArticle.publishedAt) }}</span>
+                <span>阅读 {{ activeHeroArticle.readCount || 0 }}</span>
               </div>
-              <h4>让小暖陪你慢慢变好</h4>
-              <transition
-                name="slogan-fade"
-                mode="out-in"
-              >
-                <p
-                  :key="currentSloganIndex"
-                  class="rotating-slogan"
-                >
-                  {{ heroSlogans[currentSloganIndex] }}
-                </p>
-              </transition>
-              <div class="slide-indicators">
-                <span
-                  v-for="(_, idx) in heroImages"
-                  :key="idx"
-                  class="indicator"
-                  :class="{ active: idx === currentSlide }"
-                />
+              <div class="hero-actions">
+                <router-link :to="`/knowledge/article/${activeHeroArticle.id}`" class="btn primary">
+                  阅读全文
+                </router-link>
+                <router-link :to="isLoggedIn ? '/consultation' : '/auth/login'" class="btn ghost">
+                  AI 咨询
+                </router-link>
               </div>
             </div>
+
+            <router-link :to="`/knowledge/article/${activeHeroArticle.id}`" class="hero-slide-image">
+              <img :src="activeHeroArticle.coverImage || fallbackCover" :alt="activeHeroArticle.title" @error="onImageError">
+            </router-link>
           </div>
+          <div v-else key="empty" class="hero-slide-card empty">
+            <div class="hero-slide-text">
+              <p class="hero-kicker">MENTAL BLOG</p>
+              <h1>心理成长与陪伴空间</h1>
+              <p class="hero-desc">在这里记录、阅读、倾诉，把复杂情绪整理成能被理解的文字与行动。</p>
+            </div>
+          </div>
+        </transition>
+
+        <div class="hero-dots">
+          <button
+            v-for="(item, idx) in heroArticles"
+            :key="item.id"
+            class="hero-dot"
+            :class="{ active: idx === heroIndex }"
+            @click="goHero(idx)"
+          />
         </div>
+      </div>
+
+      <div class="hero-search">
+        <input
+          v-model.trim="searchKeyword"
+          type="text"
+          placeholder="输入关键词，快速搜索心理文章"
+          @keyup.enter="goSearch"
+        >
+        <button @click="goSearch">搜索</button>
       </div>
     </section>
 
-    <section class="features-section">
-      <div class="features-overlay" />
-
-      <div class="features-container">
-        <div class="section-header">
-          <h3 class="section-title">
-            我们的服务
-          </h3>
-          <p class="section-description">
-            用心倾听每一个故事，用爱温暖每一颗心灵
-          </p>
-        </div>
-
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-content">
-              <div class="feature-icon ai-icon">
-                <i class="fas fa-comments" />
-              </div>
-              <h4 class="feature-title">
-                心灵倾诉
-              </h4>
-              <p class="feature-description">
-                无论何时何地，都有一颗温暖的心在倾听。分享烦恼，收获理解与支持。
-              </p>
-              <router-link
-                :to="isLoggedIn ? '/consultation' : '/auth/login'"
-                class="feature-link"
-              >
-                开始倾诉
-                <i class="fas fa-arrow-right" />
-              </router-link>
-            </div>
+    <section class="home-main">
+      <div class="main-grid">
+        <div class="left-column">
+          <div class="section-title-row">
+            <h2>最新文章</h2>
+            <router-link to="/knowledge" class="more-link">查看更多</router-link>
           </div>
-
-          <div class="feature-card">
-            <div class="feature-content">
-              <div class="feature-icon emotion-icon">
-                <i class="fas fa-heart" />
+          <div v-loading="latestLoading" class="article-list">
+            <router-link
+              v-for="article in latestArticles"
+              :key="article.id"
+              :to="`/knowledge/article/${article.id}`"
+              class="article-item"
+            >
+              <img :src="article.coverImage || fallbackCover" :alt="article.title" @error="onImageError">
+              <div class="article-info">
+                <p class="article-meta">{{ article.categoryName || '心理知识' }} · {{ formatDate(article.publishedAt) }}</p>
+                <h3>{{ article.title }}</h3>
+                <p class="article-summary">{{ article.summary || getAutoSummary(article.content) }}</p>
+                <p class="article-foot">阅读 {{ article.readCount || 0 }} · 收藏 {{ article.favoriteCount || 0 }}</p>
               </div>
-              <h4 class="feature-title">
-                情感记录
-              </h4>
-              <p class="feature-description">
-                每一种情绪都值得被记录和珍视。陪你观察内心，拥抱真实的自己。
-              </p>
-              <router-link
-                :to="isLoggedIn ? '/emotion-diary' : '/auth/login'"
-                class="feature-link"
-              >
-                记录心情
-                <i class="fas fa-arrow-right" />
-              </router-link>
-            </div>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-content">
-              <div class="feature-icon knowledge-icon">
-                <i class="fas fa-seedling" />
-              </div>
-              <h4 class="feature-title">
-                心灵成长
-              </h4>
-              <p class="feature-description">
-                在知识花园中漫步，发现内心力量。每篇内容都通往更好的自己。
-              </p>
-              <router-link
-                to="/knowledge"
-                class="feature-link"
-              >
-                开始探索
-                <i class="fas fa-arrow-right" />
-              </router-link>
-            </div>
+            </router-link>
+            <div v-if="!latestLoading && latestArticles.length === 0" class="empty-text">暂无文章内容</div>
           </div>
         </div>
+
+        <aside class="right-column">
+          <div class="widget">
+            <h3>快捷入口</h3>
+            <div class="quick-links">
+              <router-link :to="isLoggedIn ? '/emotion-diary' : '/auth/login'">情绪日记</router-link>
+              <router-link :to="isLoggedIn ? '/psychological-test' : '/auth/login'">心理测试</router-link>
+              <router-link :to="isLoggedIn ? '/consultation' : '/auth/login'">AI 咨询</router-link>
+              <router-link to="/knowledge">知识分类</router-link>
+            </div>
+          </div>
+
+          <div class="widget">
+            <h3>热门阅读</h3>
+            <router-link
+              v-for="item in popularArticles"
+              :key="item.id"
+              :to="`/knowledge/article/${item.id}`"
+              class="hot-item"
+            >
+              <span class="hot-title">{{ item.title }}</span>
+              <span class="hot-count">👀 {{ item.readCount || 0 }}</span>
+            </router-link>
+            <p v-if="!popularArticles.length" class="empty-text">暂无热门文章</p>
+          </div>
+        </aside>
       </div>
     </section>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
-import cataImg from '@/assets/cata.jpg'
-import catbImg from '@/assets/catb.jpg'
-import catcImg from '@/assets/catc.jpg'
-import catdImg from '@/assets/catd.jpg'
+import { getArticlePage } from '@/api/knowledgeArticle'
+import { formatDate } from '@/utils/dateUtils'
 
+const router = useRouter()
 const userStore = useUserStore()
 const isLoggedIn = computed(() => !!userStore.token)
-const heroImages = [cataImg, catbImg, catcImg, catdImg]
-const heroSlogans = [
-  '倾诉心声、记录心情、探索内心、获得陪伴',
-  '改变自己，从现在开始',
-  '小暖，陪你一起成长',
-  '今天你的心情怎么样^-^'
-]
-const snowflakes = Array.from({ length: 30 }, (_, index) => ({
-  id: index + 1,
-  left: `${Math.random() * 100}%`,
-  duration: `${8 + Math.random() * 10}s`,
-  delay: `${Math.random() * 8}s`,
-  opacity: `${0.25 + Math.random() * 0.5}`,
-  size: `${12 + Math.random() * 14}px`
-}))
 
-const currentSlide = ref(0)
-const slideDirection = ref(1)
-const currentSloganIndex = ref(0)
-let slideTimer = null
-let sloganTimer = null
+const searchKeyword = ref('')
+const latestLoading = ref(false)
+const latestArticles = ref([])
+const popularArticles = ref([])
+const heroIndex = ref(0)
+const fallbackCover = 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+let heroTimer = null
 
-const playHeroSlider = () => {
-  const next = currentSlide.value + slideDirection.value
-  if (next >= heroImages.length) {
-    slideDirection.value = -1
-    currentSlide.value = heroImages.length - 2
-    return
-  }
-  if (next < 0) {
-    slideDirection.value = 1
-    currentSlide.value = 1
-    return
-  }
-  currentSlide.value = next
+const heroArticles = computed(() => latestArticles.value.slice(0, 4))
+const activeHeroArticle = computed(() => heroArticles.value[heroIndex.value] || null)
+
+const goSearch = () => {
+  router.push({
+    path: '/knowledge',
+    query: searchKeyword.value ? { keyword: searchKeyword.value } : undefined
+  })
 }
 
+const onImageError = (event) => {
+  event.target.src = fallbackCover
+}
+
+const getAutoSummary = (content) => {
+  if (!content) return '暂无摘要'
+  const plainText = content.replace(/<[^>]+>/g, '')
+  return plainText.length > 90 ? `${plainText.substring(0, 90)}...` : plainText
+}
+
+const fetchLatestArticles = () => {
+  latestLoading.value = true
+  getArticlePage(
+    { currentPage: 1, size: 6, sortField: 'publishedAt', sortDirection: 'desc' },
+    {
+      onSuccess: (res) => {
+        latestArticles.value = res?.records || []
+        latestLoading.value = false
+      },
+      onError: () => {
+        latestArticles.value = []
+        latestLoading.value = false
+      }
+    }
+  )
+}
+
+const fetchPopularArticles = () => {
+  getArticlePage(
+    { currentPage: 1, size: 6, sortField: 'readCount', sortDirection: 'desc' },
+    {
+      onSuccess: (res) => {
+        popularArticles.value = res?.records || []
+      },
+      onError: () => {
+        popularArticles.value = []
+      }
+    }
+  )
+}
+
+const nextHero = () => {
+  if (!heroArticles.value.length) return
+  heroIndex.value = (heroIndex.value + 1) % heroArticles.value.length
+}
+
+const prevHero = () => {
+  if (!heroArticles.value.length) return
+  heroIndex.value = (heroIndex.value - 1 + heroArticles.value.length) % heroArticles.value.length
+}
+
+const goHero = (index) => {
+  heroIndex.value = index
+}
+
+const startHeroAutoPlay = () => {
+  if (heroTimer) window.clearInterval(heroTimer)
+  heroTimer = window.setInterval(() => {
+    if (heroArticles.value.length > 1) nextHero()
+  }, 5000)
+}
+
+watch(heroArticles, (val) => {
+  if (!val.length) {
+    heroIndex.value = 0
+    return
+  }
+  if (heroIndex.value >= val.length) {
+    heroIndex.value = 0
+  }
+})
+
 onMounted(() => {
-  slideTimer = window.setInterval(playHeroSlider, 7000)
-  sloganTimer = window.setInterval(() => {
-    currentSloganIndex.value = (currentSloganIndex.value + 1) % heroSlogans.length
-  }, 3000)
+  fetchLatestArticles()
+  fetchPopularArticles()
+  startHeroAutoPlay()
 })
 
 onUnmounted(() => {
-  if (slideTimer) {
-    window.clearInterval(slideTimer)
-    slideTimer = null
-  }
-  if (sloganTimer) {
-    window.clearInterval(sloganTimer)
-    sloganTimer = null
+  if (heroTimer) {
+    window.clearInterval(heroTimer)
+    heroTimer = null
   }
 })
 </script>
 
 <style scoped>
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
-
-.home {
-  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  position: relative;
+.home-blog {
+  background: #f5f7fb;
+  min-height: 100vh;
+  color: #1f2937;
 }
 
-.home-background {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.home-bg-slide {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transform: scale(1.035);
-  transition: opacity 2.4s ease, transform 7s linear;
-}
-
-.home-bg-slide.active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.snow-layer {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 6;
-  overflow: hidden;
-}
-
-.snowflake {
-  position: absolute;
-  top: -5vh;
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.35);
-  animation-name: snowfall;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-.hero-section {
-  position: relative;
-  z-index: 1;
-  color: #fff;
-  padding: 5rem 0;
-  min-height: 72vh;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(110deg, rgba(8, 20, 45, 0.78) 0%, rgba(8, 20, 45, 0.55) 45%, rgba(8, 20, 45, 0.45) 100%);
-}
-
-.hero-container {
-  position: relative;
-  z-index: 2;
-  max-width: 1100px;
+.blog-hero {
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 3rem 1rem 2rem;
 }
 
-.hero-content {
+.hero-carousel {
+  position: relative;
+}
+
+.hero-slide-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: center;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1rem;
 }
 
-.hero-title {
-  font-size: 3rem;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 1.5rem;
+.hero-slide-card.empty {
+  grid-template-columns: 1fr;
 }
 
-.highlight-text {
-  color: #ffe08a;
+.hero-slide-text {
+  padding: 0.4rem 0.35rem;
 }
 
-.hero-description {
-  font-size: 1.2rem;
-  line-height: 1.7;
-  margin-bottom: 2rem;
-  color: rgba(255, 255, 255, 0.95);
+.hero-slide-image {
+  display: block;
+}
+
+.hero-slide-image img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.hero-kicker {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: #6b7280;
+  margin-bottom: 0.4rem;
+}
+
+.blog-hero h1 {
+  font-size: 2.2rem;
+  margin: 0 0 0.8rem;
+}
+
+.hero-desc {
+  margin: 0;
+  color: #4b5563;
+  max-width: 720px;
 }
 
 .hero-actions {
+  margin-top: 1.3rem;
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
+}
+
+.hero-meta {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 0.75rem;
   flex-wrap: wrap;
+  color: #6b7280;
+  font-size: 0.85rem;
 }
 
-.primary-btn {
-  background: rgba(255, 255, 255, 0.96);
-  color: #1e3a8a;
-  padding: 0.75rem 2rem;
-  border-radius: 0.65rem;
+.btn {
   text-decoration: none;
-  font-weight: 700;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
 }
 
-.primary-btn:hover {
-  transform: translateY(-2px);
-}
-
-.secondary-btn {
-  border: 2px solid rgba(255, 255, 255, 0.88);
+.btn.primary {
+  background: #2563eb;
   color: #fff;
-  padding: 0.75rem 2rem;
-  border-radius: 0.65rem;
-  text-decoration: none;
-  font-weight: 700;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
-.secondary-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  transform: translateY(-2px);
+.btn.ghost {
+  border: 1px solid #cbd5e1;
+  color: #334155;
 }
 
-.hero-image {
+.hero-nav {
+  position: absolute;
+  top: 45%;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(17, 24, 39, 0.7);
+  color: #fff;
+  cursor: pointer;
+}
+
+.hero-nav.prev {
+  left: -10px;
+}
+
+.hero-nav.next {
+  right: -10px;
+}
+
+.hero-dots {
+  margin-top: 0.7rem;
   display: flex;
+  gap: 0.35rem;
   justify-content: center;
 }
 
-.hero-panel {
-  max-width: 360px;
-  width: 100%;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
-  padding: 1.5rem;
-  text-align: left;
-}
-
-.panel-badge {
-  display: inline-block;
-  padding: 0.35rem 0.8rem;
+.hero-dot {
+  width: 16px;
+  height: 4px;
+  border: 0;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  font-size: 0.85rem;
-  margin-bottom: 0.9rem;
+  background: #cbd5e1;
+  cursor: pointer;
 }
 
-.hero-panel h4 {
-  margin: 0 0 0.7rem;
-  font-size: 1.35rem;
-  font-weight: 700;
+.hero-dot.active {
+  width: 28px;
+  background: #2563eb;
 }
 
-.hero-panel p {
-  margin: 0;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.92);
-}
-
-.rotating-slogan {
-  min-height: 2.8em;
-}
-
-.slogan-fade-enter-active,
-.slogan-fade-leave-active {
-  transition: opacity 0.45s ease, transform 0.45s ease;
-}
-
-.slogan-fade-enter-from,
-.slogan-fade-leave-to {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.slide-indicators {
+.hero-search {
   margin-top: 1rem;
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
+  max-width: 560px;
 }
 
-.indicator {
-  width: 20px;
-  height: 4px;
+.hero-search input {
+  flex: 1;
+  border: 1px solid #d1d5db;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.35);
-  transition: all 0.35s ease;
+  padding: 0.65rem 0.85rem;
 }
 
-.indicator.active {
-  width: 34px;
-  background: #fff;
-}
-
-.features-section {
-  position: relative;
-  z-index: 1;
-  padding: 5rem 0;
-  overflow: hidden;
-}
-
-.features-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(150deg, rgba(7, 19, 42, 0.8) 0%, rgba(12, 30, 60, 0.65) 45%, rgba(8, 20, 45, 0.72) 100%);
-}
-
-.features-container {
-  position: relative;
-  z-index: 2;
-  max-width: 1200px;
-  margin: 0 auto;
+.hero-search button {
+  border: 0;
+  border-radius: 10px;
+  background: #111827;
+  color: #fff;
   padding: 0 1rem;
 }
 
-.section-header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 1rem;
-}
-
-.section-description {
-  font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.86);
-  max-width: 600px;
+.home-main {
+  max-width: 1160px;
   margin: 0 auto;
+  padding: 0 1rem 2.5rem;
 }
 
-.features-grid {
+.main-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: 1fr 320px;
+  gap: 1rem;
 }
 
-.feature-card {
-  background: rgba(255, 255, 255, 0.14);
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  backdrop-filter: blur(6px);
-  transition: all 0.35s ease;
-  text-align: center;
-}
-
-.feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(74, 144, 226, 0.2);
-}
-
-.feature-icon {
-  width: 4rem;
-  height: 4rem;
-  margin: 0 auto 1rem;
-  border-radius: 50%;
+.left-column,
+.right-column {
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 1.5rem;
 }
 
-.ai-icon {
-  background: linear-gradient(135deg, #4a90e2, #9013fe);
+.section-title-row h2 {
+  margin: 0;
 }
 
-.emotion-icon {
-  background: linear-gradient(135deg, #7ed321, #f5a623);
-}
-
-.knowledge-icon {
-  background: linear-gradient(135deg, #f5a623, #9013fe);
-}
-
-.feature-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 0.75rem;
-}
-
-.feature-description {
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
-.feature-link {
-  color: #bfdbfe;
+.more-link {
+  font-size: 0.9rem;
+  color: #2563eb;
   text-decoration: none;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
+}
+
+.article-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.article-item {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 0.9rem;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border-radius: 14px;
+  padding: 0.7rem;
+  border: 1px solid #e5e7eb;
+}
+
+.article-item img {
+  width: 100%;
+  height: 140px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.article-meta {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.article-info h3 {
+  margin: 0.35rem 0 0.45rem;
+  font-size: 1.05rem;
+}
+
+.article-summary {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.article-foot {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.widget {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  padding: 1rem;
+}
+
+.widget h3 {
+  margin: 0 0 0.9rem;
+}
+
+.quick-links {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.quick-links a {
+  text-decoration: none;
+  color: #1f2937;
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.hot-item {
+  display: flex;
+  justify-content: space-between;
   gap: 0.5rem;
-  transition: color 0.3s ease;
+  text-decoration: none;
+  color: #334155;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed #e5e7eb;
 }
 
-.feature-link:hover {
-  color: #dbeafe;
+.hot-title {
+  flex: 1;
 }
 
-@keyframes snowfall {
-  0% {
-    transform: translate3d(0, -10vh, 0) rotate(0deg);
-  }
-  100% {
-    transform: translate3d(30px, 110vh, 0) rotate(360deg);
-  }
+.hot-count {
+  color: #6b7280;
 }
 
-@media (max-width: 768px) {
-  .hero-content {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    text-align: center;
-  }
+.empty-text {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
 
-  .hero-title {
-    font-size: 2rem;
-  }
+.hero-slide-enter-active,
+.hero-slide-leave-active {
+  transition: all 0.35s ease;
+}
 
-  .hero-description {
-    font-size: 1rem;
-  }
+.hero-slide-enter-from,
+.hero-slide-leave-to {
+  opacity: 0;
+  transform: translateX(12px);
+}
 
-  .hero-actions {
-    justify-content: center;
-  }
-
-  .hero-panel {
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .section-title {
-    font-size: 2rem;
-  }
-
-  .features-grid {
+@media (max-width: 992px) {
+  .hero-slide-card {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 480px) {
-  .hero-section {
-    padding: 3rem 0;
+  .hero-nav.prev {
+    left: 6px;
   }
 
-  .hero-title {
-    font-size: 1.75rem;
+  .hero-nav.next {
+    right: 6px;
   }
 
-  .primary-btn,
-  .secondary-btn {
-    padding: 0.5rem 1.2rem;
-    font-size: 0.875rem;
+  .main-grid {
+    grid-template-columns: 1fr;
   }
 
-  .hero-panel h4 {
-    font-size: 1.15rem;
-  }
-
-  .features-section {
-    padding: 3rem 0;
-  }
-
-  .section-title {
-    font-size: 1.75rem;
-  }
-
-  .feature-card {
-    padding: 1.5rem;
+  .article-item {
+    grid-template-columns: 1fr;
   }
 }
 </style>

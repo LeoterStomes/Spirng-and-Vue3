@@ -8,7 +8,7 @@
             <i class="fas fa-book-open"></i>
           </div>
           <div class="header-text">
-            <h2>心理健康知识库</h2>
+            <h2>心理健康文章</h2>
           </div>
         </div>
         <div class="header-right">
@@ -191,6 +191,12 @@ import { formatDate } from '@/utils/dateUtils'
 
 const router = useRouter()
 
+const knowledgePhotoModules = import.meta.glob('@/knowledgephoto/*.{jpg,jpeg,png,webp,gif}', {
+  eager: true,
+  import: 'default'
+})
+const knowledgePhotoUrls = Object.values(knowledgePhotoModules)
+
 // 响应式数据
 const loading = ref(false)
 const articles = ref([])
@@ -212,7 +218,18 @@ const searchForm = reactive({
 })
 
 // 默认封面图片
-const defaultCover = 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+const defaultCover = knowledgePhotoUrls[0] || 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+
+const getStableKnowledgePhoto = (seed) => {
+  if (knowledgePhotoUrls.length === 0) return defaultCover
+  const text = String(seed || '')
+  let hash = 0
+  for (let i = 0; i < text.length; i++) {
+    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0
+  }
+  const index = Math.abs(hash) % knowledgePhotoUrls.length
+  return knowledgePhotoUrls[index]
+}
 
 // 每日提示
 const dailyTip = ref('深呼吸是最简单有效的放松技巧。当感到压力时，尝试4-7-8呼吸法：吸气4秒，屏息7秒，呼气8秒。')
@@ -237,6 +254,9 @@ const fetchArticles = () => {
         // 处理文章列表并检查收藏状态
         articles.value = response.records.map(article => {
           article.isFavorited = false // 默认未收藏
+          if (!article.coverImage || article.coverImage.includes('unsplash.com')) {
+            article.coverImage = getStableKnowledgePhoto(article.id || article.title)
+          }
           return article
         })
         total.value = response.total || 0
@@ -507,20 +527,21 @@ onMounted(() => {
 <style scoped>
 .knowledge-page {
   min-height: 100vh;
-  background: #f8fafc;
+  background: #f5f7fb;
 }
 
 /* 页面头部样式 */
 .header-section {
-  background: linear-gradient(135deg, #f59e0b 0%, #8b5cf6 100%);
-  color: white;
-  padding: 3rem 0;
+  background: #ffffff;
+  color: #111827;
+  padding: 2rem 0;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .header-content {
-  max-width: 1400px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -529,23 +550,18 @@ onMounted(() => {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .breathing-animation {
-  font-size: 4rem;
-  animation: breathing 4s ease-in-out infinite;
-}
-
-@keyframes breathing {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  font-size: 2.1rem;
+  color: #2563eb;
 }
 
 .header-text h2 {
-  font-size: 2.5rem;
+  font-size: 1.9rem;
   margin: 0;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .header-right {
@@ -554,7 +570,7 @@ onMounted(() => {
 }
 
 .search-container {
-  min-width: 400px;
+  min-width: 360px;
 }
 
 .search-wrapper {
@@ -562,48 +578,43 @@ onMounted(() => {
 }
 
 .search-input {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
+  border-radius: 0.9rem;
   transition: all 0.3s ease;
 }
 
-.search-input:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
 .search-input :deep(.el-input__wrapper) {
-  background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 1rem;
+  background: #f8fafc;
+  border: 1px solid #d1d5db;
+  border-radius: 0.9rem;
   padding: 0.5rem 1rem;
   transition: all 0.3s ease;
 }
 
 .search-input :deep(.el-input__wrapper):hover,
 .search-input :deep(.el-input__wrapper.is-focus) {
-  border-color: rgba(255, 255, 255, 0.6);
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .search-input :deep(.el-input__inner) {
-  color: white;
+  color: #111827;
   font-size: 1rem;
 }
 
 .search-input :deep(.el-input__inner::placeholder) {
-  color: rgba(255, 255, 255, 0.7);
+  color: #9ca3af;
 }
 
 .search-btn {
   border: none;
-  background: rgba(255, 255, 255, 0.2);
+  background: #2563eb;
   color: white;
   border-radius: 0.75rem;
   transition: all 0.3s ease;
 }
 
 .search-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
+  background: #1d4ed8;
 }
 
 /* 搜索历史样式 */
@@ -680,13 +691,13 @@ onMounted(() => {
 
 /* 内容区域样式 */
 .knowledge-content {
-  padding: 2rem 0;
+  padding: 1.5rem 0 2.5rem;
 }
 
 .content-container {
-  max-width: 1400px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1rem;
 }
 
 .content-wrapper {
@@ -706,8 +717,9 @@ onMounted(() => {
 .recommend-section,
 .daily-tip {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  border: 1px solid #e5e7eb;
   padding: 1.5rem;
 }
 
@@ -744,8 +756,9 @@ onMounted(() => {
 }
 
 .category-item.active {
-  background: linear-gradient(135deg, #f59e0b, #8b5cf6);
-  color: white;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
   transform: translateY(-2px);
 }
 
@@ -767,7 +780,7 @@ onMounted(() => {
 }
 
 .recommend-item {
-  border-left: 4px solid #f59e0b;
+  border-left: 4px solid #2563eb;
   padding-left: 1rem;
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -808,8 +821,9 @@ onMounted(() => {
 
 .filter-bar {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  border: 1px solid #e5e7eb;
   padding: 1.5rem;
   display: flex;
   justify-content: space-between;
@@ -849,7 +863,7 @@ onMounted(() => {
 }
 
 .filter-right strong {
-  color: #f59e0b;
+  color: #2563eb;
 }
 
 /* 文章列表样式 */

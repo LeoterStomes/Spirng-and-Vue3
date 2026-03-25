@@ -954,19 +954,20 @@ onMounted(() => {
 <style scoped>
 .emotion-diary-page {
   min-height: calc(100vh - 60px);
-  background: linear-gradient(135deg, #fafbfc 0%, #f7f9fc 50%, #f2f6fa 100%);
+  background: #f5f7fb;
 }
 
 .header-section {
-  background: linear-gradient(135deg, #7ED321 0%, #F5A623 100%);
-  color: white;
-  padding: 3rem 0;
+  background: #ffffff;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 2rem 0;
 }
 
 .header-content {
-  max-width: 1400px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -975,35 +976,30 @@ onMounted(() => {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .breathing-animation {
-  font-size: 4rem;
-  animation: breathing 4s ease-in-out infinite;
-}
-
-@keyframes breathing {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  font-size: 2.2rem;
+  color: #2563eb;
 }
 
 .header-text h2 {
-  font-size: 2.5rem;
+  font-size: 1.9rem;
   margin: 0 0 0.5rem 0;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .header-text p {
-  font-size: 1.25rem;
+  font-size: 1rem;
   margin: 0;
-  opacity: 0.9;
+  color: #4b5563;
 }
 
 .main-content {
-  max-width: 1400px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.5rem 1rem 2.5rem;
 }
 
 .content-layout {
@@ -1020,15 +1016,16 @@ onMounted(() => {
 
 .diary-card {
   background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
 }
 
 .diary-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(126, 211, 33, 0.15);
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.08);
 }
 
 .card-title {
@@ -1042,7 +1039,7 @@ onMounted(() => {
 }
 
 .card-title i {
-  color: #7ED321;
+  color: #2563eb;
 }
 
 .mood-score-section .mood-label {
@@ -1110,7 +1107,7 @@ onMounted(() => {
 .current-selection {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #7ED321;
+  color: #2563eb;
 }
 
 .emotion-grid {
@@ -1135,8 +1132,8 @@ onMounted(() => {
 }
 
 .emotion-card.selected {
-  border-color: #7ED321;
-  background: #F0FDF4;
+  border-color: #2563eb;
+  background: #eff6ff;
   transform: translateY(-3px);
 }
 
@@ -1195,9 +1192,10 @@ onMounted(() => {
 
 .stat-card {
   background: white;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  border: 1px solid #e5e7eb;
 }
 
 .stat-title {
@@ -1211,7 +1209,7 @@ onMounted(() => {
 }
 
 .stat-title i {
-  color: #7ED321;
+  color: #2563eb;
 }
 
 .trend-chart {
@@ -1271,8 +1269,8 @@ onMounted(() => {
 }
 
 .analysis-card {
-  background: linear-gradient(135deg, #EBF8FF 0%, #F3E8FF 100%);
-  border: 1px solid #BFDBFE;
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
 }
 
 .analysis-content {
@@ -1316,7 +1314,7 @@ onMounted(() => {
 
 .action-btn:hover {
   background: #F3F4F6;
-  color: #7ED321;
+  color: #2563eb;
 }
 
 .tip-card {
@@ -1333,7 +1331,7 @@ onMounted(() => {
 
 /* AI情绪分析卡片样式 */
 .ai-emotion-card {
-  background: linear-gradient(135deg, #F0F9FF 0%, #E0E7FF 100%);
+  background: #f8fbff;
   border: 1px solid #C7D2FE;
 }
 

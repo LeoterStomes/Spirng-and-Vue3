@@ -242,6 +242,11 @@ const handleLogin = async () => {
   justify-content: center;
   align-items: center;
   min-height: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  backdrop-filter: blur(2px);
+  padding: 1rem;
 }
 
 .form-container {

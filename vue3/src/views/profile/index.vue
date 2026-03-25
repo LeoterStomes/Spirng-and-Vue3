@@ -48,6 +48,10 @@
                 <i :class="tab.icon"></i>{{ tab.label }}
               </button>
             </nav>
+            <el-button class="logout-profile-btn" @click="handleLogout">
+              <i class="fas fa-sign-out-alt"></i>
+              退出登录
+            </el-button>
           </div>
         </div>
 
@@ -168,11 +172,13 @@
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/store/user'
+import { useRouter } from 'vue-router'
 import { getCurrentUser, updateUser, updatePassword as updateUserPassword } from '@/api/user'
 import { uploadTempBusinessFile, confirmTempFile } from '@/api/FileApi'
 import { formatDate } from '@/utils/dateUtils'
 
 const userStore = useUserStore()
+const router = useRouter()
 
 // 标签页面
 const activeTab = ref('personal')
@@ -441,6 +447,23 @@ const updatePassword = async () => {
   }
 }
 
+const handleLogout = () => {
+  ElMessageBox.confirm('确定要退出登录吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    try {
+      await userStore.logout()
+      router.push('/auth/login')
+    } catch (error) {
+      console.error('退出登录失败:', error)
+      userStore.clearUserInfo()
+      router.push('/auth/login')
+    }
+  }).catch(() => {})
+}
+
 // 组件挂载
 onMounted(async () => {
   try {
@@ -577,6 +600,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .tab-item {
@@ -608,6 +632,12 @@ onMounted(async () => {
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.logout-profile-btn {
+  width: 100%;
+  justify-content: center;
+  border-radius: 0.6rem;
 }
 
 /* 主内容区 */

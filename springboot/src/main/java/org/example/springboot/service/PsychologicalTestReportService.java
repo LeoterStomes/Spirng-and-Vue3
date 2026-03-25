@@ -66,7 +66,7 @@ public class PsychologicalTestReportService {
 
         // 默认标题
         if (!StringUtils.hasText(report.getTitle())) {
-            report.setTitle(getTestTypeDisplayName(report.getTestType()) + " - " + LocalDateTime.now().toString());
+            report.setTitle(getTestTypeDisplayName(report.getTestType()) + " - " + LocalDateTime.now().toLocalDate());
         }
 
         reportMapper.insert(report);
