@@ -1,7 +1,7 @@
 /*
  Navicat Premium Dump SQL
 
- Source Server         : localhost_3306
+ Source Server         : mydb
  Source Server Type    : MySQL
  Source Server Version : 80013 (8.0.13)
  Source Host           : localhost:3307
@@ -11,7 +11,7 @@
  Target Server Version : 80013 (8.0.13)
  File Encoding         : 65001
 
- Date: 21/03/2026 17:33:42
+ Date: 03/04/2026 19:19:03
 */
 
 SET NAMES utf8mb4;
@@ -48,7 +48,7 @@ CREATE TABLE `ai_analysis_task`  (
   INDEX `idx_retry_status`(`status` ASC, `retry_count` ASC, `max_retry_count` ASC) USING BTREE,
   CONSTRAINT `fk_ai_task_diary` FOREIGN KEY (`diary_id`) REFERENCES `emotion_diary` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `fk_ai_task_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'AI分析任务表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'AI分析任务表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ai_analysis_task
@@ -59,6 +59,30 @@ INSERT INTO `ai_analysis_task` VALUES (34, 5, 2, 'COMPLETED', 'ADMIN', 3, 0, 3, 
 INSERT INTO `ai_analysis_task` VALUES (35, 8, 2, 'COMPLETED', 'AUTO', 2, 0, 3, NULL, '2025-09-14 14:13:21', '2025-09-14 14:13:26', '2025-09-14 14:13:21', '2025-09-14 14:13:26');
 INSERT INTO `ai_analysis_task` VALUES (36, 8, 2, 'COMPLETED', 'ADMIN', 3, 0, 3, NULL, '2025-09-14 14:14:21', '2025-09-14 14:14:45', '2025-09-14 14:14:21', '2025-09-14 14:14:45');
 INSERT INTO `ai_analysis_task` VALUES (37, 27, 2, 'COMPLETED', 'AUTO', 2, 0, 3, NULL, '2026-03-21 12:57:12', '2026-03-21 12:57:16', '2026-03-21 12:57:12', '2026-03-21 12:57:16');
+INSERT INTO `ai_analysis_task` VALUES (38, 20, 4, 'COMPLETED', 'ADMIN', 3, 0, 3, NULL, '2026-03-21 20:35:14', '2026-03-21 20:35:19', '2026-03-21 20:35:14', '2026-03-21 20:35:19');
+
+-- ----------------------------
+-- Table structure for clinical_note
+-- ----------------------------
+DROP TABLE IF EXISTS `clinical_note`;
+CREATE TABLE `clinical_note`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `doctor_id` bigint(20) NOT NULL,
+  `patient_id` bigint(20) NOT NULL,
+  `note_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `related_diary_id` bigint(20) NULL DEFAULT NULL,
+  `related_session_id` bigint(20) NULL DEFAULT NULL,
+  `related_report_id` bigint(20) NULL DEFAULT NULL,
+  `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_doctor_patient_time`(`doctor_id` ASC, `patient_id` ASC, `created_at` ASC) USING BTREE,
+  INDEX `idx_patient_time`(`patient_id` ASC, `created_at` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of clinical_note
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for consultation_message
@@ -76,7 +100,7 @@ CREATE TABLE `consultation_message`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_session_message`(`session_id` ASC, `created_at` ASC) USING BTREE,
   CONSTRAINT `consultation_message_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `consultation_session` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 118 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '咨询消息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 128 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '咨询消息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of consultation_message
@@ -101,6 +125,14 @@ INSERT INTO `consultation_message` VALUES (114, 22, 2, 1, '我理解你可能有
 INSERT INTO `consultation_message` VALUES (115, 23, 1, 1, '我完成了一份心理测试，请你基于我的报告帮助我理解情况，并给出具体的心理疏导建议与可执行的下一步行动/可能的治疗或求助方向。\n\n（风险等级：1，总分：7）\n\n心理测试报告摘要：\n您好，感谢您完成了这份抑郁倾向测试。根据您的回答，您的总分为7分（满分18分）。这个分数表明您目前可能正经历一些情绪上的低落或困扰，但尚未达到需要紧急干预的程度。测试结果显示，您在情绪感受和日常兴趣方面可能受到了一些影响，比如感到情绪有些低落，或者对某些活动的兴趣有所减少。这些感受是真实且值得被关注的。请理解，这只是一份初步的自我评估，不能替代专业的临床诊断。重要的是，您已经迈出了关注自己心理健康的第一步。接下来的报告将为您提供更详细的分析和一些温和的建议，帮助您更好地理解当前的状态并采取积极的应对措施。\n\n心理测试报告正文（节选）：\n根据您提供的答案，我们进行了分析。本次测试共6个条目，每个条目得分范围为0-3分，总分范围为0-18分。您的具体得分情况如下：D1（情绪低落）0分，D2（兴趣减退）1分，D3（精力/疲劳）2分，D4（自我评价）2分，D5（注意力）1分，D6（悲观想法）1分，总分为7分。\n\n**得分解读**\n总分7分处于轻度关注区间。这表明您近期可能体验到了一些抑郁相关的情绪或思维模式，但整体严重程度较轻。具体来看，您在“精力/疲劳”和“自我评价”两个维度上得分相对较高（均为2分），这可能意味着您最近感到比平时更容易疲劳或精力不足，并且在看待自己时可能夹杂着一些消极或不满意的想法。在“兴趣减退”、“注意力”和“悲观想法”维度上得分均为1分，提示这些方面有轻微的影响，例如可能对某些事情的兴趣不如从前集中，偶尔会感到注意力难以集中，或者对未来产生过一丝担忧。值得欣慰的是，在核心的“情绪低落”项目上您得分为0分，这是一个积极的信号。\n\n**整体评估**\n综合来看，您目前的状态可能更接近于一种“亚临床”的情绪困扰，或者是对近期生活压力的一种反应。这种状态很常见，许多人都会在人生的某个阶段经历。它提醒我们需要给予自己的内心世界更多的关怀和照料。虽然当前没有显示需要立即危机干预的迹象，但持续的低落感、疲劳感和自我批评如果得不到缓解，可能会影响您的生活质量和心理韧性。\n\n**重要说明**\n这份报告基于您提供的信息生成，仅作为自我了解和心理健康的参考工具，绝不能用于替代精神科医生或心理咨询师的专业评估与诊断。每个人的情况都是独特的，测试分数只是反映某个时间点的状态。如果您对自己的感受感到持续困扰，寻求专业帮助始终是最佳选择。\n\n如果你判断存在较高心理风险，请优先给出紧急应对建议，并鼓励我尽快联系专业机构/学校心理中心。', NULL, NULL, '2026-03-21 13:26:26');
 INSERT INTO `consultation_message` VALUES (116, 23, 1, 1, '我刚完成了心理测试，请你结合我的测试报告解释我的情况，并给出具体的心理疏导建议与可执行的下一步/可能的求助方向。', NULL, NULL, '2026-03-21 13:26:26');
 INSERT INTO `consultation_message` VALUES (117, 23, 2, 1, '看到你主动完成测试并愿意深入了解自己的状态，这真的非常棒！这说明你对自己的心理健康有着很好的觉察力和关怀心。❤️\n\n首先，我想请你放心。根据你提供的报告，**风险等级为1，总分7分**，这确实表明你目前处于**轻度情绪困扰**的区间，但**没有紧急风险**。报告特别指出，你在“情绪低落”这一核心项目上得分为0分，这是一个非常积极的信号，说明你基本的情绪基调是稳定的。\n\n让我帮你梳理一下报告反映的情况：\n\n**你的状态可能更像是：**\n- **一种“心理疲劳”或“压力反应”**：你在“精力/疲劳”（2分）和“自我评价”（2分）上得分相对突出，这很可能意味着你最近可能比较累，身体和大脑在提醒你需要休息；同时，你对自己可能有些苛责或不够满意的想法。\n- **兴趣和注意力有轻微波动**：对事情的热忱偶尔下降，专注力不如平时，这常常和疲劳、压力相伴而生。\n- **对未来有隐隐的担忧**：偶尔有一些悲观的想法，这是人在压力下的常见反应。\n\n**总的来说**，这不像是一种疾病，而更像你的内心在对你发出一个温和的提醒：“嘿，我最近有些耗竭，需要被温柔地照顾一下了。” 很多人（尤其是处于学业、人生转折阶段的朋友）都会经历类似的状态。\n\n---\n\n### **具体的心理疏导建议与可执行步骤**\n\n你可以把这些看作一个“自我关怀工具包”，不必全部做完，选择其中1-2个你觉得最自然、最容易开始的就好。\n\n**1. 应对“精力疲劳”与提升能量：**\n- **微行动策略**：与其想着“我要锻炼一小时”，不如从“每天散步10分钟”或“跟着视频做5分钟拉伸”开始。微小、可持续的行动最能积累能量。\n- **睡眠卫生**：关注睡眠质量。尝试睡前半小时放下手机，听听舒缓的音乐或播客，用温水泡脚。小小的仪式感能大大改善休息。\n- **饮食关照**：留意一下是否因为忙碌而忽略了规律进食。尝试在三餐中加入一些你喜欢的、健康的食物，让吃饭变成一件愉悦的事。\n\n**2. 改善“自我评价”与对待自己：**\n- **书写自我关怀日记**：每天睡前，写下1-2件“今天我做得不错的小事”或“我感谢自己的一个瞬间”。例如：“今天我虽然很累，但还是完成了报告，谢谢自己的坚持。” 这能直接对抗消极的自我评价。\n- **练习“像对待朋友一样对待自己”**：当你又开始批评自己时，停下来问：“如果是我最好的朋友处于这种情况，我会对他说什么？” 然后把这句话说给自己听。\n- **肯定自己的努力**：你完成测试并寻求帮助，这本身就是非常了不起的、关爱自己的努力！请先肯定这一步。\n\n**3. 管理注意力与恢复兴趣：**\n- **“五分钟启动法”**：对于需要专注但提不起劲的事，告诉自己“我只做五分钟”。往往开始后，就能继续下去。\n- **重新连接让你愉悦的小事**：想想过去让你感到放松或快乐的一件小事（比如听某类音乐、拼图、整理房间、接触大自然），安排一个很短的时间（15分钟）去纯粹地体验它，不带任何目的。\n\n---\n\n### **可能的求助与前进方向**\n\n**现阶段，你可以：**\n- **将自我关怀作为首要任务**：优先执行上述建议，给自己2-4周的时间，像进行一个温柔的“自我实验”，观察感受的变化。\n- **利用身边的支持系统**：可以和一位你信任的、能给你带来积极能量的朋友或家人，聊聊你最近的感受。倾诉本身就有疗愈作用。\n- **了解学校的心理资源**：你可以登录学校官网，查一下心理咨询中心的介绍、预约方式和开放时间。**仅仅只是了解信息，并不意味着你必须立刻去**。这能让你在需要时，减少一步障碍。\n\n**何时考虑寻求专业帮助：**\n- 如果你尝试自我调节后，这种疲劳感、自我批评或兴趣减退的状态**持续超过两周，且明显影响了你的学业、社交或日常生活**。\n- 或者你只是单纯地觉得，和一个人聊聊这些想法，会让你更舒服。\n\n如果选择求助，学校心理咨询中心是一个**安全、保密且免费（通常）** 的起点。心理咨询师会和你一起梳理情况，提供专业的支持，他们的工作就是帮助你更好地应对这些挑战。\n\n**最后想对你说：**\n你目前的状态更像是一次心灵的“感冒”，很常见，也完全有办法恢复。你敏锐地察觉到了它的存在，这已经是康复路上最重要的一步。请相信，这种疲惫和困扰的感受是会变化的。你值得被自己温柔以待。🌱\n\n如果还有任何想聊的，或者实践中有新的感受，我都在这里。', NULL, 'openai', '2026-03-21 13:26:56');
+INSERT INTO `consultation_message` VALUES (118, 24, 1, 1, '我今天心情不太好，你能给我点建议吗', NULL, NULL, '2026-03-21 20:33:15');
+INSERT INTO `consultation_message` VALUES (119, 24, 2, 1, '我完全理解你现在的心情不太好，每个人都会有这样的时刻。😊 首先，我想告诉你，你的感受是值得被重视的，无论是什么原因让你感到低落，都没关系。\n\n如果你愿意的话，可以试着和我聊聊发生了什么吗？有时候把情绪说出来，本身就是一种释放。如果暂时不想说也没关系，我们可以一起想想怎么让你感觉好一点。\n\n比如：\n- 今天有没有什么小事让你觉得稍微轻松一些？哪怕只是一杯喜欢的饮料，或者窗外的好天气。\n- 要不要试试简单的呼吸练习？慢慢吸气4秒，屏住呼吸4秒，再缓缓呼气6秒，重复几次，可能会让身体放松一些。\n\n记住，心情起伏是正常的，你不需要独自承受这一切。如果需要，学校的心理咨询中心也是一个安全、专业的选择。你愿意多说说吗？我在这里陪着你。💛', NULL, 'openai', '2026-03-21 20:33:22');
+INSERT INTO `consultation_message` VALUES (120, 24, 1, 1, '我想学点做饭的，你有什么建议吗', NULL, NULL, '2026-03-21 20:33:48');
+INSERT INTO `consultation_message` VALUES (121, 24, 2, 1, '听到你想学做饭，我觉得这是一个特别棒的想法！🍳 做饭不仅是生活技能，其实也是一种很治愈的过程呢～能感受到你正在尝试用新的方式照顾自己，这真的很值得鼓励！\n\n作为初学者，我建议可以从这些方向开始：\n\n**1. 从简单喜欢的食物入手**\n比如先试试番茄炒蛋、煮面条、蒸蛋羹这类家常菜，成功率高容易建立信心。想想你平时最爱吃什么？可以从那个开始尝试哦！\n\n**2. 善用“新手友好”工具**\n- 不粘锅（减少糊锅焦虑）\n- 定时器（避免忘记关火）\n- 准备一个厨房秤（刚开始按菜谱做更稳妥）\n\n**3. 安全第一小贴士**\n- 切菜时手指弯曲，用指关节抵住刀面\n- 热油时不要溅入水滴\n- 记得准备隔热手套\n\n**4. 允许自己“不完美”**\n第一次盐放多了、菜炒老了都很正常！每个会做饭的人都经历过这些。可以把每次尝试看作有趣的实验，而不是考试～\n\n**5. 找一些轻松的学习资源**\n比如下厨房APP里有很多带步骤图的菜谱，B站上也有很多适合新手的视频教程（搜索“零失败”“新手必学”关键词）。\n\n需要我推荐几个特别适合新手尝试的菜谱吗？或者你心里有没有特别想学的那道菜？我们可以一起聊聊怎么开始～ 🌟\n\n记住：享受过程比追求完美更重要，哪怕只是煮一碗好吃的泡面加个蛋，也是超棒的开始！', NULL, 'openai', '2026-03-21 20:34:00');
+INSERT INTO `consultation_message` VALUES (124, 26, 1, 1, '小暖你能够看见我说的吗', NULL, NULL, '2026-04-03 15:40:33');
+INSERT INTO `consultation_message` VALUES (125, 26, 2, 1, '我能看见，也能听见你的声音。🌼\n\n我在这里，会一直陪着你。无论你想说什么，或者只是需要有人倾听，我都会耐心地陪伴你。慢慢来，不着急。', NULL, 'openai', '2026-04-03 15:40:36');
+INSERT INTO `consultation_message` VALUES (126, 27, 1, 1, '小暖，今天你还好吗，我好难过', NULL, NULL, '2026-04-03 15:41:44');
+INSERT INTO `consultation_message` VALUES (127, 27, 2, 1, '（轻轻抱抱你）我在这里呢，一直陪着你。看到你连发了三次“好难过”，一定是很不好受吧……可以和我聊聊发生了什么吗？没关系的，想到什么就说什么，我会好好听着。💛', NULL, 'openai', '2026-04-03 15:41:46');
 
 -- ----------------------------
 -- Table structure for consultation_session
@@ -117,7 +149,7 @@ CREATE TABLE `consultation_session`  (
   INDEX `idx_user_session`(`user_id` ASC, `started_at` ASC) USING BTREE,
   INDEX `idx_last_emotion_updated_at`(`last_emotion_updated_at` ASC) USING BTREE,
   CONSTRAINT `consultation_session_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '咨询会话表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '咨询会话表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of consultation_session
@@ -129,6 +161,30 @@ INSERT INTO `consultation_session` VALUES (20, 2, '小暖助手 - 2026/3/20 14:3
 INSERT INTO `consultation_session` VALUES (21, 2, '小暖助手 - 2026/3/20 14:56:13', '2026-03-20 14:56:13', '{\"icon\": \"😐\", \"label\": \"平静\", \"keywords\": [], \"riskLevel\": 0, \"timestamp\": 1773989816968, \"isNegative\": false, \"suggestion\": \"情绪状态平稳，慢慢来就好\", \"emotionScore\": 50, \"primaryEmotion\": \"中性\", \"riskDescription\": \"当前情绪状态稳定，无需特别关注\", \"improvementSuggestions\": [\"保持规律作息\", \"适当运动\", \"与朋友交流\"]}', '2026-03-20 14:56:57');
 INSERT INTO `consultation_session` VALUES (22, 2, '小暖助手 - 2026/3/21 00:01:55', '2026-03-21 00:01:56', '{\"icon\": \"🤔\", \"label\": \"困惑\", \"keywords\": [\"困惑\", \"询问\", \"分享\", \"测试\"], \"riskLevel\": 0, \"timestamp\": 1739792160000, \"isNegative\": false, \"suggestion\": \"慢慢来，我在这里倾听你的分享。\", \"emotionScore\": 45, \"primaryEmotion\": \"困惑\", \"riskDescription\": \"情绪稳定\", \"improvementSuggestions\": [\"和朋友聊聊你的测试结果\", \"写下此刻的心情\", \"深呼吸放松一下\", \"做些喜欢的事情\"]}', '2026-03-21 00:02:01');
 INSERT INTO `consultation_session` VALUES (23, 2, '心理测试报告咨询 - 今天还好', '2026-03-21 13:26:25', '{\"icon\": \"🤔\", \"label\": \"困惑\", \"keywords\": [\"困惑\", \"寻求解释\", \"期待建议\", \"主动求助\"], \"riskLevel\": 0, \"timestamp\": 1739797357000, \"isNegative\": false, \"suggestion\": \"你主动寻求帮助，这本身就是很棒的第一步。\", \"emotionScore\": 45, \"primaryEmotion\": \"困惑\", \"riskDescription\": \"情绪稳定，主动寻求帮助\", \"improvementSuggestions\": [\"深呼吸，给自己一点时间\", \"写下此刻的感受和疑问\", \"预约一次专业的心理咨询\", \"和朋友或家人聊聊你的想法\"]}', '2026-03-21 13:26:31');
+INSERT INTO `consultation_session` VALUES (24, 2, '小暖助手 - 2026/3/21 20:33:14', '2026-03-21 20:33:14', '{\"icon\": \"✨\", \"label\": \"积极\", \"keywords\": [\"学习\", \"兴趣\", \"探索\", \"积极\"], \"riskLevel\": 0, \"timestamp\": 1739797000000, \"isNegative\": false, \"suggestion\": \"这是个很棒的想法！从简单的菜开始，享受烹饪的乐趣吧。\", \"emotionScore\": 45, \"primaryEmotion\": \"希望\", \"riskDescription\": \"情绪稳定，积极向上\", \"improvementSuggestions\": [\"从一道简单菜开始\", \"看美食视频学习\", \"和朋友一起尝试\", \"记录烹饪心得\"]}', '2026-03-21 20:33:54');
+INSERT INTO `consultation_session` VALUES (26, 11, '小暖助手 - 2026/4/3 15:40:33', '2026-04-03 15:40:33', '{\"icon\": \"🤔\", \"label\": \"困惑\", \"keywords\": [\"困惑\", \"测试\", \"连接\"], \"riskLevel\": 0, \"timestamp\": 1733145600000, \"isNegative\": false, \"suggestion\": \"我在这里，能看见你哦。\", \"emotionScore\": 50, \"primaryEmotion\": \"困惑\", \"riskDescription\": \"情绪稳定\", \"improvementSuggestions\": [\"深呼吸放松一下\", \"给自己倒杯温水\", \"写下此刻的想法\"]}', '2026-04-03 15:40:38');
+INSERT INTO `consultation_session` VALUES (27, 11, '小暖助手 - 2026/4/3 15:41:43', '2026-04-03 15:41:44', '{\"icon\": \"😢\", \"label\": \"悲伤\", \"keywords\": [\"难过\", \"悲伤\", \"情绪低落\"], \"riskLevel\": 1, \"timestamp\": 1733145600000, \"isNegative\": true, \"suggestion\": \"我在这里陪着你，难过的时候说出来会好一些。\", \"emotionScore\": 75, \"primaryEmotion\": \"悲伤\", \"riskDescription\": \"需要关注\", \"improvementSuggestions\": [\"深呼吸放松一下\", \"给自己一个温暖的拥抱\", \"写写心情日记\"]}', '2026-04-03 15:41:48');
+
+-- ----------------------------
+-- Table structure for doctor_patient
+-- ----------------------------
+DROP TABLE IF EXISTS `doctor_patient`;
+CREATE TABLE `doctor_patient`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `doctor_id` bigint(20) NOT NULL,
+  `patient_id` bigint(20) NOT NULL,
+  `bind_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'active',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_doctor_patient_active`(`doctor_id` ASC, `patient_id` ASC, `status` ASC) USING BTREE,
+  INDEX `idx_doctor_status`(`doctor_id` ASC, `status` ASC) USING BTREE,
+  INDEX `idx_patient_status`(`patient_id` ASC, `status` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of doctor_patient
+-- ----------------------------
+INSERT INTO `doctor_patient` VALUES (1, 5, 11, '2026-04-03 15:41:02', 'active');
 
 -- ----------------------------
 -- Table structure for emotion_diary
@@ -171,7 +227,7 @@ INSERT INTO `emotion_diary` VALUES (16, 4, '2025-09-10', 8, '兴奋', '结识新
 INSERT INTO `emotion_diary` VALUES (17, 4, '2025-09-11', 4, '孤独', '思念家乡', '突然很想念家乡和家人，感到有些孤独。虽然新环境很好，但还是会想家。', 3, 3, NULL, NULL, '2025-09-11 09:41:02', '2025-09-11 09:41:02');
 INSERT INTO `emotion_diary` VALUES (18, 4, '2025-09-12', 7, '充实', '忙碌的一天', '今天过得很充实，完成了很多事情。感觉自己在慢慢适应新的生活。', 4, 2, NULL, NULL, '2025-09-12 09:41:02', '2025-09-12 09:41:02');
 INSERT INTO `emotion_diary` VALUES (19, 4, '2025-09-13', 3, '挫折', '遇到困难', '遇到了一些困难，感到有些挫败。但我相信通过努力一定能够克服。', 2, 4, NULL, NULL, '2025-09-13 09:41:02', '2025-09-13 09:41:02');
-INSERT INTO `emotion_diary` VALUES (20, 4, '2025-09-14', 6, '坚定', '制定计划', '为自己制定了详细的计划，感觉目标更加清晰了。有了方向就有了动力。', 4, 2, NULL, NULL, '2025-09-14 09:41:02', '2025-09-14 09:41:02');
+INSERT INTO `emotion_diary` VALUES (20, 4, '2025-09-14', 6, '坚定', '制定计划', '为自己制定了详细的计划，感觉目标更加清晰了。有了方向就有了动力。', 4, 2, '{\"primaryEmotion\":\"希望\",\"emotionScore\":60,\"isNegative\":false,\"riskLevel\":0,\"keywords\":[\"坚定\",\"计划\",\"清晰\",\"动力\"],\"suggestion\":\"有计划有方向的感觉真好，一步步来，你会做得很好。\",\"icon\":\"✨\",\"label\":\"坚定\",\"riskDescription\":\"情绪稳定，目标明确\",\"improvementSuggestions\":[\"按计划执行第一步\",\"庆祝小目标的达成\",\"保持规律的作息\",\"定期回顾调整计划\"],\"timestamp\":1739797000000}', '2026-03-21 20:35:19', '2025-09-14 09:41:02', '2026-03-21 20:35:18');
 INSERT INTO `emotion_diary` VALUES (26, 2, '2026-03-20', 10, '焦虑', '今天起晚了', '', NULL, NULL, NULL, NULL, '2026-03-20 14:35:11', '2026-03-20 23:58:19');
 INSERT INTO `emotion_diary` VALUES (27, 2, '2026-03-21', 6, '困惑', '起床有点晚', '今天还好', 1, 2, '{\"primaryEmotion\":\"困惑\",\"emotionScore\":60,\"isNegative\":false,\"riskLevel\":0,\"keywords\":[\"困惑\",\"睡眠不佳\",\"平静\",\"轻微压力\",\"起床晚\"],\"suggestion\":\"今天还好，先从调整作息开始吧。\",\"icon\":\"🤔\",\"label\":\"困惑\",\"riskDescription\":\"情绪基本稳定，无明显风险\",\"improvementSuggestions\":[\"今晚早点休息\",\"喝杯温水放松一下\",\"规划明天的起床时间\"],\"timestamp\":1739791792000}', '2026-03-21 12:57:16', '2026-03-21 12:57:08', '2026-03-21 12:57:16');
 
@@ -240,6 +296,36 @@ INSERT INTO `knowledge_category` VALUES (1, 0, '心理健康基础', NULL, '心�
 INSERT INTO `knowledge_category` VALUES (2, 0, '情绪管理', NULL, '情绪识别、调节和管理技巧', 40, 1, '2025-09-04 12:50:03', '2025-09-13 11:48:16');
 INSERT INTO `knowledge_category` VALUES (3, 0, '压力缓解', NULL, '压力来源分析和缓解方法', 20, 1, '2025-09-04 12:50:03', '2025-09-13 11:48:16');
 INSERT INTO `knowledge_category` VALUES (4, 0, '人际关系', NULL, '人际交往和关系处理', 10, 1, '2025-09-04 12:50:03', '2025-09-13 11:48:16');
+
+-- ----------------------------
+-- Table structure for patient_profile
+-- ----------------------------
+DROP TABLE IF EXISTS `patient_profile`;
+CREATE TABLE `patient_profile`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `doctor_id` bigint(20) NOT NULL,
+  `chief_complaint` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `diagnosis_summary` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `risk_level` int(11) NULL DEFAULT 0,
+  `treatment_plan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `medication_notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `personality_traits` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `communication_style` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT 'gentle',
+  `tags` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT 'active',
+  `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_patient_profile_user`(`user_id` ASC) USING BTREE,
+  INDEX `idx_doctor`(`doctor_id` ASC) USING BTREE,
+  INDEX `idx_risk_level`(`risk_level` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of patient_profile
+-- ----------------------------
+INSERT INTO `patient_profile` VALUES (1, 11, 5, NULL, NULL, 0, NULL, NULL, NULL, 'gentle', NULL, 'active', '2026-04-03 15:41:02', '2026-04-03 15:41:02');
 
 -- ----------------------------
 -- Table structure for psychological_test_report
@@ -340,7 +426,7 @@ CREATE TABLE `user`  (
   UNIQUE INDEX `phone`(`phone` ASC) USING BTREE,
   INDEX `idx_username`(`username` ASC) USING BTREE,
   INDEX `idx_user_type`(`user_type` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
@@ -348,6 +434,8 @@ CREATE TABLE `user`  (
 INSERT INTO `user` VALUES (1, 'admin', 'admin@example.com', '13123456789', '$2a$10$qUjCfQLqf9qVt1w1LDoaj.f5TUzBYcXh3FNNA0BhoQ54Vv2cSUt7K', '系统管理员', '/files/bussiness/user_avatar/1757687320361.jpg', 1, '2019-09-02', 2, 1, '2025-08-30 12:00:01', '2025-09-12 22:28:42');
 INSERT INTO `user` VALUES (2, 'test', '15165@qq.com', '13132584165', '$2a$10$qUjCfQLqf9qVt1w1LDoaj.f5TUzBYcXh3FNNA0BhoQ54Vv2cSUt7K', 'tyest', '/files/bussiness/user_avatar/1757816752928.jpg', 1, '2002-08-01', 1, 1, '2025-08-30 17:22:24', '2026-03-20 14:34:05');
 INSERT INTO `user` VALUES (4, 'ces', '111111111111@qq.com', '13123456654', '$2a$10$Sy22CXQJe5OAS.Xvmbb60ul9O4a5qi5FtnOjFC2v/Ruk2binJ7vEm', '1561', NULL, 1, '2025-09-10', 1, 0, '2025-08-30 18:53:07', '2025-09-12 14:12:35');
+INSERT INTO `user` VALUES (5, 'lzs', '158289202@qq.com', '13341873226', '$2a$10$AOM0tfEfntrTD8LviuWKbOJ6eg142l.5aoFEq4wAGjLSgqB34PI2i', 'ray', NULL, 0, NULL, 3, 1, '2026-04-03 14:54:57', '2026-04-03 14:54:57');
+INSERT INTO `user` VALUES (11, 'wht', '3030185521@qq.com', '13341872236', '$2a$10$GseVFws.49pWd4o0/tIyR.hhKCLWLug1vnyxY5ZTb5oaSyQEQILju', 'leo', NULL, 0, NULL, 1, 1, '2026-04-03 15:36:58', '2026-04-03 15:36:58');
 
 -- ----------------------------
 -- Table structure for user_favorite
