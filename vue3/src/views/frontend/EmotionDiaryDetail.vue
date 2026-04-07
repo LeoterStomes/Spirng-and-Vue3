@@ -6,7 +6,7 @@
         <div class="header-content">
           <div class="header-left">
             <div class="breathing-animation">
-              <i class="fas fa-heart"></i>
+              <i class="fas fa-heart" />
             </div>
             <div class="header-text">
               <h2>情绪日记详情</h2>
@@ -14,20 +14,35 @@
             </div>
           </div>
           <div class="header-actions">
-            <el-button @click="goBack" class="back-btn">
-              <i class="fas fa-arrow-left"></i>
+            <el-button
+              class="back-btn"
+              @click="goBack"
+            >
+              <i class="fas fa-arrow-left" />
               返回列表
             </el-button>
-            <el-button type="primary" @click="enterEditMode" v-if="!isEditMode && diaryData">
-              <i class="fas fa-edit"></i>
+            <el-button
+              v-if="!isEditMode && diaryData"
+              type="primary"
+              @click="enterEditMode"
+            >
+              <i class="fas fa-edit" />
               编辑
             </el-button>
-            <el-button type="success" @click="saveDiary" v-if="isEditMode" :loading="saving">
-              <i class="fas fa-save"></i>
+            <el-button
+              v-if="isEditMode"
+              type="success"
+              :loading="saving"
+              @click="saveDiary"
+            >
+              <i class="fas fa-save" />
               保存
             </el-button>
-            <el-button @click="cancelEdit" v-if="isEditMode">
-              <i class="fas fa-times"></i>
+            <el-button
+              v-if="isEditMode"
+              @click="cancelEdit"
+            >
+              <i class="fas fa-times" />
               取消
             </el-button>
           </div>
@@ -36,364 +51,495 @@
     </section>
 
     <!-- 加载状态 -->
-    <div v-if="loading" class="loading-container">
-      <el-skeleton :rows="8" animated />
+    <div
+      v-if="loading"
+      class="loading-container"
+    >
+      <el-skeleton
+        :rows="8"
+        animated
+      />
     </div>
 
     <!-- 详情内容 -->
-    <div v-else-if="diaryData" class="detail-content">
+    <div
+      v-else-if="diaryData"
+      class="detail-content"
+    >
       <div class="content-container">
         <div class="content-layout">
           <!-- 左侧：日记详情 -->
           <div class="diary-detail-section">
-          <!-- 情绪与生活指标综合卡片 -->
-          <div class="detail-card emotion-summary-card">
-            <h3 class="card-title">
-              <i class="fas fa-chart-bar"></i>
-              情绪与生活指标
-            </h3>
+            <!-- 情绪与生活指标综合卡片 -->
+            <div class="detail-card emotion-summary-card">
+              <h3 class="card-title">
+                <i class="fas fa-chart-bar" />
+                情绪与生活指标
+              </h3>
             
-            <!-- 情绪评分区域 -->
-            <div class="emotion-section">
-              <h4 class="section-title">今日情绪评分</h4>
-              <div class="mood-score-display">
-                <div class="score-circle" :class="getMoodClass(diaryData.moodScore)">
-                  {{ diaryData.moodScore }}
-                </div>
-                <div class="score-info">
-                  <div class="score-text">{{ getMoodDescription(diaryData.moodScore) }}</div>
-                  <div class="score-range">评分范围：1-10分</div>
-                </div>
-              </div>
-              
-              <!-- 编辑模式下的评分选择器 -->
-              <div v-if="isEditMode" class="mood-edit-section">
-                <div class="mood-selectors">
-                  <span class="mood-range-label">很糟糕</span>
-                  <div class="mood-buttons">
-                    <div
-                      v-for="score in 10"
-                      :key="score"
-                      class="mood-selector"
-                      :class="{ selected: editForm.moodScore === score }"
-                      @click="editForm.moodScore = score"
-                    >
-                      {{ score }}
-                    </div>
-                  </div>
-                  <span class="mood-range-label">非常好</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- 主要情绪区域 -->
-            <div class="emotion-section">
-              <h4 class="section-title">主要情绪</h4>
-              <div class="emotion-display" v-if="!isEditMode">
-                <div class="emotion-tag" :style="{ color: getEmotionColor(diaryData.dominantEmotion) }">
-                  <i :class="getEmotionIcon(diaryData.dominantEmotion)"></i>
-                  {{ diaryData.dominantEmotion || '未记录' }}
-                </div>
-              </div>
-              <div v-else class="emotion-edit">
-                <div class="emotion-grid">
+              <!-- 情绪评分区域 -->
+              <div class="emotion-section">
+                <h4 class="section-title">
+                  今日情绪评分
+                </h4>
+                <div class="mood-score-display">
                   <div
-                    v-for="emotion in emotionOptions"
-                    :key="emotion.name"
-                    class="emotion-card"
-                    :class="{ selected: editForm.dominantEmotion === emotion.name }"
-                    @click="editForm.dominantEmotion = emotion.name"
+                    class="score-circle"
+                    :class="getMoodClass(diaryData.moodScore)"
                   >
-                    <i :class="emotion.icon" :style="{ color: emotion.color }"></i>
-                    <div class="emotion-name">{{ emotion.name }}</div>
+                    {{ diaryData.moodScore }}
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 生活指标区域 -->
-            <div class="emotion-section">
-              <h4 class="section-title">生活指标</h4>
-              <div class="metrics-grid">
-                <div class="metric-item">
-                  <div class="metric-label">睡眠质量</div>
-                  <div v-if="!isEditMode" class="metric-value">
-                    <div class="quality-display" :class="getQualityClass(diaryData.sleepQuality)">
-                      {{ getSleepQualityText(diaryData.sleepQuality) }}
+                  <div class="score-info">
+                    <div class="score-text">
+                      {{ getMoodDescription(diaryData.moodScore) }}
+                    </div>
+                    <div class="score-range">
+                      评分范围：1-10分
                     </div>
                   </div>
-                  <el-rate 
-                    v-else
-                    v-model="editForm.sleepQuality"
-                    :max="5"
-                    show-text
-                    :texts="['很差', '较差', '一般', '良好', '很好']"
-                  />
                 </div>
-                
-                <div class="metric-item">
-                  <div class="metric-label">压力水平</div>
-                  <div v-if="!isEditMode" class="metric-value">
-                    <div class="stress-display" :class="getStressClass(diaryData.stressLevel)">
-                      {{ getStressLevelText(diaryData.stressLevel) }}
-                    </div>
-                  </div>
-                  <el-rate 
-                    v-else
-                    v-model="editForm.stressLevel"
-                    :max="5"
-                    show-text
-                    :texts="['很低', '较低', '中等', '较高', '很高']"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 基本信息卡片 -->
-          <div class="detail-card">
-            <h3 class="card-title">
-              <i class="fas fa-calendar-day"></i>
-              基本信息
-            </h3>
-            <div class="basic-info">
-              <div class="info-row">
-                <span class="info-label">记录日期：</span>
-                <span class="info-value">{{ diaryData.diaryDate }}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">创建时间：</span>
-                <span class="info-value">{{ formatDateTime(diaryData.createdAt) }}</span>
-              </div>
-              <div class="info-row" v-if="diaryData.updatedAt !== diaryData.createdAt">
-                <span class="info-label">更新时间：</span>
-                <span class="info-value">{{ formatDateTime(diaryData.updatedAt) }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 详细内容 -->
-          <div class="detail-card">
-            <h3 class="card-title">
-              <i class="fas fa-edit"></i>
-              详细记录
-            </h3>
-            
-            <!-- 情绪触发因素 -->
-            <div class="content-section">
-              <h4 class="section-title">情绪触发因素</h4>
-              <div v-if="!isEditMode" class="content-text">
-                {{ diaryData.emotionTriggers || '暂无记录' }}
-              </div>
-              <el-input
-                v-else
-                v-model="editForm.emotionTriggers"
-                type="textarea"
-                :rows="3"
-                placeholder="今天什么事情影响了您的情绪？"
-                maxlength="1000"
-                show-word-limit
-              />
-            </div>
-
-            <!-- 今日感想 -->
-            <div class="content-section">
-              <h4 class="section-title">今日感想</h4>
-              <div v-if="!isEditMode" class="content-text diary-content">
-                <div v-if="diaryData.diaryContent" v-html="formatDiaryContent(diaryData.diaryContent)"></div>
-                <div v-else class="no-content">暂无记录</div>
-              </div>
-              <el-input
-                v-else
-                v-model="editForm.diaryContent"
-                type="textarea"
-                :rows="8"
-                placeholder="记录您今天的感受、想法和体验..."
-                maxlength="2000"
-                show-word-limit
-              />
-            </div>
-          </div>
-
-        </div>
-
-        <!-- 右侧：AI分析结果 -->
-        <div class="analysis-section">
-          <!-- AI情绪分析卡片 -->
-          <div class="detail-card ai-analysis-card">
-            <h3 class="card-title">
-              <i class="fas fa-brain"></i>
-              AI情绪分析
-              <div class="analysis-status">
-                <el-tag 
-                  v-if="diaryData.aiAnalysisStatus === 'PENDING'" 
-                  type="warning" 
-                  effect="light"
+              
+                <!-- 编辑模式下的评分选择器 -->
+                <div
+                  v-if="isEditMode"
+                  class="mood-edit-section"
                 >
-                  <i class="fas fa-clock"></i>
-                  分析中...
-                </el-tag>
-                <el-tag 
-                  v-else-if="diaryData.aiAnalysisStatus === 'COMPLETED'" 
-                  type="success" 
-                  effect="light"
-                >
-                  <i class="fas fa-check-circle"></i>
-                  已完成
-                </el-tag>
-                <el-tag 
-                  v-else-if="diaryData.aiAnalysisStatus === 'FAILED'" 
-                  type="danger" 
-                  effect="light"
-                >
-                  <i class="fas fa-exclamation-circle"></i>
-                  分析失败
-                </el-tag>
-              </div>
-            </h3>
-
-            <div class="ai-analysis-content">
-              <!-- 加载中状态 -->
-              <div v-if="aiAnalysisLoading" class="analysis-loading">
-                <el-skeleton :rows="3" animated />
-              </div>
-
-              <!-- AI分析结果 -->
-              <div v-else-if="aiAnalysis && diaryData.aiAnalysisStatus === 'COMPLETED'" class="analysis-result">
-                <!-- 情绪识别 -->
-                <div class="analysis-section-item">
-                  <h4 class="analysis-title">情绪识别</h4>
-                  <div class="emotion-analysis">
-                    <div class="primary-emotion">
-                      <span class="emotion-label">主要情绪：</span>
-                      <div class="emotion-value-wrapper">
-                        <i :class="getEmotionIcon(aiAnalysis.primaryEmotion)" 
-                           :style="{ color: getEmotionColor(aiAnalysis.primaryEmotion) }"
-                           class="emotion-icon"></i>
-                        <span class="emotion-value">{{ aiAnalysis.primaryEmotion }}</span>
+                  <div class="mood-selectors">
+                    <span class="mood-range-label">很糟糕</span>
+                    <div class="mood-buttons">
+                      <div
+                        v-for="score in 10"
+                        :key="score"
+                        class="mood-selector"
+                        :class="{ selected: editForm.moodScore === score }"
+                        @click="editForm.moodScore = score"
+                      >
+                        {{ score }}
                       </div>
                     </div>
-                    <div class="emotion-intensity">
-                      <span class="emotion-label">情绪强度：</span>
-                      <el-progress 
-                        :percentage="aiAnalysis.emotionScore" 
-                        :color="getIntensityColor(aiAnalysis.emotionScore)"
-                        :show-text="false"
+                    <span class="mood-range-label">非常好</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 主要情绪区域 -->
+              <div class="emotion-section">
+                <h4 class="section-title">
+                  主要情绪
+                </h4>
+                <div
+                  v-if="!isEditMode"
+                  class="emotion-display"
+                >
+                  <div
+                    class="emotion-tag"
+                    :style="{ color: getEmotionColor(diaryData.dominantEmotion) }"
+                  >
+                    <i :class="getEmotionIcon(diaryData.dominantEmotion)" />
+                    {{ diaryData.dominantEmotion || '未记录' }}
+                  </div>
+                </div>
+                <div
+                  v-else
+                  class="emotion-edit"
+                >
+                  <div class="emotion-grid">
+                    <div
+                      v-for="emotion in emotionOptions"
+                      :key="emotion.name"
+                      class="emotion-card"
+                      :class="{ selected: editForm.dominantEmotion === emotion.name }"
+                      @click="editForm.dominantEmotion = emotion.name"
+                    >
+                      <i
+                        :class="emotion.icon"
+                        :style="{ color: emotion.color }"
                       />
-                      <span class="intensity-text">{{ aiAnalysis.emotionScore }}/100</span>
+                      <div class="emotion-name">
+                        {{ emotion.name }}
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <!-- 风险评估 -->
-                <div class="analysis-section-item">
-                  <h4 class="analysis-title">风险评估</h4>
-                  <div class="risk-assessment">
-                    <el-tag 
-                      :type="getRiskTagType(aiAnalysis.riskLevel)" 
-                      class="risk-tag"
+              <!-- 生活指标区域 -->
+              <div class="emotion-section">
+                <h4 class="section-title">
+                  生活指标
+                </h4>
+                <div class="metrics-grid">
+                  <div class="metric-item">
+                    <div class="metric-label">
+                      睡眠质量
+                    </div>
+                    <div
+                      v-if="!isEditMode"
+                      class="metric-value"
                     >
-                      {{ getRiskLevelText(aiAnalysis.riskLevel) }}
-                    </el-tag>
-                    <div class="risk-description" v-if="aiAnalysis.riskDescription">
-                      {{ aiAnalysis.riskDescription }}
+                      <div
+                        class="quality-display"
+                        :class="getQualityClass(diaryData.sleepQuality)"
+                      >
+                        {{ getSleepQualityText(diaryData.sleepQuality) }}
+                      </div>
                     </div>
+                    <el-rate 
+                      v-else
+                      v-model="editForm.sleepQuality"
+                      :max="5"
+                      show-text
+                      :texts="['很差', '较差', '一般', '良好', '很好']"
+                    />
                   </div>
-                </div>
-
-                <!-- AI建议 -->
-                <div class="analysis-section-item" v-if="aiAnalysis.suggestion">
-                  <h4 class="analysis-title">AI建议</h4>
-                  <div class="suggestions-list">
-                    <div class="suggestion-item">
-                      <i class="fas fa-lightbulb"></i>
-                      {{ aiAnalysis.suggestion }}
+                
+                  <div class="metric-item">
+                    <div class="metric-label">
+                      压力水平
                     </div>
-                  </div>
-                </div>
-
-                <!-- 改善建议 -->
-                <div class="analysis-section-item" v-if="aiAnalysis.improvementSuggestions">
-                  <h4 class="analysis-title">改善建议</h4>
-                  <div class="improvement-suggestions">
-                    <div 
-                      v-for="(suggestion, index) in aiAnalysis.improvementSuggestions" 
-                      :key="index"
-                      class="improvement-item"
+                    <div
+                      v-if="!isEditMode"
+                      class="metric-value"
                     >
-                      <i class="fas fa-arrow-up"></i>
-                      {{ suggestion }}
+                      <div
+                        class="stress-display"
+                        :class="getStressClass(diaryData.stressLevel)"
+                      >
+                        {{ getStressLevelText(diaryData.stressLevel) }}
+                      </div>
                     </div>
+                    <el-rate 
+                      v-else
+                      v-model="editForm.stressLevel"
+                      :max="5"
+                      show-text
+                      :texts="['很低', '较低', '中等', '较高', '很高']"
+                    />
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- 分析失败状态 -->
-              <div v-else-if="diaryData.aiAnalysisStatus === 'FAILED'" class="analysis-failed">
-                <div class="failed-content">
-                  <i class="fas fa-exclamation-triangle"></i>
-                  <p>AI分析失败，请稍后重试</p>
-                  <el-button type="primary" @click="triggerAnalysis">
-                    重新分析
-                  </el-button>
+            <!-- 基本信息卡片 -->
+            <div class="detail-card">
+              <h3 class="card-title">
+                <i class="fas fa-calendar-day" />
+                基本信息
+              </h3>
+              <div class="basic-info">
+                <div class="info-row">
+                  <span class="info-label">记录日期：</span>
+                  <span class="info-value">{{ diaryData.diaryDate }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">创建时间：</span>
+                  <span class="info-value">{{ formatDateTime(diaryData.createdAt) }}</span>
+                </div>
+                <div
+                  v-if="diaryData.updatedAt !== diaryData.createdAt"
+                  class="info-row"
+                >
+                  <span class="info-label">更新时间：</span>
+                  <span class="info-value">{{ formatDateTime(diaryData.updatedAt) }}</span>
                 </div>
               </div>
+            </div>
 
-              <!-- 分析中状态 -->
-              <div v-else-if="diaryData.aiAnalysisStatus === 'PENDING'" class="analysis-pending">
-                <div class="pending-content">
-                  <i class="fas fa-clock"></i>
-                  <p>AI正在分析您的情绪日记...</p>
-                  <p class="pending-tip">通常需要1-2分钟，请稍候</p>
-                  <el-button @click="refreshAnalysisStatus" :loading="aiAnalysisLoading">
-                    刷新状态
-                  </el-button>
+            <!-- 详细内容 -->
+            <div class="detail-card">
+              <h3 class="card-title">
+                <i class="fas fa-edit" />
+                详细记录
+              </h3>
+            
+              <!-- 情绪触发因素 -->
+              <div class="content-section">
+                <h4 class="section-title">
+                  情绪触发因素
+                </h4>
+                <div
+                  v-if="!isEditMode"
+                  class="content-text"
+                >
+                  {{ diaryData.emotionTriggers || '暂无记录' }}
                 </div>
+                <el-input
+                  v-else
+                  v-model="editForm.emotionTriggers"
+                  type="textarea"
+                  :rows="3"
+                  placeholder="今天什么事情影响了您的情绪？"
+                  maxlength="1000"
+                  show-word-limit
+                />
               </div>
 
-              <!-- 无分析数据 -->
-              <div v-else class="no-analysis">
-                <div class="no-analysis-content">
-                  <i class="fas fa-robot"></i>
-                  <p>暂无AI分析数据</p>
-                  <el-button type="primary" @click="triggerAnalysis">
-                    开始分析
-                  </el-button>
+              <!-- 今日感想 -->
+              <div class="content-section">
+                <h4 class="section-title">
+                  今日感想
+                </h4>
+                <div
+                  v-if="!isEditMode"
+                  class="content-text diary-content"
+                >
+                  <div
+                    v-if="diaryData.diaryContent"
+                    v-html="formatDiaryContent(diaryData.diaryContent)"
+                  />
+                  <div
+                    v-else
+                    class="no-content"
+                  >
+                    暂无记录
+                  </div>
                 </div>
+                <el-input
+                  v-else
+                  v-model="editForm.diaryContent"
+                  type="textarea"
+                  :rows="8"
+                  placeholder="记录您今天的感受、想法和体验..."
+                  maxlength="2000"
+                  show-word-limit
+                />
               </div>
             </div>
           </div>
 
-          <!-- 操作提示卡片 -->
-          <div class="detail-card tips-card">
-            <h3 class="card-title">
-              <i class="fas fa-info-circle"></i>
-              温馨提示
-            </h3>
-            <div class="tips-content">
-              <div class="tip-item">
-                <i class="fas fa-heart"></i>
-                记录情绪有助于提高自我觉察能力
+          <!-- 右侧：AI分析结果 -->
+          <div class="analysis-section">
+            <!-- AI情绪分析卡片 -->
+            <div class="detail-card ai-analysis-card">
+              <h3 class="card-title">
+                <i class="fas fa-brain" />
+                AI情绪分析
+                <div class="analysis-status">
+                  <el-tag 
+                    v-if="diaryData.aiAnalysisStatus === 'PENDING'" 
+                    type="warning" 
+                    effect="light"
+                  >
+                    <i class="fas fa-clock" />
+                    分析中...
+                  </el-tag>
+                  <el-tag 
+                    v-else-if="diaryData.aiAnalysisStatus === 'COMPLETED'" 
+                    type="success" 
+                    effect="light"
+                  >
+                    <i class="fas fa-check-circle" />
+                    已完成
+                  </el-tag>
+                  <el-tag 
+                    v-else-if="diaryData.aiAnalysisStatus === 'FAILED'" 
+                    type="danger" 
+                    effect="light"
+                  >
+                    <i class="fas fa-exclamation-circle" />
+                    分析失败
+                  </el-tag>
+                </div>
+              </h3>
+
+              <div class="ai-analysis-content">
+                <!-- 加载中状态 -->
+                <div
+                  v-if="aiAnalysisLoading"
+                  class="analysis-loading"
+                >
+                  <el-skeleton
+                    :rows="3"
+                    animated
+                  />
+                </div>
+
+                <!-- AI分析结果 -->
+                <div
+                  v-else-if="aiAnalysis && diaryData.aiAnalysisStatus === 'COMPLETED'"
+                  class="analysis-result"
+                >
+                  <!-- 情绪识别 -->
+                  <div class="analysis-section-item">
+                    <h4 class="analysis-title">
+                      情绪识别
+                    </h4>
+                    <div class="emotion-analysis">
+                      <div class="primary-emotion">
+                        <span class="emotion-label">主要情绪：</span>
+                        <div class="emotion-value-wrapper">
+                          <i
+                            :class="getEmotionIcon(aiAnalysis.primaryEmotion)" 
+                            :style="{ color: getEmotionColor(aiAnalysis.primaryEmotion) }"
+                            class="emotion-icon"
+                          />
+                          <span class="emotion-value">{{ aiAnalysis.primaryEmotion }}</span>
+                        </div>
+                      </div>
+                      <div class="emotion-intensity">
+                        <span class="emotion-label">情绪强度：</span>
+                        <el-progress 
+                          :percentage="aiAnalysis.emotionScore" 
+                          :color="getIntensityColor(aiAnalysis.emotionScore)"
+                          :show-text="false"
+                        />
+                        <span class="intensity-text">{{ aiAnalysis.emotionScore }}/100</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 风险评估 -->
+                  <div class="analysis-section-item">
+                    <h4 class="analysis-title">
+                      风险评估
+                    </h4>
+                    <div class="risk-assessment">
+                      <el-tag 
+                        :type="getRiskTagType(aiAnalysis.riskLevel)" 
+                        class="risk-tag"
+                      >
+                        {{ getRiskLevelText(aiAnalysis.riskLevel) }}
+                      </el-tag>
+                      <div
+                        v-if="aiAnalysis.riskDescription"
+                        class="risk-description"
+                      >
+                        {{ aiAnalysis.riskDescription }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- AI建议 -->
+                  <div
+                    v-if="aiAnalysis.suggestion"
+                    class="analysis-section-item"
+                  >
+                    <h4 class="analysis-title">
+                      AI建议
+                    </h4>
+                    <div class="suggestions-list">
+                      <div class="suggestion-item">
+                        <i class="fas fa-lightbulb" />
+                        {{ aiAnalysis.suggestion }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 改善建议 -->
+                  <div
+                    v-if="aiAnalysis.improvementSuggestions"
+                    class="analysis-section-item"
+                  >
+                    <h4 class="analysis-title">
+                      改善建议
+                    </h4>
+                    <div class="improvement-suggestions">
+                      <div 
+                        v-for="(suggestion, index) in aiAnalysis.improvementSuggestions" 
+                        :key="index"
+                        class="improvement-item"
+                      >
+                        <i class="fas fa-arrow-up" />
+                        {{ suggestion }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 分析失败状态 -->
+                <div
+                  v-else-if="diaryData.aiAnalysisStatus === 'FAILED'"
+                  class="analysis-failed"
+                >
+                  <div class="failed-content">
+                    <i class="fas fa-exclamation-triangle" />
+                    <p>AI分析失败，请稍后重试</p>
+                    <el-button
+                      type="primary"
+                      @click="triggerAnalysis"
+                    >
+                      重新分析
+                    </el-button>
+                  </div>
+                </div>
+
+                <!-- 分析中状态 -->
+                <div
+                  v-else-if="diaryData.aiAnalysisStatus === 'PENDING'"
+                  class="analysis-pending"
+                >
+                  <div class="pending-content">
+                    <i class="fas fa-clock" />
+                    <p>AI正在分析您的情绪日记...</p>
+                    <p class="pending-tip">
+                      通常需要1-2分钟，请稍候
+                    </p>
+                    <el-button
+                      :loading="aiAnalysisLoading"
+                      @click="refreshAnalysisStatus"
+                    >
+                      刷新状态
+                    </el-button>
+                  </div>
+                </div>
+
+                <!-- 无分析数据 -->
+                <div
+                  v-else
+                  class="no-analysis"
+                >
+                  <div class="no-analysis-content">
+                    <i class="fas fa-robot" />
+                    <p>暂无AI分析数据</p>
+                    <el-button
+                      type="primary"
+                      @click="triggerAnalysis"
+                    >
+                      开始分析
+                    </el-button>
+                  </div>
+                </div>
               </div>
-              <div class="tip-item">
-                <i class="fas fa-chart-line"></i>
-                定期回顾有助于发现情绪规律
-              </div>
-              <div class="tip-item">
-                <i class="fas fa-user-friends"></i>
-                如需专业帮助，请及时寻求支持
+            </div>
+
+            <!-- 操作提示卡片 -->
+            <div class="detail-card tips-card">
+              <h3 class="card-title">
+                <i class="fas fa-info-circle" />
+                温馨提示
+              </h3>
+              <div class="tips-content">
+                <div class="tip-item">
+                  <i class="fas fa-heart" />
+                  记录情绪有助于提高自我觉察能力
+                </div>
+                <div class="tip-item">
+                  <i class="fas fa-chart-line" />
+                  定期回顾有助于发现情绪规律
+                </div>
+                <div class="tip-item">
+                  <i class="fas fa-user-friends" />
+                  如需专业帮助，请及时寻求支持
+                </div>
               </div>
             </div>
           </div>
-        </div>
         </div>
       </div>
     </div>
 
     <!-- 错误状态 -->
-    <div v-else class="error-state">
+    <div
+      v-else
+      class="error-state"
+    >
       <el-empty description="日记不存在或已被删除">
-        <el-button type="primary" @click="goBack">返回列表</el-button>
+        <el-button
+          type="primary"
+          @click="goBack"
+        >
+          返回列表
+        </el-button>
       </el-empty>
     </div>
   </div>
@@ -410,6 +556,7 @@ import {
   triggerAiEmotionAnalysis 
 } from '@/api/emotionDiary'
 import { formatDateTime } from '@/utils/dateUtils'
+import { sanitizeTextWithBreaks } from '@/utils/sanitizeHtml'
 
 const route = useRoute()
 const router = useRouter()
@@ -696,7 +843,7 @@ const getEmotionColor = (emotion) => {
 }
 
 const formatDiaryContent = (content) => {
-  return content.replace(/\n/g, '<br>')
+  return sanitizeTextWithBreaks(content)
 }
 
 const getSleepQualityText = (quality) => {
@@ -795,7 +942,7 @@ onMounted(() => {
 .header-content .breathing-animation {
   font-size: 2.5rem;
   animation: breathing 4s ease-in-out infinite;
-  color: #7ED321;
+  color: #4f46e5;
 }
 
 @keyframes breathing {
@@ -898,10 +1045,11 @@ onMounted(() => {
 .loading-container, .error-state {
   max-width: 1200px;
   margin: 0 auto;
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 2rem;
   padding: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .diary-detail-section, .analysis-section {
@@ -912,10 +1060,12 @@ onMounted(() => {
 
 /* 卡片样式 */
 .detail-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 1.5rem;
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  backdrop-filter: blur(8px);
 }
 
 /* 情绪综合卡片样式 */
@@ -950,7 +1100,7 @@ onMounted(() => {
   content: '';
   width: 4px;
   height: 16px;
-  background: #7ED321;
+  background: #5b7bff;
   border-radius: 2px;
 }
 
@@ -966,7 +1116,7 @@ onMounted(() => {
 }
 
 .card-title i {
-  color: #7ED321;
+  color: #4f46e5;
   font-size: 1.25rem;
 }
 

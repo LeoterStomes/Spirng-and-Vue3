@@ -4,11 +4,16 @@
     <div class="page-header">
       <div class="header-content">
         <div class="header-left">
-          <h2 class="page-title">情绪日记管理</h2>
+          <h2 class="page-title">
+            情绪日记管理
+          </h2>
         </div>
         <div class="header-actions">
-          <el-button type="info" @click="handleRefresh">
-            <i class="fas fa-sync-alt"></i>刷新
+          <el-button
+            type="info"
+            @click="handleRefresh"
+          >
+            <i class="fas fa-sync-alt" />刷新
           </el-button>
         </div>
       </div>
@@ -18,12 +23,12 @@
     <!-- 筛选和搜索 -->
     <div class="search-area">
       <el-form 
-        :model="searchForm" 
         ref="searchFormRef" 
+        :model="searchForm" 
         inline 
         label-width="80px"
-        @submit.prevent="handleSearch"
         class="search-form"
+        @submit.prevent="handleSearch"
       >
         <el-form-item label="用户搜索">
           <el-input 
@@ -32,7 +37,7 @@
             clearable
           >
             <template #prefix>
-              <i class="fas fa-search"></i>
+              <i class="fas fa-search" />
             </template>
           </el-input>
         </el-form-item>
@@ -60,29 +65,78 @@
         </el-form-item>
 
         <el-form-item label="情绪评分">
-          <el-select v-model="searchForm.moodScoreRange" placeholder="选择评分范围" clearable>
-            <el-option label="全部" value="" />
-            <el-option label="低分 (1-3)" value="1-3" />
-            <el-option label="中分 (4-6)" value="4-6" />
-            <el-option label="高分 (7-10)" value="7-10" />
+          <el-select
+            v-model="searchForm.moodScoreRange"
+            placeholder="选择评分范围"
+            clearable
+          >
+            <el-option
+              label="全部"
+              value=""
+            />
+            <el-option
+              label="低分 (1-3)"
+              value="1-3"
+            />
+            <el-option
+              label="中分 (4-6)"
+              value="4-6"
+            />
+            <el-option
+              label="高分 (7-10)"
+              value="7-10"
+            />
           </el-select>
         </el-form-item>
 
         <el-form-item label="主要情绪">
-          <el-select v-model="searchForm.dominantEmotion" placeholder="选择情绪" clearable>
-            <el-option label="全部" value="" />
-            <el-option label="快乐" value="快乐" />
-            <el-option label="愤怒" value="愤怒" />
-            <el-option label="悲伤" value="悲伤" />
-            <el-option label="焦虑" value="焦虑" />
-            <el-option label="平静" value="平静" />
-            <el-option label="兴奋" value="兴奋" />
+          <el-select
+            v-model="searchForm.dominantEmotion"
+            placeholder="选择情绪"
+            clearable
+          >
+            <el-option
+              label="全部"
+              value=""
+            />
+            <el-option
+              label="快乐"
+              value="快乐"
+            />
+            <el-option
+              label="愤怒"
+              value="愤怒"
+            />
+            <el-option
+              label="悲伤"
+              value="悲伤"
+            />
+            <el-option
+              label="焦虑"
+              value="焦虑"
+            />
+            <el-option
+              label="平静"
+              value="平静"
+            />
+            <el-option
+              label="兴奋"
+              value="兴奋"
+            />
           </el-select>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="handleSearch" :loading="loading">搜索</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <el-button
+            type="primary"
+            :loading="loading"
+            @click="handleSearch"
+          >
+            搜索
+          </el-button>
+          <el-button @click="handleReset">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -93,7 +147,7 @@
         <template #header>
           <div class="table-header">
             <span class="table-title">
-              <i class="fas fa-list"></i>
+              <i class="fas fa-list" />
               情绪日记列表 ({{ total }} 条记录)
             </span>
             <div class="table-actions">
@@ -103,7 +157,7 @@
                 :disabled="selectedRows.length === 0"
                 @click="handleBatchAiAnalysis"
               >
-                <i class="fas fa-brain"></i>批量AI分析 ({{ selectedRows.length }})
+                <i class="fas fa-brain" />批量AI分析 ({{ selectedRows.length }})
               </el-button>
               <el-button 
                 type="danger" 
@@ -111,36 +165,60 @@
                 :disabled="selectedRows.length === 0"
                 @click="handleBatchDelete"
               >
-                <i class="fas fa-trash"></i>批量删除 ({{ selectedRows.length }})
+                <i class="fas fa-trash" />批量删除 ({{ selectedRows.length }})
               </el-button>
             </div>
           </div>
         </template>
 
         <el-table 
-          :data="tableData" 
-          v-loading="loading"
-          @selection-change="handleSelectionChange"
+          v-loading="loading" 
+          :data="tableData"
           height="500"
           stripe
+          @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="50" fixed="left" />
+          <el-table-column
+            type="selection"
+            width="50"
+            fixed="left"
+          />
           
-          <el-table-column prop="id" label="ID" width="80" />
+          <el-table-column
+            prop="id"
+            label="ID"
+            width="80"
+          />
           
-          <el-table-column label="用户信息" width="150">
+          <el-table-column
+            label="用户信息"
+            width="150"
+          >
             <template #default="{ row }">
               <div class="user-info">
-                <p class="username">{{ row.username }}</p>
-                <p class="nickname">{{ row.nickname || '-' }}</p>
-                <el-tag size="small">ID: {{ row.userId }}</el-tag>
+                <p class="username">
+                  {{ row.username }}
+                </p>
+                <p class="nickname">
+                  {{ row.nickname || '-' }}
+                </p>
+                <el-tag size="small">
+                  ID: {{ row.userId }}
+                </el-tag>
               </div>
             </template>
           </el-table-column>
 
-          <el-table-column prop="diaryDate" label="记录日期" width="120" />
+          <el-table-column
+            prop="diaryDate"
+            label="记录日期"
+            width="120"
+          />
 
-          <el-table-column label="情绪评分" width="100">
+          <el-table-column
+            label="情绪评分"
+            width="100"
+          >
             <template #default="{ row }">
               <div class="mood-score">
                 <el-rate 
@@ -154,7 +232,11 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="dominantEmotion" label="主要情绪" width="100">
+          <el-table-column
+            prop="dominantEmotion"
+            label="主要情绪"
+            width="100"
+          >
             <template #default="{ row }">
               <el-tag 
                 :type="getEmotionTagType(row.dominantEmotion)"
@@ -165,22 +247,33 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="生活指标" width="120">
+          <el-table-column
+            label="生活指标"
+            width="120"
+          >
             <template #default="{ row }">
               <div class="life-indicators">
                 <p v-if="row.sleepQuality">
-                  <i class="fas fa-bed"></i> 睡眠: {{ row.sleepQuality }}/5
+                  <i class="fas fa-bed" /> 睡眠: {{ row.sleepQuality }}/5
                 </p>
                 <p v-if="row.stressLevel">
-                  <i class="fas fa-brain"></i> 压力: {{ row.stressLevel }}/5
+                  <i class="fas fa-brain" /> 压力: {{ row.stressLevel }}/5
                 </p>
               </div>
             </template>
           </el-table-column>
 
-          <el-table-column prop="emotionTriggers" label="情绪触发因素" min-width="200" show-overflow-tooltip />
+          <el-table-column
+            prop="emotionTriggers"
+            label="情绪触发因素"
+            min-width="200"
+            show-overflow-tooltip
+          />
 
-          <el-table-column label="AI分析状态" width="150">
+          <el-table-column
+            label="AI分析状态"
+            width="150"
+          >
             <template #default="{ row }">
               <div class="ai-analysis-status">
                 <el-tag 
@@ -189,51 +282,72 @@
                   size="small"
                   class="ai-status-tag"
                 >
-                  <i class="fas fa-brain"></i>
+                  <i class="fas fa-brain" />
                   {{ getAiAnalysisStatus(row.aiEmotionAnalysis) }}
                 </el-tag>
-                <el-tag v-else type="info" size="small" class="ai-status-tag">
-                  <i class="fas fa-clock"></i>
+                <el-tag
+                  v-else
+                  type="info"
+                  size="small"
+                  class="ai-status-tag"
+                >
+                  <i class="fas fa-clock" />
                   未分析
                 </el-tag>
-                <div v-if="row.aiEmotionAnalysis" class="ai-analysis-preview">
+                <div
+                  v-if="row.aiEmotionAnalysis"
+                  class="ai-analysis-preview"
+                >
                   {{ getAiAnalysisPreview(row.aiEmotionAnalysis) }}
                 </div>
               </div>
             </template>
           </el-table-column>
 
-          <el-table-column prop="diaryContent" label="日记内容" min-width="250" show-overflow-tooltip />
+          <el-table-column
+            prop="diaryContent"
+            label="日记内容"
+            min-width="250"
+            show-overflow-tooltip
+          />
 
-          <el-table-column prop="createdAt" label="创建时间" width="160">
+          <el-table-column
+            prop="createdAt"
+            label="创建时间"
+            width="160"
+          >
             <template #default="{ row }">
               {{ formatDateTime(row.createdAt) }}
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" width="180" fixed="right">
+          <el-table-column
+            label="操作"
+            width="180"
+            fixed="right"
+          >
             <template #default="{ row }">
               <el-button 
                 type="primary" 
                 size="small" 
                 @click="handleViewDetail(row)"
               >
-                <i class="fas fa-eye"></i>详情
+                <i class="fas fa-eye" />详情
               </el-button>
               <el-button 
                 type="success" 
                 size="small" 
-                @click="handleTriggerAiAnalysis(row)"
                 :title="row.aiEmotionAnalysis ? '重新分析' : '开始分析'"
+                @click="handleTriggerAiAnalysis(row)"
               >
-                <i class="fas fa-brain"></i>{{ row.aiEmotionAnalysis ? '重新分析' : 'AI分析' }}
+                <i class="fas fa-brain" />{{ row.aiEmotionAnalysis ? '重新分析' : 'AI分析' }}
               </el-button>
               <el-button 
                 type="danger" 
                 size="small" 
                 @click="handleDelete(row)"
               >
-                <i class="fas fa-trash"></i>删除
+                <i class="fas fa-trash" />删除
               </el-button>
             </template>
           </el-table-column>
@@ -261,36 +375,65 @@
       width="800px"
       destroy-on-close
     >
-      <div v-if="currentDetail" class="detail-content">
+      <div
+        v-if="currentDetail"
+        class="detail-content"
+      >
         <div class="detail-section">
-          <h4><i class="fas fa-user"></i> 用户信息</h4>
-          <el-descriptions :column="2" border>
-            <el-descriptions-item label="用户名">{{ currentDetail.username }}</el-descriptions-item>
-            <el-descriptions-item label="昵称">{{ currentDetail.nickname || '-' }}</el-descriptions-item>
-            <el-descriptions-item label="用户ID">{{ currentDetail.userId }}</el-descriptions-item>
-            <el-descriptions-item label="记录日期">{{ currentDetail.diaryDate }}</el-descriptions-item>
+          <h4><i class="fas fa-user" /> 用户信息</h4>
+          <el-descriptions
+            :column="2"
+            border
+          >
+            <el-descriptions-item label="用户名">
+              {{ currentDetail.username }}
+            </el-descriptions-item>
+            <el-descriptions-item label="昵称">
+              {{ currentDetail.nickname || '-' }}
+            </el-descriptions-item>
+            <el-descriptions-item label="用户ID">
+              {{ currentDetail.userId }}
+            </el-descriptions-item>
+            <el-descriptions-item label="记录日期">
+              {{ currentDetail.diaryDate }}
+            </el-descriptions-item>
           </el-descriptions>
         </div>
 
         <div class="detail-section">
-          <h4><i class="fas fa-heart"></i> 情绪状态</h4>
-          <el-descriptions :column="2" border>
+          <h4><i class="fas fa-heart" /> 情绪状态</h4>
+          <el-descriptions
+            :column="2"
+            border
+          >
             <el-descriptions-item label="情绪评分">
-              <el-rate :model-value="currentDetail.moodScore" :max="10" disabled show-score />
+              <el-rate
+                :model-value="currentDetail.moodScore"
+                :max="10"
+                disabled
+                show-score
+              />
             </el-descriptions-item>
             <el-descriptions-item label="主要情绪">
               <el-tag :type="getEmotionTagType(currentDetail.dominantEmotion)">
                 {{ currentDetail.dominantEmotion || '-' }}
               </el-tag>
             </el-descriptions-item>
-            <el-descriptions-item label="睡眠质量">{{ currentDetail.sleepQuality || '-' }}/5</el-descriptions-item>
-            <el-descriptions-item label="压力水平">{{ currentDetail.stressLevel || '-' }}/5</el-descriptions-item>
+            <el-descriptions-item label="睡眠质量">
+              {{ currentDetail.sleepQuality || '-' }}/5
+            </el-descriptions-item>
+            <el-descriptions-item label="压力水平">
+              {{ currentDetail.stressLevel || '-' }}/5
+            </el-descriptions-item>
           </el-descriptions>
         </div>
 
         <div class="detail-section">
-          <h4><i class="fas fa-sticky-note"></i> 日记内容</h4>
-          <el-descriptions :column="1" border>
+          <h4><i class="fas fa-sticky-note" /> 日记内容</h4>
+          <el-descriptions
+            :column="1"
+            border
+          >
             <el-descriptions-item label="情绪触发因素">
               {{ currentDetail.emotionTriggers || '无' }}
             </el-descriptions-item>
@@ -300,13 +443,19 @@
           </el-descriptions>
         </div>
 
-        <div v-if="currentDetail.aiEmotionAnalysis" class="detail-section">
-          <h4><i class="fas fa-brain"></i> AI情绪分析结果</h4>
+        <div
+          v-if="currentDetail.aiEmotionAnalysis"
+          class="detail-section"
+        >
+          <h4><i class="fas fa-brain" /> AI情绪分析结果</h4>
           <div class="ai-analysis-result">
-            <el-descriptions :column="2" border>
+            <el-descriptions
+              :column="2"
+              border
+            >
               <el-descriptions-item label="主要情绪">
                 <el-tag :type="getAiEmotionTagType(aiAnalysisData.primaryEmotion)">
-                  <i :class="aiAnalysisData.icon"></i>
+                  <i :class="aiAnalysisData.icon" />
                   {{ aiAnalysisData.primaryEmotion }}
                 </el-tag>
               </el-descriptions-item>
@@ -324,14 +473,17 @@
               </el-descriptions-item>
               <el-descriptions-item label="情绪性质">
                 <el-tag :type="aiAnalysisData.isNegative ? 'danger' : 'success'">
-                  <i :class="aiAnalysisData.isNegative ? 'fas fa-frown' : 'fas fa-smile'"></i>
+                  <i :class="aiAnalysisData.isNegative ? 'fas fa-frown' : 'fas fa-smile'" />
                   {{ aiAnalysisData.isNegative ? '负面情绪' : '正面情绪' }}
                 </el-tag>
               </el-descriptions-item>
             </el-descriptions>
 
-            <div v-if="aiAnalysisData.keywords && aiAnalysisData.keywords.length > 0" class="ai-keywords-section">
-              <h5><i class="fas fa-tags"></i> 情绪关键词</h5>
+            <div
+              v-if="aiAnalysisData.keywords && aiAnalysisData.keywords.length > 0"
+              class="ai-keywords-section"
+            >
+              <h5><i class="fas fa-tags" /> 情绪关键词</h5>
               <div class="keywords-container">
                 <el-tag 
                   v-for="keyword in aiAnalysisData.keywords" 
@@ -344,24 +496,36 @@
               </div>
             </div>
 
-            <div v-if="aiAnalysisData.suggestion" class="ai-suggestion-section">
-              <h5><i class="fas fa-lightbulb"></i> 专业建议</h5>
+            <div
+              v-if="aiAnalysisData.suggestion"
+              class="ai-suggestion-section"
+            >
+              <h5><i class="fas fa-lightbulb" /> 专业建议</h5>
               <div class="suggestion-content">
                 {{ aiAnalysisData.suggestion }}
               </div>
             </div>
 
-            <div v-if="aiAnalysisData.riskDescription" class="ai-risk-section">
-              <h5><i class="fas fa-exclamation-triangle"></i> 风险描述</h5>
+            <div
+              v-if="aiAnalysisData.riskDescription"
+              class="ai-risk-section"
+            >
+              <h5><i class="fas fa-exclamation-triangle" /> 风险描述</h5>
               <div class="risk-content">
                 {{ aiAnalysisData.riskDescription }}
               </div>
             </div>
 
-            <div v-if="aiAnalysisData.improvementSuggestions && aiAnalysisData.improvementSuggestions.length > 0" class="ai-improvements-section">
-              <h5><i class="fas fa-arrow-up"></i> 改善建议</h5>
+            <div
+              v-if="aiAnalysisData.improvementSuggestions && aiAnalysisData.improvementSuggestions.length > 0"
+              class="ai-improvements-section"
+            >
+              <h5><i class="fas fa-arrow-up" /> 改善建议</h5>
               <ul class="improvement-list">
-                <li v-for="suggestion in aiAnalysisData.improvementSuggestions" :key="suggestion">
+                <li
+                  v-for="suggestion in aiAnalysisData.improvementSuggestions"
+                  :key="suggestion"
+                >
                   {{ suggestion }}
                 </li>
               </ul>
@@ -369,7 +533,7 @@
 
             <div class="ai-analysis-meta">
               <p class="analysis-time">
-                <i class="fas fa-clock"></i>
+                <i class="fas fa-clock" />
                 分析时间: {{ formatTimestamp(aiAnalysisData.timestamp) }}
               </p>
             </div>
@@ -377,16 +541,25 @@
         </div>
 
         <div class="detail-section">
-          <h4><i class="fas fa-clock"></i> 时间信息</h4>
-          <el-descriptions :column="2" border>
-            <el-descriptions-item label="创建时间">{{ formatDateTime(currentDetail.createdAt) }}</el-descriptions-item>
-            <el-descriptions-item label="更新时间">{{ formatDateTime(currentDetail.updatedAt) }}</el-descriptions-item>
+          <h4><i class="fas fa-clock" /> 时间信息</h4>
+          <el-descriptions
+            :column="2"
+            border
+          >
+            <el-descriptions-item label="创建时间">
+              {{ formatDateTime(currentDetail.createdAt) }}
+            </el-descriptions-item>
+            <el-descriptions-item label="更新时间">
+              {{ formatDateTime(currentDetail.updatedAt) }}
+            </el-descriptions-item>
           </el-descriptions>
         </div>
       </div>
       
       <template #footer>
-        <el-button @click="detailDialogVisible = false">关闭</el-button>
+        <el-button @click="detailDialogVisible = false">
+          关闭
+        </el-button>
       </template>
     </el-dialog>
   </div>

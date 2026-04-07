@@ -136,6 +136,19 @@ export function updateUserStatus(id, params, config = {}) {
 }
 
 /**
+ * 更新用户角色（管理员功能）
+ * 入参：{ userType: 1|2|3 }
+ * url地址：/user/{id}/role
+ * 请求方式：PUT
+ */
+export function updateUserRole(id, userType, config = {}) {
+  return request.put(`/user/${id}/role`, null, {
+    ...config,
+    params: { userType }
+  })
+}
+
+/**
  * 删除用户（管理员功能）
  * 功能描述：管理员删除指定用户
  * 入参：无

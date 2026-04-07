@@ -2,15 +2,31 @@
   <div class="article-test">
     <h2>文章内容保存测试</h2>
     
-    <el-form ref="formRef" :model="form" label-width="120px">
+    <el-form
+      ref="formRef"
+      :model="form"
+      label-width="120px"
+    >
       <el-form-item label="文章标题">
-        <el-input v-model="form.title" placeholder="请输入标题" />
+        <el-input
+          v-model="form.title"
+          placeholder="请输入标题"
+        />
       </el-form-item>
       
       <el-form-item label="分类">
-        <el-select v-model="form.categoryId" placeholder="请选择分类">
-          <el-option label="情绪管理" :value="1" />
-          <el-option label="压力管理" :value="2" />
+        <el-select
+          v-model="form.categoryId"
+          placeholder="请选择分类"
+        >
+          <el-option
+            label="情绪管理"
+            :value="1"
+          />
+          <el-option
+            label="压力管理"
+            :value="2"
+          />
         </el-select>
       </el-form-item>
       
@@ -27,10 +43,29 @@
       </el-form-item>
       
       <el-form-item>
-        <el-button type="primary" @click="testCreate">测试创建文章</el-button>
-        <el-button type="success" @click="testEdit" :disabled="!lastCreatedId">测试编辑功能</el-button>
-        <el-button type="info" @click="testPreview" :disabled="!lastCreatedId">测试预览功能</el-button>
-        <el-button @click="clearForm">清空表单</el-button>
+        <el-button
+          type="primary"
+          @click="testCreate"
+        >
+          测试创建文章
+        </el-button>
+        <el-button
+          type="success"
+          :disabled="!lastCreatedId"
+          @click="testEdit"
+        >
+          测试编辑功能
+        </el-button>
+        <el-button
+          type="info"
+          :disabled="!lastCreatedId"
+          @click="testPreview"
+        >
+          测试预览功能
+        </el-button>
+        <el-button @click="clearForm">
+          清空表单
+        </el-button>
       </el-form-item>
     </el-form>
     
@@ -44,7 +79,10 @@
       <h3>响应结果</h3>
       <pre>{{ JSON.stringify(response, null, 2) }}</pre>
       
-      <div v-if="lastCreatedId" class="test-actions">
+      <div
+        v-if="lastCreatedId"
+        class="test-actions"
+      >
         <h3>测试操作</h3>
         <p>最后创建的文章ID: <strong>{{ lastCreatedId }}</strong></p>
         <p>点击上方按钮测试编辑和预览功能是否能正确显示内容。</p>

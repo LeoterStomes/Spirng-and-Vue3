@@ -6,17 +6,17 @@
     <div class="editor-wrapper">
       <WangToolbar 
         :editor="editorRef" 
-        :defaultConfig="toolbarConfig" 
+        :default-config="toolbarConfig" 
         mode="default" 
         style="border-bottom: 1px solid #ccc"
       />
       <WangEditor
         v-model="content"
-        :defaultConfig="editorConfig"
+        :default-config="editorConfig"
         mode="default"
         style="height: 400px; overflow-y: hidden;"
-        @onCreated="handleCreated"
-        @onChange="handleChange"
+        @on-created="handleCreated"
+        @on-change="handleChange"
       />
     </div>
     

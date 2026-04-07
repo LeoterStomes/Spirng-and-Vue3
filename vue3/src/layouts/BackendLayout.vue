@@ -1,24 +1,27 @@
 <template>
-    <div class="backend-layout">
-      <!-- 侧边栏 -->
-      <Sidebar />
+  <div class="backend-layout">
+    <!-- 侧边栏 -->
+    <Sidebar />
   
-      <!-- 主要内容区域 -->
-      <div class="main-content">
-        <!-- 顶部导航栏 -->
-        <Navbar @logout="handleLogout" />
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+      <!-- 顶部导航栏 -->
+      <Navbar @logout="handleLogout" />
   
-        <!-- 页面内容 -->
-        <div class="content-container">
-          <router-view v-slot="{ Component }">
-            <transition name="fade" mode="out-in">
-              <component :is="Component" />
-            </transition>
-          </router-view>
-        </div>
+      <!-- 页面内容 -->
+      <div class="content-container">
+        <router-view v-slot="{ Component }">
+          <transition
+            name="fade"
+            mode="out-in"
+          >
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </div>
     </div>
-  </template>
+  </div>
+</template>
   
   <script setup>
   import { computed } from 'vue'
@@ -42,7 +45,10 @@
     display: flex;
     height: 100vh;
     min-height: 100vh;
-    background-color: #f5f7fa;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(91, 123, 255, 0.1) 0%, transparent 32%),
+    radial-gradient(circle at 100% 0%, rgba(34, 197, 94, 0.08) 0%, transparent 32%),
+    #f5f8ff;
     overflow: hidden;
   }
   
@@ -77,6 +83,8 @@
     padding: 20px;
     overflow-y: auto;
     position: relative;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
     
     &::-webkit-scrollbar {
       width: 6px;

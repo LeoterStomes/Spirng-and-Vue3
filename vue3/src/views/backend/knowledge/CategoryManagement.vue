@@ -4,19 +4,21 @@
     <div class="page-header">
       <div class="header-content">
         <div class="header-left">
-          <h1 class="page-title">知识分类管理</h1>
+          <h1 class="page-title">
+            知识分类管理
+          </h1>
         </div>
         <div class="header-actions">
           <el-button 
             type="primary" 
-            @click="handleCreate"
             size="default"
+            @click="handleCreate"
           >
             新建分类
           </el-button>
           <el-button 
-            @click="handleRefresh"
             size="default"
+            @click="handleRefresh"
           >
             刷新
           </el-button>
@@ -48,14 +50,27 @@
             placeholder="选择状态"
             clearable
           >
-            <el-option label="启用" :value="1" />
-            <el-option label="禁用" :value="0" />
+            <el-option
+              label="启用"
+              :value="1"
+            />
+            <el-option
+              label="禁用"
+              :value="0"
+            />
           </el-select>
         </el-form-item>
         
         <el-form-item>
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <el-button
+            type="primary"
+            @click="handleSearch"
+          >
+            搜索
+          </el-button>
+          <el-button @click="handleReset">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -65,10 +80,10 @@
       <el-table
         v-loading="loading"
         :data="tableData"
-        @sort-change="handleSortChange"
         stripe
         style="width: 100%"
         height="600"
+        @sort-change="handleSortChange"
       >
         <el-table-column 
           prop="id" 
@@ -88,7 +103,7 @@
               <i 
                 class="fas fa-folder" 
                 style="color: #409EFF; margin-right: 8px;"
-              ></i>
+              />
               <span class="category-name">{{ row.categoryName }}</span>
             </div>
           </template>
@@ -102,7 +117,10 @@
         >
           <template #default="{ row }">
             <span v-if="row.description">{{ row.description }}</span>
-            <span v-else class="text-muted">暂无描述</span>
+            <span
+              v-else
+              class="text-muted"
+            >暂无描述</span>
           </template>
         </el-table-column>
         
@@ -133,9 +151,12 @@
           width="100"
         >
           <template #default="{ row }">
-            <el-tooltip content="该分类下的文章数量" placement="top">
+            <el-tooltip
+              content="该分类下的文章数量"
+              placement="top"
+            >
               <span class="stat-item">
-                <i class="fas fa-file-alt"></i>
+                <i class="fas fa-file-alt" />
                 {{ row.articleCount || 0 }}
               </span>
             </el-tooltip>
@@ -166,7 +187,7 @@
                 link
                 @click="handleEdit(row)"
               >
-                <i class="fas fa-edit"></i>
+                <i class="fas fa-edit" />
                 编辑
               </el-button>
               <el-button 
@@ -175,17 +196,17 @@
                 link
                 @click="handleToggleStatus(row)"
               >
-                <i :class="row.status === 1 ? 'fas fa-ban' : 'fas fa-check'"></i>
+                <i :class="row.status === 1 ? 'fas fa-ban' : 'fas fa-check'" />
                 {{ row.status === 1 ? '禁用' : '启用' }}
               </el-button>
               <el-button 
                 size="small" 
                 type="danger" 
                 link
-                @click="handleDelete(row)"
                 :disabled="row.articleCount > 0"
+                @click="handleDelete(row)"
               >
-                <i class="fas fa-trash"></i>
+                <i class="fas fa-trash" />
                 删除
               </el-button>
             </div>

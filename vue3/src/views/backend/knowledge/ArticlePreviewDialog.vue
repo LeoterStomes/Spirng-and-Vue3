@@ -6,7 +6,10 @@
     :close-on-click-modal="true"
     class="article-preview-dialog"
   >
-    <div v-if="article" class="preview-container">
+    <div
+      v-if="article"
+      class="preview-container"
+    >
       <!-- 文章头部 -->
       <div class="article-header">
         <div class="article-meta">
@@ -24,36 +27,47 @@
               {{ getStatusText(article.status) }}
             </el-tag>
           </span>
-          <span class="publish-date" v-if="article.publishedAt">
-            <i class="fas fa-calendar"></i>
+          <span
+            v-if="article.publishedAt"
+            class="publish-date"
+          >
+            <i class="fas fa-calendar" />
             {{ formatDateTime(article.publishedAt) }}
           </span>
         </div>
         
-        <h1 class="article-title">{{ article.title }}</h1>
+        <h1 class="article-title">
+          {{ article.title }}
+        </h1>
         
         <div class="article-info">
           <span class="author">
-            <i class="fas fa-user-md"></i>
+            <i class="fas fa-user-md" />
             {{ article.authorName || '心理健康助手' }}
           </span>
           <span class="read-count">
-            <i class="fas fa-eye"></i>
+            <i class="fas fa-eye" />
             {{ formatReadCount(article.readCount) }} 次阅读
           </span>
           <span class="read-time">
-            <i class="fas fa-clock"></i>
+            <i class="fas fa-clock" />
             约 {{ getReadTime(article.content) }} 分钟阅读
           </span>
         </div>
         
-        <div class="article-summary" v-if="article.summary">
+        <div
+          v-if="article.summary"
+          class="article-summary"
+        >
           <p>{{ article.summary }}</p>
         </div>
       </div>
 
       <!-- 封面图片 -->
-      <div class="article-cover" v-if="article.coverImage">
+      <div
+        v-if="article.coverImage"
+        class="article-cover"
+      >
         <img 
           :src="article.coverImage" 
           :alt="article.title"
@@ -66,11 +80,14 @@
         <div 
           class="content-body" 
           v-html="formatContent(article.content)"
-        ></div>
+        />
       </div>
 
       <!-- 标签 -->
-      <div class="article-tags" v-if="article.tags">
+      <div
+        v-if="article.tags"
+        class="article-tags"
+      >
         <span class="tags-label">相关标签：</span>
         <el-tag
           v-for="tag in getTagArray(article.tags)"
@@ -88,25 +105,25 @@
       <div class="article-stats">
         <div class="stats-grid">
           <div class="stat-item">
-            <i class="fas fa-eye"></i>
+            <i class="fas fa-eye" />
             <span class="stat-label">阅读量</span>
             <span class="stat-value">{{ formatReadCount(article.readCount) }}</span>
           </div>
           
           <div class="stat-item">
-            <i class="fas fa-heart"></i>
+            <i class="fas fa-heart" />
             <span class="stat-label">收藏数</span>
             <span class="stat-value">{{ article.favoriteCount || 0 }}</span>
           </div>
           
           <div class="stat-item">
-            <i class="fas fa-calendar-plus"></i>
+            <i class="fas fa-calendar-plus" />
             <span class="stat-label">创建时间</span>
             <span class="stat-value">{{ formatDateTime(article.createdAt) }}</span>
           </div>
           
           <div class="stat-item">
-            <i class="fas fa-edit"></i>
+            <i class="fas fa-edit" />
             <span class="stat-label">更新时间</span>
             <span class="stat-value">{{ formatDateTime(article.updatedAt) }}</span>
           </div>
@@ -116,7 +133,9 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="dialogVisible = false">关闭</el-button>
+        <el-button @click="dialogVisible = false">
+          关闭
+        </el-button>
       </div>
     </template>
   </el-dialog>

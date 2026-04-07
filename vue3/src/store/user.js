@@ -70,6 +70,12 @@ export const useUserStore = defineStore('user', {
       return state.userInfo.userType === 1 || state.userInfo.roleType === 'USER' || state.userInfo.roleType === '1'
     },
 
+    // 判断是否是医生 - 使用userType = 3或roleType = 'DOCTOR'
+    isDoctor: (state) => {
+      if (!state.userInfo) return false
+      return state.userInfo.userType === 3 || state.userInfo.roleType === 'DOCTOR' || state.userInfo.roleType === '3'
+    },
+
     // 获取用户显示名称 - 优先使用nickname，其次username
     displayName: (state) => {
       if (!state.userInfo) return '未登录'

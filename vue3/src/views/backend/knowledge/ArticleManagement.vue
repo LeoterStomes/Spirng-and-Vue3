@@ -4,34 +4,36 @@
     <div class="page-header">
       <div class="header-content">
         <div class="header-left">
-          <h1 class="page-title">知识文章管理</h1>
+          <h1 class="page-title">
+            知识文章管理
+          </h1>
         </div>
         <div class="header-actions">
           <el-button 
             type="primary" 
-            @click="handleCreate"
             size="default"
+            @click="handleCreate"
           >
             新建文章
           </el-button>
           <el-button
             type="success"
-            @click="handleOpenImportDialog"
             size="default"
+            @click="handleOpenImportDialog"
           >
             快速导入
           </el-button>
           <el-button 
             type="danger" 
             :disabled="!selectedRows.length"
-            @click="handleBatchDelete"
             size="default"
+            @click="handleBatchDelete"
           >
             批量删除
           </el-button>
           <el-button 
-            @click="handleRefresh"
             size="default"
+            @click="handleRefresh"
           >
             刷新
           </el-button>
@@ -78,9 +80,18 @@
             placeholder="选择状态"
             clearable
           >
-            <el-option label="草稿" :value="0" />
-            <el-option label="已发布" :value="1" />
-            <el-option label="已下线" :value="2" />
+            <el-option
+              label="草稿"
+              :value="0"
+            />
+            <el-option
+              label="已发布"
+              :value="1"
+            />
+            <el-option
+              label="已下线"
+              :value="2"
+            />
           </el-select>
         </el-form-item>
         
@@ -93,8 +104,15 @@
         </el-form-item>
         
         <el-form-item>
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <el-button
+            type="primary"
+            @click="handleSearch"
+          >
+            搜索
+          </el-button>
+          <el-button @click="handleReset">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -104,13 +122,17 @@
       <el-table
         v-loading="loading"
         :data="tableData"
-        @selection-change="handleSelectionChange"
-        @sort-change="handleSortChange"
         stripe
         style="width: 100%"
         height="600"
+        @selection-change="handleSelectionChange"
+        @sort-change="handleSortChange"
       >
-        <el-table-column type="selection" width="50" fixed="left" />
+        <el-table-column
+          type="selection"
+          width="50"
+          fixed="left"
+        />
         
         <el-table-column 
           prop="id" 
@@ -120,7 +142,10 @@
           show-overflow-tooltip
         >
           <template #default="{ row }">
-            <span class="id-cell" :title="row.id">
+            <span
+              class="id-cell"
+              :title="row.id"
+            >
               {{ row.id.substring(0, 8) }}...
             </span>
           </template>
@@ -134,7 +159,10 @@
         >
           <template #default="{ row }">
             <div class="title-cell">
-              <div class="title-text" @click="handlePreview(row)">
+              <div
+                class="title-text"
+                @click="handlePreview(row)"
+              >
                 {{ row.title }}
               </div>
               <div class="title-meta">
@@ -145,7 +173,7 @@
                   {{ getStatusText(row.status) }}
                 </el-tag>
                 <span class="read-count">
-                  <i class="fas fa-eye"></i>
+                  <i class="fas fa-eye" />
                   {{ row.readCount }}
                 </span>
               </div>
@@ -160,7 +188,12 @@
           sortable="custom"
         >
           <template #default="{ row }">
-            <el-tag type="info" size="small">{{ row.categoryName }}</el-tag>
+            <el-tag
+              type="info"
+              size="small"
+            >
+              {{ row.categoryName }}
+            </el-tag>
           </template>
         </el-table-column>
         
@@ -216,8 +249,8 @@
               <el-button
                 type="primary"
                 size="small"
-                @click="handleEdit(row)"
                 link
+                @click="handleEdit(row)"
               >
                 编辑
               </el-button>
@@ -226,8 +259,8 @@
                 v-if="row.status === 0 || row.status === 2"
                 type="success"
                 size="small"
-                @click="handlePublish(row)"
                 link
+                @click="handlePublish(row)"
               >
                 {{ row.status === 0 ? '发布' : '重新发布' }}
               </el-button>
@@ -236,8 +269,8 @@
                 v-if="row.status === 1"
                 type="warning"
                 size="small"
-                @click="handleOffline(row)"
                 link
+                @click="handleOffline(row)"
               >
                 下线
               </el-button>
@@ -245,8 +278,8 @@
               <el-button
                 type="info"
                 size="small"
-                @click="handlePreview(row)"
                 link
+                @click="handlePreview(row)"
               >
                 预览
               </el-button>
@@ -254,8 +287,8 @@
               <el-button
                 type="danger"
                 size="small"
-                @click="handleDelete(row)"
                 link
+                @click="handleDelete(row)"
               >
                 删除
               </el-button>
@@ -273,9 +306,9 @@
         :page-sizes="[10, 20, 50, 100]"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
+        background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        background
       />
     </div>
 
@@ -313,8 +346,12 @@
 
         <el-form-item label="发布状态">
           <el-radio-group v-model="importForm.status">
-            <el-radio :label="0">草稿</el-radio>
-            <el-radio :label="1">立即发布</el-radio>
+            <el-radio :label="0">
+              草稿
+            </el-radio>
+            <el-radio :label="1">
+              立即发布
+            </el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -327,7 +364,11 @@
 
         <el-form-item label="导入文件">
           <div class="import-actions">
-            <el-button type="primary" plain @click="triggerImportFileSelect">
+            <el-button
+              type="primary"
+              plain
+              @click="triggerImportFileSelect"
+            >
               选择本地文件/文件夹
             </el-button>
             <span class="import-tip">支持 .txt / .md / .json，可多选</span>
@@ -343,15 +384,31 @@
             @change="handleImportFilesSelect"
           >
           <div class="import-files">
-            <p v-if="importFiles.length === 0" class="import-empty">尚未选择文件</p>
-            <p v-else class="import-count">已选择 {{ importFiles.length }} 个文件</p>
+            <p
+              v-if="importFiles.length === 0"
+              class="import-empty"
+            >
+              尚未选择文件
+            </p>
+            <p
+              v-else
+              class="import-count"
+            >
+              已选择 {{ importFiles.length }} 个文件
+            </p>
           </div>
         </el-form-item>
       </el-form>
 
       <template #footer>
-        <el-button @click="importDialogVisible = false">取消</el-button>
-        <el-button type="primary" :loading="importing" @click="handleQuickImport">
+        <el-button @click="importDialogVisible = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          :loading="importing"
+          @click="handleQuickImport"
+        >
           开始导入
         </el-button>
       </template>

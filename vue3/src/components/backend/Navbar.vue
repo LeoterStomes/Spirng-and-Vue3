@@ -3,46 +3,68 @@
     <!-- 左侧区域 -->
     <div class="navbar-left">
       <!-- 侧边栏切换按钮 -->
-      <button class="sidebar-toggle" @click="toggleSidebar">
-        <i :class="appStore.sidebarCollapsed ? 'fas fa-expand' : 'fas fa-compress'"></i>
+      <button
+        class="sidebar-toggle"
+        @click="toggleSidebar"
+      >
+        <i :class="appStore.sidebarCollapsed ? 'fas fa-expand' : 'fas fa-compress'" />
       </button>
       
       <!-- 页面标题区域 -->
       <div class="page-header">
-        <h2 class="page-title">{{ pageTitle }}</h2>
-      
+        <h2 class="page-title">
+          {{ pageTitle }}
+        </h2>
       </div>
     </div>
     
     <!-- 右侧工具区域 -->
     <div class="navbar-right">
       <!-- 全屏切换按钮 -->
-      <div class="toolbar-item" @click="toggleFullScreen">
-        <i :class="isFullscreen ? 'fas fa-compress' : 'fas fa-expand'" class="toolbar-icon"></i>
+      <div
+        class="toolbar-item"
+        @click="toggleFullScreen"
+      >
+        <i
+          :class="isFullscreen ? 'fas fa-compress' : 'fas fa-expand'"
+          class="toolbar-icon"
+        />
       </div>
       
       <!-- 时间显示 -->
       <div class="time-display">
-        <div class="current-time">{{ currentTime }}</div>
+        <div class="current-time">
+          {{ currentTime }}
+        </div>
       </div>
       
       <!-- 用户信息下拉菜单 -->
-      <el-dropdown trigger="click" @command="handleDropdownCommand">
+      <el-dropdown
+        trigger="click"
+        @command="handleDropdownCommand"
+      >
         <div class="user-dropdown">
-          <el-avatar :size="32" :src="avatarUrl" class="user-avatar">
+          <el-avatar
+            :size="32"
+            :src="avatarUrl"
+            class="user-avatar"
+          >
             {{ userInfo?.name?.charAt(0)?.toUpperCase() || userInfo?.username?.charAt(0)?.toUpperCase() || 'A' }}
           </el-avatar>
           <span class="user-name">{{ userInfo?.name || userInfo?.username || '管理员' }}</span>
-          <i class="fas fa-chevron-down dropdown-arrow"></i>
+          <i class="fas fa-chevron-down dropdown-arrow" />
         </div>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item command="profile">
-              <i class="fas fa-user dropdown-icon"></i>
+              <i class="fas fa-user dropdown-icon" />
               个人资料
             </el-dropdown-item>
-            <el-dropdown-item divided command="logout">
-              <i class="fas fa-sign-out-alt dropdown-icon"></i>
+            <el-dropdown-item
+              divided
+              command="logout"
+            >
+              <i class="fas fa-sign-out-alt dropdown-icon" />
               退出登录
             </el-dropdown-item>
           </el-dropdown-menu>

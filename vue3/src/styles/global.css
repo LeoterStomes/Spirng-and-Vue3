@@ -1,47 +1,119 @@
-重置基础样式
+/* 全局重置 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 设置根元素字体大小，方便使用 rem */
+:root {
+  --bg-base: #f3f7ff;
+  --bg-surface: #ffffff;
+  --bg-soft: #f8fbff;
+  --text-main: #1e293b;
+  --text-sub: #64748b;
+  --primary: #5b7bff;
+  --primary-strong: #4f46e5;
+  --mint: #22c55e;
+  --border-soft: rgba(148, 163, 184, 0.2);
+  --shadow-soft: 0 12px 28px rgba(79, 70, 229, 0.1);
+  --shadow-hover: 0 16px 36px rgba(79, 70, 229, 0.16);
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
 html {
   font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 body {
-  color: #333;
-  background-color: #fff;
+  color: var(--text-main);
+  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(91, 123, 255, 0.12) 0%, transparent 34%),
+    radial-gradient(circle at 90% 10%, rgba(34, 197, 94, 0.1) 0%, transparent 36%),
+    linear-gradient(180deg, #f6f9ff 0%, #f7fbff 100%);
+  background-attachment: fixed;
 }
 
-/* 移除列表样式 */
-ul, ol {
+/* 页面切换动效 */
+.route-fade-enter-active,
+.route-fade-leave-active {
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.route-fade-enter-from,
+.route-fade-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* 滚动条 */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(91, 123, 255, 0.45), rgba(79, 70, 229, 0.42));
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(91, 123, 255, 0.7), rgba(79, 70, 229, 0.65));
+}
+
+ul,
+ol {
   list-style: none;
 }
 
-/* 移除链接下划线 */
 a {
   text-decoration: none;
   color: inherit;
 }
 
-/* 图片默认样式 */
 img {
   max-width: 100%;
   height: auto;
   vertical-align: middle;
 }
 
-
-/* 文本溢出省略号 */
 .text-ellipsis {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* 鼠标样式 */
 .pointer {
   cursor: pointer;
+}
+
+/* 通用轻量卡片样式 */
+.soft-panel {
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 无障碍：用户偏好减少动画时，关闭主要动态效果 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

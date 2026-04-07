@@ -22,7 +22,10 @@
 
       <div class="preview-section">
         <h3>实时预览</h3>
-        <div class="content-preview" v-html="content"></div>
+        <div
+          class="content-preview"
+          v-html="content"
+        />
       </div>
 
       <div class="info-section">
@@ -30,11 +33,19 @@
         <div class="info-grid">
           <div class="info-item">
             <label>HTML内容：</label>
-            <textarea readonly :value="content" rows="6"></textarea>
+            <textarea
+              readonly
+              :value="content"
+              rows="6"
+            />
           </div>
           <div class="info-item">
             <label>纯文本内容：</label>
-            <textarea readonly :value="textContent" rows="6"></textarea>
+            <textarea
+              readonly
+              :value="textContent"
+              rows="6"
+            />
           </div>
           <div class="info-item">
             <label>字符统计：</label>
@@ -44,9 +55,21 @@
       </div>
 
       <div class="test-buttons">
-        <el-button @click="clearContent">清空内容</el-button>
-        <el-button @click="insertSampleText" type="primary">插入示例文本</el-button>
-        <el-button @click="setSampleHtml" type="success">设置示例HTML</el-button>
+        <el-button @click="clearContent">
+          清空内容
+        </el-button>
+        <el-button
+          type="primary"
+          @click="insertSampleText"
+        >
+          插入示例文本
+        </el-button>
+        <el-button
+          type="success"
+          @click="setSampleHtml"
+        >
+          设置示例HTML
+        </el-button>
       </div>
     </div>
   </div>

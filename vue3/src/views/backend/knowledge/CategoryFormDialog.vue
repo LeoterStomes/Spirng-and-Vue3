@@ -14,7 +14,10 @@
       label-width="100px"
       size="default"
     >
-      <el-form-item label="分类名称" prop="categoryName">
+      <el-form-item
+        label="分类名称"
+        prop="categoryName"
+      >
         <el-input
           v-model="formData.categoryName"
           placeholder="请输入分类名称"
@@ -23,7 +26,10 @@
         />
       </el-form-item>
 
-      <el-form-item label="分类描述" prop="description">
+      <el-form-item
+        label="分类描述"
+        prop="description"
+      >
         <el-input
           v-model="formData.description"
           type="textarea"
@@ -34,7 +40,10 @@
         />
       </el-form-item>
 
-      <el-form-item label="排序号" prop="sortOrder">
+      <el-form-item
+        label="排序号"
+        prop="sortOrder"
+      >
         <el-input-number
           v-model="formData.sortOrder"
           :min="0"
@@ -48,17 +57,26 @@
         </div>
       </el-form-item>
 
-      <el-form-item label="状态" prop="status">
+      <el-form-item
+        label="状态"
+        prop="status"
+      >
         <el-radio-group v-model="formData.status">
-          <el-radio :label="1" size="large">
+          <el-radio
+            :label="1"
+            size="large"
+          >
             <span style="color: #67C23A">
-              <i class="fas fa-check-circle"></i>
+              <i class="fas fa-check-circle" />
               启用
             </span>
           </el-radio>
-          <el-radio :label="0" size="large">
+          <el-radio
+            :label="0"
+            size="large"
+          >
             <span style="color: #F56C6C">
-              <i class="fas fa-ban"></i>
+              <i class="fas fa-ban" />
               禁用
             </span>
           </el-radio>
@@ -71,14 +89,17 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleCancel" size="default">
+        <el-button
+          size="default"
+          @click="handleCancel"
+        >
           取消
         </el-button>
         <el-button 
           type="primary" 
-          @click="handleSubmit"
           :loading="submitLoading"
           size="default"
+          @click="handleSubmit"
         >
           {{ isEditMode ? '更新' : '创建' }}
         </el-button>

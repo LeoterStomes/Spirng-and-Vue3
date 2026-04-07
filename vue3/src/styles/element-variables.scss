@@ -1,19 +1,19 @@
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
   $colors: (
     'primary': (
-      'base': #2B5BA1,
+      'base': #5b7bff,
     ),
     'success': (
-      'base': #2E7D32,
+      'base': #22c55e,
     ),
     'warning': (
-      'base': #E6A23C,
+      'base': #f59e0b,
     ),
     'danger': (
-      'base': #F56C6C,
+      'base': #ef4444,
     ),
     'info': (
-      'base': #909399,
+      'base': #64748b,
     )
   ),
 );
@@ -21,29 +21,30 @@
 /* 只需要重写你需要的即可 */
 @use "element-plus/theme-chalk/src/index.scss" as *;
 
-// Element Plus 自定义样式
-// 卡片样式
+// Element Plus 全局视觉升级：轻盈玻璃感 + 柔和动效
 .el-card {
-  border: none !important;
-  box-shadow: none !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.08) !important;
+  backdrop-filter: blur(6px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
 
   &:hover {
-    box-shadow: none !important;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 34px rgba(79, 70, 229, 0.14) !important;
   }
 }
 
-
-
-
-
-// Dialog 样式
 .el-dialog {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.2) !important;
   
   .el-dialog__header {
     margin: 0;
     padding: 20px 24px;
-    border-bottom: 1px solid #ebeef5;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
     
     .el-dialog__title {
       font-size: 16px;
@@ -57,45 +58,51 @@
   
   .el-dialog__footer {
     padding: 16px 24px;
-    border-top: 1px solid #ebeef5;
+    border-top: 1px solid rgba(148, 163, 184, 0.25);
   }
 }
 
-// Form 样式
-.el-form {
-  .el-form-item {
-    margin-bottom: 24px;
-    
-    .el-form-item__label {
-      font-weight: 500;
-      color: #333;
-      padding-bottom: 8px;
-    }
-    
-    .el-form-item__error {
-      padding-top: 4px;
-    }
-  }
-}
-
-// Input 样式
 .el-input {
   .el-input__wrapper {
-    box-shadow: 0 0 0 1px #dcdfe6 inset;
-    transition: all 0.2s;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.3) inset;
+    transition: all 0.2s ease;
     
     &:hover {
-      box-shadow: 0 0 0 1px #2B5BA1 inset;
+      box-shadow: 0 0 0 1px rgba(91, 123, 255, 0.85) inset;
     }
     
     &.is-focus {
-      box-shadow: 0 0 0 1px #2B5BA1 inset !important;
+      box-shadow: 0 0 0 1px rgba(91, 123, 255, 1) inset !important;
     }
   }
   
   &.is-disabled .el-input__wrapper {
-    background-color: #f5f7fa;
-    box-shadow: 0 0 0 1px #e4e7ed inset;
+    background-color: #f8fafc;
+    box-shadow: 0 0 0 1px rgba(203, 213, 225, 0.85) inset;
   }
+}
+
+.el-button {
+  border-radius: 11px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.el-button:hover {
+  transform: translateY(-1px);
+}
+
+.el-button--primary {
+  box-shadow: 0 8px 20px rgba(91, 123, 255, 0.28);
+}
+
+.el-table {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.el-table th.el-table__cell {
+  background: #f8fbff;
 }
 

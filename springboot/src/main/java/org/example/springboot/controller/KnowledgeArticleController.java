@@ -12,6 +12,7 @@ import org.example.springboot.DTO.command.ArticleCreateDTO;
 import org.example.springboot.DTO.command.ArticleUpdateDTO;
 import org.example.springboot.DTO.command.ArticleStatusUpdateDTO;
 import org.example.springboot.DTO.command.ArticleBatchDeleteDTO;
+import org.example.springboot.DTO.command.KnowledgeImportTextDTO;
 import org.example.springboot.DTO.query.ArticleListQueryDTO;
 import org.example.springboot.DTO.response.ArticleResponseDTO;
 import org.example.springboot.DTO.response.ArticleSimpleResponseDTO;
@@ -62,6 +63,28 @@ public class KnowledgeArticleController {
         
         ArticleResponseDTO response = articleService.createArticle(createDTO, currentUserId);
         return Result.success("创建文章成功", response);
+    }
+
+    @Operation(summary = "导入本地文本知识")
+    @PostMapping("/import-text")
+    public Result<ArticleResponseDTO> importTextKnowledge(
+            @Valid @RequestBody KnowledgeImportTextDTO importDTO,
+            HttpServletRequest request) {
+        Long currentUserId = JwtTokenUtils.getCurrentUserId();
+        if (currentUserId == null) {
+            return Result.error("用户未登录");
+        }
+        ArticleResponseDTO response = articleService.importPlainTextKnowledge(importDTO, currentUserId);
+        return Result.success("文本知识导入成功", response);
+    }
+
+    @Operation(summary = "检索本地知识片段（供AI优先使用）")
+    @GetMapping("/local-context")
+    public Result<String> getLocalKnowledgeContext(
+            @Parameter(description = "检索关键词") @RequestParam String keyword,
+            @Parameter(description = "最大返回条数") @RequestParam(defaultValue = "3") Integer maxCount) {
+        String context = articleService.buildKnowledgeContextForAi(keyword, maxCount);
+        return Result.success(context);
     }
 
     /**

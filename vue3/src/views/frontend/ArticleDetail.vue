@@ -6,17 +6,24 @@
         <div class="header-content">
           <div class="header-left">
             <div class="breathing-animation">
-              <i class="fas fa-book-open"></i>
+              <i class="fas fa-book-open" />
             </div>
             <div class="header-text">
               <h2>知识文章详情</h2>
-              <p v-if="article">{{ article.categoryName }} - 深度解读心理健康知识</p>
-              <p v-else>加载中...</p>
+              <p v-if="article">
+                {{ article.categoryName }} - 深度解读心理健康知识
+              </p>
+              <p v-else>
+                加载中...
+              </p>
             </div>
           </div>
           <div class="header-actions">
-            <el-button @click="goBack" class="back-btn">
-              <i class="fas fa-arrow-left"></i>
+            <el-button
+              class="back-btn"
+              @click="goBack"
+            >
+              <i class="fas fa-arrow-left" />
               返回知识库
             </el-button>
           </div>
@@ -25,203 +32,235 @@
     </section>
 
     <!-- 加载状态 -->
-    <div v-if="loading" class="loading-container">
-      <el-skeleton :rows="8" animated />
+    <div
+      v-if="loading"
+      class="loading-container"
+    >
+      <el-skeleton
+        :rows="8"
+        animated
+      />
     </div>
 
     <!-- 详情内容 -->
-    <div v-else-if="article" class="detail-content">
+    <div
+      v-else-if="article"
+      class="detail-content"
+    >
       <div class="content-container">
         <div class="content-layout">
-        <!-- 左侧：文章详情 -->
-        <div class="article-detail-section">
-          <!-- 文章信息和封面组合卡片 -->
-          <div class="detail-card article-info-card">
-            <h3 class="card-title">
-              <i class="fas fa-newspaper"></i>
-              文章信息
-            </h3>
+          <!-- 左侧：文章详情 -->
+          <div class="article-detail-section">
+            <!-- 文章信息和封面组合卡片 -->
+            <div class="detail-card article-info-card">
+              <h3 class="card-title">
+                <i class="fas fa-newspaper" />
+                文章信息
+              </h3>
             
-            <div class="article-info-layout">
-              <!-- 左侧：文章信息 -->
-              <div class="article-info-content">
-                <div class="article-meta">
-                  <el-tag 
-                    :type="getCategoryTagType(article.categoryName)"
-                    size="large"
-                    class="category-tag"
+              <div class="article-info-layout">
+                <!-- 左侧：文章信息 -->
+                <div class="article-info-content">
+                  <div class="article-meta">
+                    <el-tag 
+                      :type="getCategoryTagType(article.categoryName)"
+                      size="large"
+                      class="category-tag"
+                    >
+                      {{ article.categoryName }}
+                    </el-tag>
+                    <span class="publish-date">
+                      <i class="fas fa-calendar" />
+                      {{ formatDate(article.publishedAt) }}
+                    </span>
+                    <span class="read-time">
+                      <i class="fas fa-clock" />
+                      约 {{ getReadTime(article.content) }} 分钟阅读
+                    </span>
+                  </div>
+                
+                  <h1 class="article-title">
+                    {{ article.title }}
+                  </h1>
+                
+                  <div
+                    v-if="article.summary"
+                    class="article-summary"
                   >
-                    {{ article.categoryName }}
-                  </el-tag>
-                  <span class="publish-date">
-                    <i class="fas fa-calendar"></i>
-                    {{ formatDate(article.publishedAt) }}
-                  </span>
-                  <span class="read-time">
-                    <i class="fas fa-clock"></i>
-                    约 {{ getReadTime(article.content) }} 分钟阅读
-                  </span>
-                </div>
-                
-                <h1 class="article-title">{{ article.title }}</h1>
-                
-                <div class="article-summary" v-if="article.summary">
-                  <div class="summary-content">
-                    <i class="fas fa-quote-left"></i>
-                    <p>{{ article.summary }}</p>
+                    <div class="summary-content">
+                      <i class="fas fa-quote-left" />
+                      <p>{{ article.summary }}</p>
+                    </div>
                   </div>
-                </div>
                 
-                <div class="article-stats">
-                  <div class="stats-left">
-                    <span class="author">
-                      <i class="fas fa-user-md"></i>
-                      {{ article.authorName || '心理健康助手' }}
-                    </span>
-                    <span class="read-count">
-                      <i class="fas fa-eye"></i>
-                      {{ formatReadCount(article.readCount) }} 次阅读
-                    </span>
-                  </div>
+                  <div class="article-stats">
+                    <div class="stats-left">
+                      <span class="author">
+                        <i class="fas fa-user-md" />
+                        {{ article.authorName || '心理健康助手' }}
+                      </span>
+                      <span class="read-count">
+                        <i class="fas fa-eye" />
+                        {{ formatReadCount(article.readCount) }} 次阅读
+                      </span>
+                    </div>
                   
-                  <div class="stats-right">
-                    <el-button
-                      :type="article.isFavorited ? 'danger' : 'primary'"
-                      @click="toggleFavorite"
-                      class="action-btn"
-                    >
-                      <i :class="article.isFavorited ? 'fas fa-heart' : 'far fa-heart'"></i>
-                      {{ article.isFavorited ? '已收藏' : '收藏' }}
-                    </el-button>
+                    <div class="stats-right">
+                      <el-button
+                        :type="article.isFavorited ? 'danger' : 'primary'"
+                        class="action-btn"
+                        @click="toggleFavorite"
+                      >
+                        <i :class="article.isFavorited ? 'fas fa-heart' : 'far fa-heart'" />
+                        {{ article.isFavorited ? '已收藏' : '收藏' }}
+                      </el-button>
                     
-                    <el-button
-                      @click="shareArticle"
-                      type="info"
-                      class="action-btn"
-                    >
-                      <i class="fas fa-share-alt"></i>
-                      分享
-                    </el-button>
+                      <el-button
+                        type="info"
+                        class="action-btn"
+                        @click="shareArticle"
+                      >
+                        <i class="fas fa-share-alt" />
+                        分享
+                      </el-button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <!-- 右侧：封面图片 -->
-              <div class="article-cover-section" v-if="article.coverImage">
-                <img 
-                  :src="article.coverImage" 
-                  :alt="article.title"
-                  @error="handleImageError"
-                  class="cover-image"
+                <!-- 右侧：封面图片 -->
+                <div
+                  v-if="article.coverImage"
+                  class="article-cover-section"
                 >
-              </div>
-            </div>
-          </div>
-
-          <!-- 文章内容卡片 -->
-          <div class="detail-card content-card">
-            <h3 class="card-title">
-              <i class="fas fa-file-alt"></i>
-              正文内容
-            </h3>
-            <div class="content-wrapper" v-html="formatContent(article.content)"></div>
-            
-            <!-- 标签内容直接在正文底部 -->
-            <div class="tags-content" v-if="article.tags">
-              <h4 class="tags-title">
-                <i class="fas fa-tags"></i>
-                相关标签
-              </h4>
-              <div class="tags-list">
-                <el-tag
-                  v-for="tag in getTagArray(article.tags)"
-                  :key="tag"
-                  type="info"
-                  effect="light"
-                  class="tag-item"
-                >
-                  <i class="fas fa-tag"></i>
-                  {{ tag }}
-                </el-tag>
-              </div>
-            </div>
-          </div>
-
-
-        </div>
-
-        <!-- 右侧：推荐内容 -->
-        <div class="sidebar-section">
-          <!-- 相关文章推荐 -->
-          <div class="detail-card related-articles-card" v-if="relatedArticles.length > 0">
-            <h3 class="card-title">
-              <i class="fas fa-lightbulb"></i>
-              相关文章推荐
-            </h3>
-            <div class="related-list">
-              <div 
-                v-for="relatedArticle in relatedArticles"
-                :key="relatedArticle.id"
-                class="related-item"
-                @click="goToArticle(relatedArticle.id)"
-              >
-                <div class="related-image">
                   <img 
-                    :src="relatedArticle.coverImage || defaultCover" 
-                    :alt="relatedArticle.title"
+                    :src="article.coverImage" 
+                    :alt="article.title"
+                    class="cover-image"
                     @error="handleImageError"
                   >
                 </div>
-                <div class="related-content">
-                  <h4>{{ relatedArticle.title }}</h4>
-                  <p>{{ getAutoSummary(relatedArticle.content) }}</p>
-                  <div class="related-meta">
-                    <span><i class="fas fa-eye"></i>{{ formatReadCount(relatedArticle.readCount) }}</span>
-                    <span><i class="fas fa-calendar"></i>{{ formatDate(relatedArticle.publishedAt) }}</span>
-                  </div>
+              </div>
+            </div>
+
+            <!-- 文章内容卡片 -->
+            <div class="detail-card content-card">
+              <h3 class="card-title">
+                <i class="fas fa-file-alt" />
+                正文内容
+              </h3>
+              <div
+                class="content-wrapper"
+                v-html="formatContent(article.content)"
+              />
+            
+              <!-- 标签内容直接在正文底部 -->
+              <div
+                v-if="article.tags"
+                class="tags-content"
+              >
+                <h4 class="tags-title">
+                  <i class="fas fa-tags" />
+                  相关标签
+                </h4>
+                <div class="tags-list">
+                  <el-tag
+                    v-for="tag in getTagArray(article.tags)"
+                    :key="tag"
+                    type="info"
+                    effect="light"
+                    class="tag-item"
+                  >
+                    <i class="fas fa-tag" />
+                    {{ tag }}
+                  </el-tag>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 温馨提示卡片 -->
-          <div class="detail-card tips-card">
-            <h3 class="card-title">
-              <i class="fas fa-info-circle"></i>
-              温馨提示
-            </h3>
-            <div class="tips-content">
-              <div class="tip-item">
-                <i class="fas fa-book-reader"></i>
-                定期阅读心理健康知识有助于提升心理素养
+          <!-- 右侧：推荐内容 -->
+          <div class="sidebar-section">
+            <!-- 相关文章推荐 -->
+            <div
+              v-if="relatedArticles.length > 0"
+              class="detail-card related-articles-card"
+            >
+              <h3 class="card-title">
+                <i class="fas fa-lightbulb" />
+                相关文章推荐
+              </h3>
+              <div class="related-list">
+                <div 
+                  v-for="relatedArticle in relatedArticles"
+                  :key="relatedArticle.id"
+                  class="related-item"
+                  @click="goToArticle(relatedArticle.id)"
+                >
+                  <div class="related-image">
+                    <img 
+                      :src="relatedArticle.coverImage || defaultCover" 
+                      :alt="relatedArticle.title"
+                      @error="handleImageError"
+                    >
+                  </div>
+                  <div class="related-content">
+                    <h4>{{ relatedArticle.title }}</h4>
+                    <p>{{ getAutoSummary(relatedArticle.content) }}</p>
+                    <div class="related-meta">
+                      <span><i class="fas fa-eye" />{{ formatReadCount(relatedArticle.readCount) }}</span>
+                      <span><i class="fas fa-calendar" />{{ formatDate(relatedArticle.publishedAt) }}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="tip-item">
-                <i class="fas fa-heart"></i>
-                收藏喜欢的文章，方便日后查阅
-              </div>
-              <div class="tip-item">
-                <i class="fas fa-share-alt"></i>
-                分享有价值的内容，帮助更多人受益
-              </div>
-              <div class="tip-item">
-                <i class="fas fa-user-friends"></i>
-                如需专业帮助，请及时寻求心理咨询
+            </div>
+
+            <!-- 温馨提示卡片 -->
+            <div class="detail-card tips-card">
+              <h3 class="card-title">
+                <i class="fas fa-info-circle" />
+                温馨提示
+              </h3>
+              <div class="tips-content">
+                <div class="tip-item">
+                  <i class="fas fa-book-reader" />
+                  定期阅读心理健康知识有助于提升心理素养
+                </div>
+                <div class="tip-item">
+                  <i class="fas fa-heart" />
+                  收藏喜欢的文章，方便日后查阅
+                </div>
+                <div class="tip-item">
+                  <i class="fas fa-share-alt" />
+                  分享有价值的内容，帮助更多人受益
+                </div>
+                <div class="tip-item">
+                  <i class="fas fa-user-friends" />
+                  如需专业帮助，请及时寻求心理咨询
+                </div>
               </div>
             </div>
           </div>
-        </div>
         </div>
       </div>
     </div>
 
     <!-- 错误状态 -->
-    <div v-else class="error-state">
+    <div
+      v-else
+      class="error-state"
+    >
       <div class="error-container">
         <div class="error-content">
-          <i class="fas fa-exclamation-circle"></i>
+          <i class="fas fa-exclamation-circle" />
           <h3>文章不存在</h3>
           <p>抱歉，您访问的文章不存在或已被删除</p>
-          <el-button type="primary" @click="goBack">返回知识库</el-button>
+          <el-button
+            type="primary"
+            @click="goBack"
+          >
+            返回知识库
+          </el-button>
         </div>
       </div>
     </div>
@@ -235,6 +274,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { getArticleById } from '@/api/knowledgeArticle'
 import { favoriteArticle, unfavoriteArticle, checkFavoriteStatus } from '@/api/userFavorite'
 import { formatDate } from '@/utils/dateUtils'
+import { sanitizeHtml } from '@/utils/sanitizeHtml'
 
 const route = useRoute()
 const router = useRouter()
@@ -427,7 +467,7 @@ const formatContent = (content) => {
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
   
-  return formatted
+  return sanitizeHtml(formatted)
 }
 
 const handleImageError = (event) => {
@@ -443,15 +483,18 @@ onMounted(() => {
 <style scoped>
 .article-detail-page {
   min-height: 100vh;
-  background: #f9fafb;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(91, 123, 255, 0.1) 0%, transparent 34%),
+    radial-gradient(circle at 100% 0%, rgba(34, 197, 94, 0.08) 0%, transparent 34%),
+    #f8fbff;
 }
 
 /* 页面头部样式 */
 .page-header {
-  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+  background: linear-gradient(135deg, #5b7bff 0%, #4f46e5 60%, #22c55e 100%);
   color: white;
   padding: 2rem 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .header-container {
@@ -581,10 +624,12 @@ onMounted(() => {
 
 /* 卡片样式 */
 .detail-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 1.5rem;
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  backdrop-filter: blur(8px);
 }
 
 /* 文章信息卡片 */
@@ -619,8 +664,8 @@ onMounted(() => {
 
 /* 内容卡片 */
 .content-card {
-  background: linear-gradient(135deg, #FEFEFE 0%, #F9FAFB 100%);
-  border: 1px solid #E5E7EB;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid rgba(148, 163, 184, 0.25);
 }
 
 
@@ -663,7 +708,7 @@ onMounted(() => {
 }
 
 .card-title i {
-  color: #7ED321;
+  color: #4f46e5;
   font-size: 1.25rem;
 }
 

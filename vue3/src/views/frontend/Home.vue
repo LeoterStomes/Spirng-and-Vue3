@@ -2,17 +2,32 @@
   <div class="home-blog">
     <section class="blog-hero">
       <div class="hero-carousel">
-        <button class="hero-nav prev" @click="prevHero">‹</button>
-        <button class="hero-nav next" @click="nextHero">›</button>
+        <button
+          class="hero-nav prev"
+          @click="prevHero"
+        >
+          ‹
+        </button>
+        <button
+          class="hero-nav next"
+          @click="nextHero"
+        >
+          ›
+        </button>
 
-        <transition name="hero-slide" mode="out-in">
+        <transition
+          name="hero-slide"
+          mode="out-in"
+        >
           <div
             v-if="activeHeroArticle"
             :key="activeHeroArticle.id"
             class="hero-slide-card"
           >
             <div class="hero-slide-text">
-              <p class="hero-kicker">MENTAL BLOG</p>
+              <p class="hero-kicker">
+                MENTAL BLOG
+              </p>
               <h1>{{ activeHeroArticle.title }}</h1>
               <p class="hero-desc">
                 {{ activeHeroArticle.summary || getAutoSummary(activeHeroArticle.content) }}
@@ -23,24 +38,45 @@
                 <span>阅读 {{ activeHeroArticle.readCount || 0 }}</span>
               </div>
               <div class="hero-actions">
-                <router-link :to="`/knowledge/article/${activeHeroArticle.id}`" class="btn primary">
+                <router-link
+                  :to="`/knowledge/article/${activeHeroArticle.id}`"
+                  class="btn primary"
+                >
                   阅读全文
                 </router-link>
-                <router-link :to="isLoggedIn ? '/consultation' : '/auth/login'" class="btn ghost">
+                <router-link
+                  :to="isLoggedIn ? '/consultation' : '/auth/login'"
+                  class="btn ghost"
+                >
                   AI 咨询
                 </router-link>
               </div>
             </div>
 
-            <router-link :to="`/knowledge/article/${activeHeroArticle.id}`" class="hero-slide-image">
-              <img :src="activeHeroArticle.coverImage || fallbackCover" :alt="activeHeroArticle.title" @error="onImageError">
+            <router-link
+              :to="`/knowledge/article/${activeHeroArticle.id}`"
+              class="hero-slide-image"
+            >
+              <img
+                :src="activeHeroArticle.coverImage || fallbackCover"
+                :alt="activeHeroArticle.title"
+                @error="onImageError"
+              >
             </router-link>
           </div>
-          <div v-else key="empty" class="hero-slide-card empty">
+          <div
+            v-else
+            key="empty"
+            class="hero-slide-card empty"
+          >
             <div class="hero-slide-text">
-              <p class="hero-kicker">MENTAL BLOG</p>
+              <p class="hero-kicker">
+                MENTAL BLOG
+              </p>
               <h1>心理成长与陪伴空间</h1>
-              <p class="hero-desc">在这里记录、阅读、倾诉，把复杂情绪整理成能被理解的文字与行动。</p>
+              <p class="hero-desc">
+                在这里记录、阅读、倾诉，把复杂情绪整理成能被理解的文字与行动。
+              </p>
             </div>
           </div>
         </transition>
@@ -63,7 +99,9 @@
           placeholder="输入关键词，快速搜索心理文章"
           @keyup.enter="goSearch"
         >
-        <button @click="goSearch">搜索</button>
+        <button @click="goSearch">
+          搜索
+        </button>
       </div>
     </section>
 
@@ -72,24 +110,47 @@
         <div class="left-column">
           <div class="section-title-row">
             <h2>最新文章</h2>
-            <router-link to="/knowledge" class="more-link">查看更多</router-link>
+            <router-link
+              to="/knowledge"
+              class="more-link"
+            >
+              查看更多
+            </router-link>
           </div>
-          <div v-loading="latestLoading" class="article-list">
+          <div
+            v-loading="latestLoading"
+            class="article-list"
+          >
             <router-link
               v-for="article in latestArticles"
               :key="article.id"
               :to="`/knowledge/article/${article.id}`"
               class="article-item"
             >
-              <img :src="article.coverImage || fallbackCover" :alt="article.title" @error="onImageError">
+              <img
+                :src="article.coverImage || fallbackCover"
+                :alt="article.title"
+                @error="onImageError"
+              >
               <div class="article-info">
-                <p class="article-meta">{{ article.categoryName || '心理知识' }} · {{ formatDate(article.publishedAt) }}</p>
+                <p class="article-meta">
+                  {{ article.categoryName || '心理知识' }} · {{ formatDate(article.publishedAt) }}
+                </p>
                 <h3>{{ article.title }}</h3>
-                <p class="article-summary">{{ article.summary || getAutoSummary(article.content) }}</p>
-                <p class="article-foot">阅读 {{ article.readCount || 0 }} · 收藏 {{ article.favoriteCount || 0 }}</p>
+                <p class="article-summary">
+                  {{ article.summary || getAutoSummary(article.content) }}
+                </p>
+                <p class="article-foot">
+                  阅读 {{ article.readCount || 0 }} · 收藏 {{ article.favoriteCount || 0 }}
+                </p>
               </div>
             </router-link>
-            <div v-if="!latestLoading && latestArticles.length === 0" class="empty-text">暂无文章内容</div>
+            <div
+              v-if="!latestLoading && latestArticles.length === 0"
+              class="empty-text"
+            >
+              暂无文章内容
+            </div>
           </div>
         </div>
 
@@ -97,10 +158,18 @@
           <div class="widget">
             <h3>快捷入口</h3>
             <div class="quick-links">
-              <router-link :to="isLoggedIn ? '/emotion-diary' : '/auth/login'">情绪日记</router-link>
-              <router-link :to="isLoggedIn ? '/psychological-test' : '/auth/login'">心理测试</router-link>
-              <router-link :to="isLoggedIn ? '/consultation' : '/auth/login'">AI 咨询</router-link>
-              <router-link to="/knowledge">知识分类</router-link>
+              <router-link :to="isLoggedIn ? '/emotion-diary' : '/auth/login'">
+                情绪日记
+              </router-link>
+              <router-link :to="isLoggedIn ? '/psychological-test' : '/auth/login'">
+                心理测试
+              </router-link>
+              <router-link :to="isLoggedIn ? '/consultation' : '/auth/login'">
+                AI 咨询
+              </router-link>
+              <router-link to="/knowledge">
+                知识分类
+              </router-link>
             </div>
           </div>
 
@@ -115,7 +184,12 @@
               <span class="hot-title">{{ item.title }}</span>
               <span class="hot-count">👀 {{ item.readCount || 0 }}</span>
             </router-link>
-            <p v-if="!popularArticles.length" class="empty-text">暂无热门文章</p>
+            <p
+              v-if="!popularArticles.length"
+              class="empty-text"
+            >
+              暂无热门文章
+            </p>
           </div>
         </aside>
       </div>
@@ -140,6 +214,14 @@ const latestArticles = ref([])
 const popularArticles = ref([])
 const heroIndex = ref(0)
 const fallbackCover = 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+const homePhotoModules = import.meta.glob('@/knowledgephoto/*.{jpg,jpeg,png,webp,gif}', {
+  eager: true,
+  import: 'default'
+})
+const homePhotoUrls = Object.values(homePhotoModules)
+let coverPool = []
+let coverCursor = 0
+const coverByArticleSeed = new Map()
 let heroTimer = null
 
 const heroArticles = computed(() => latestArticles.value.slice(0, 4))
@@ -162,13 +244,53 @@ const getAutoSummary = (content) => {
   return plainText.length > 90 ? `${plainText.substring(0, 90)}...` : plainText
 }
 
+const shuffleArray = (arr) => {
+  const copy = [...arr]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const temp = copy[i]
+    copy[i] = copy[j]
+    copy[j] = temp
+  }
+  return copy
+}
+
+const resetCoverPool = () => {
+  coverPool = shuffleArray(homePhotoUrls)
+  coverCursor = 0
+  coverByArticleSeed.clear()
+}
+
+const getUniqueRandomizedCover = (seed) => {
+  if (!homePhotoUrls.length) return fallbackCover
+  const key = String(seed || '')
+  if (coverByArticleSeed.has(key)) {
+    return coverByArticleSeed.get(key)
+  }
+
+  if (!coverPool.length || coverCursor >= coverPool.length) {
+    coverPool = shuffleArray(homePhotoUrls)
+    coverCursor = 0
+  }
+
+  const selectedCover = coverPool[coverCursor++] || fallbackCover
+  coverByArticleSeed.set(key, selectedCover)
+  return selectedCover
+}
+
 const fetchLatestArticles = () => {
   latestLoading.value = true
   getArticlePage(
     { currentPage: 1, size: 6, sortField: 'publishedAt', sortDirection: 'desc' },
     {
       onSuccess: (res) => {
-        latestArticles.value = res?.records || []
+        latestArticles.value = (res?.records || []).map((article) => {
+          const next = { ...article }
+          if (!next.coverImage || next.coverImage.includes('unsplash.com')) {
+            next.coverImage = getUniqueRandomizedCover(next.id || next.title)
+          }
+          return next
+        })
         latestLoading.value = false
       },
       onError: () => {
@@ -184,7 +306,13 @@ const fetchPopularArticles = () => {
     { currentPage: 1, size: 6, sortField: 'readCount', sortDirection: 'desc' },
     {
       onSuccess: (res) => {
-        popularArticles.value = res?.records || []
+        popularArticles.value = (res?.records || []).map((article) => {
+          const next = { ...article }
+          if (!next.coverImage || next.coverImage.includes('unsplash.com')) {
+            next.coverImage = getUniqueRandomizedCover(next.id || next.title)
+          }
+          return next
+        })
       },
       onError: () => {
         popularArticles.value = []
@@ -225,6 +353,7 @@ watch(heroArticles, (val) => {
 })
 
 onMounted(() => {
+  resetCoverPool()
   fetchLatestArticles()
   fetchPopularArticles()
   startHeroAutoPlay()
@@ -240,7 +369,10 @@ onUnmounted(() => {
 
 <style scoped>
 .home-blog {
-  background: #f5f7fb;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(91, 123, 255, 0.1) 0%, transparent 32%),
+    radial-gradient(circle at 100% 0%, rgba(34, 197, 94, 0.08) 0%, transparent 34%),
+    #f5f7fb;
   min-height: 100vh;
   color: #1f2937;
 }
@@ -256,13 +388,15 @@ onUnmounted(() => {
 }
 
 .hero-slide-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 18px;
   padding: 1rem;
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 1rem;
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.1);
+  backdrop-filter: blur(8px);
 }
 
 .hero-slide-card.empty {
@@ -325,13 +459,15 @@ onUnmounted(() => {
 }
 
 .btn.primary {
-  background: #2563eb;
+  background: linear-gradient(135deg, #5b7bff 0%, #4f46e5 100%);
   color: #fff;
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.26);
 }
 
 .btn.ghost {
-  border: 1px solid #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.38);
   color: #334155;
+  background: rgba(255, 255, 255, 0.66);
 }
 
 .hero-nav {
@@ -373,7 +509,7 @@ onUnmounted(() => {
 
 .hero-dot.active {
   width: 28px;
-  background: #2563eb;
+  background: #5b7bff;
 }
 
 .hero-search {
@@ -445,10 +581,17 @@ onUnmounted(() => {
   gap: 0.9rem;
   text-decoration: none;
   color: inherit;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 14px;
   padding: 0.7rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.08);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.article-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(79, 70, 229, 0.14);
 }
 
 .article-item img {
@@ -482,10 +625,12 @@ onUnmounted(() => {
 }
 
 .widget {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 14px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.2);
   padding: 1rem;
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.08);
+  backdrop-filter: blur(8px);
 }
 
 .widget h3 {

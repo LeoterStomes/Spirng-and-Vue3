@@ -2,7 +2,9 @@
   <div class="knowledge-test-page">
     <div class="test-container">
       <h1>知识库模块功能测试</h1>
-      <p class="test-desc">本页面用于测试知识库模块的各项功能，确保前后端API集成正常工作</p>
+      <p class="test-desc">
+        本页面用于测试知识库模块的各项功能，确保前后端API集成正常工作
+      </p>
       
       <!-- 测试控制面板 -->
       <div class="test-control-panel">
@@ -10,16 +12,46 @@
           <template #header>
             <div class="card-header">
               <span>测试控制面板</span>
-              <el-button type="primary" @click="runAllTests">运行所有测试</el-button>
+              <el-button
+                type="primary"
+                @click="runAllTests"
+              >
+                运行所有测试
+              </el-button>
             </div>
           </template>
           
           <div class="test-buttons">
-            <el-button @click="testCategoryAPI" type="info">测试分类API</el-button>
-            <el-button @click="testArticleAPI" type="success">测试文章API</el-button>
-            <el-button @click="testFavoriteAPI" type="warning">测试收藏API</el-button>
-            <el-button @click="testPageNavigation" type="primary">测试页面跳转</el-button>
-            <el-button @click="clearResults" type="danger">清空结果</el-button>
+            <el-button
+              type="info"
+              @click="testCategoryAPI"
+            >
+              测试分类API
+            </el-button>
+            <el-button
+              type="success"
+              @click="testArticleAPI"
+            >
+              测试文章API
+            </el-button>
+            <el-button
+              type="warning"
+              @click="testFavoriteAPI"
+            >
+              测试收藏API
+            </el-button>
+            <el-button
+              type="primary"
+              @click="testPageNavigation"
+            >
+              测试页面跳转
+            </el-button>
+            <el-button
+              type="danger"
+              @click="clearResults"
+            >
+              清空结果
+            </el-button>
           </div>
         </el-card>
       </div>
@@ -32,8 +64,11 @@
           </template>
           
           <div class="results-content">
-            <div v-if="testResults.length === 0" class="no-results">
-              <i class="fas fa-flask"></i>
+            <div
+              v-if="testResults.length === 0"
+              class="no-results"
+            >
+              <i class="fas fa-flask" />
               <p>点击上方按钮开始测试</p>
             </div>
             
@@ -46,13 +81,18 @@
               <div class="result-header">
                 <span class="result-title">{{ result.title }}</span>
                 <span class="result-status">
-                  <i :class="result.status === 'success' ? 'fas fa-check' : 'fas fa-times'"></i>
+                  <i :class="result.status === 'success' ? 'fas fa-check' : 'fas fa-times'" />
                   {{ result.status === 'success' ? '成功' : '失败' }}
                 </span>
                 <span class="result-time">{{ result.timestamp }}</span>
               </div>
-              <div class="result-message">{{ result.message }}</div>
-              <div v-if="result.data" class="result-data">
+              <div class="result-message">
+                {{ result.message }}
+              </div>
+              <div
+                v-if="result.data"
+                class="result-data"
+              >
                 <pre>{{ JSON.stringify(result.data, null, 2) }}</pre>
               </div>
             </div>
@@ -68,18 +108,30 @@
           </template>
           
           <div class="nav-buttons">
-            <el-button @click="goToKnowledge" type="primary" size="large">
-              <i class="fas fa-book"></i>
+            <el-button
+              type="primary"
+              size="large"
+              @click="goToKnowledge"
+            >
+              <i class="fas fa-book" />
               前台知识库
             </el-button>
             
-            <el-button @click="goToBackendKnowledge" type="success" size="large">
-              <i class="fas fa-cogs"></i>
+            <el-button
+              type="success"
+              size="large"
+              @click="goToBackendKnowledge"
+            >
+              <i class="fas fa-cogs" />
               后台文章管理
             </el-button>
             
-            <el-button @click="goToArticleDetail(1)" type="info" size="large">
-              <i class="fas fa-file-alt"></i>
+            <el-button
+              type="info"
+              size="large"
+              @click="goToArticleDetail(1)"
+            >
+              <i class="fas fa-file-alt" />
               示例文章详情
             </el-button>
           </div>
@@ -94,35 +146,80 @@
           </template>
           
           <el-collapse v-model="activeCollapse">
-            <el-collapse-item title="分类管理API" name="category">
+            <el-collapse-item
+              title="分类管理API"
+              name="category"
+            >
               <div class="api-list">
-                <div class="api-item" v-for="api in categoryAPIs" :key="api.name">
+                <div
+                  v-for="api in categoryAPIs"
+                  :key="api.name"
+                  class="api-item"
+                >
                   <span class="api-name">{{ api.name }}</span>
-                  <span class="api-method" :class="api.method.toLowerCase()">{{ api.method }}</span>
+                  <span
+                    class="api-method"
+                    :class="api.method.toLowerCase()"
+                  >{{ api.method }}</span>
                   <span class="api-url">{{ api.url }}</span>
-                  <el-button size="small" @click="testSingleAPI(api)">测试</el-button>
+                  <el-button
+                    size="small"
+                    @click="testSingleAPI(api)"
+                  >
+                    测试
+                  </el-button>
                 </div>
               </div>
             </el-collapse-item>
             
-            <el-collapse-item title="文章管理API" name="article">
+            <el-collapse-item
+              title="文章管理API"
+              name="article"
+            >
               <div class="api-list">
-                <div class="api-item" v-for="api in articleAPIs" :key="api.name">
+                <div
+                  v-for="api in articleAPIs"
+                  :key="api.name"
+                  class="api-item"
+                >
                   <span class="api-name">{{ api.name }}</span>
-                  <span class="api-method" :class="api.method.toLowerCase()">{{ api.method }}</span>
+                  <span
+                    class="api-method"
+                    :class="api.method.toLowerCase()"
+                  >{{ api.method }}</span>
                   <span class="api-url">{{ api.url }}</span>
-                  <el-button size="small" @click="testSingleAPI(api)">测试</el-button>
+                  <el-button
+                    size="small"
+                    @click="testSingleAPI(api)"
+                  >
+                    测试
+                  </el-button>
                 </div>
               </div>
             </el-collapse-item>
             
-            <el-collapse-item title="收藏管理API" name="favorite">
+            <el-collapse-item
+              title="收藏管理API"
+              name="favorite"
+            >
               <div class="api-list">
-                <div class="api-item" v-for="api in favoriteAPIs" :key="api.name">
+                <div
+                  v-for="api in favoriteAPIs"
+                  :key="api.name"
+                  class="api-item"
+                >
                   <span class="api-name">{{ api.name }}</span>
-                  <span class="api-method" :class="api.method.toLowerCase()">{{ api.method }}</span>
+                  <span
+                    class="api-method"
+                    :class="api.method.toLowerCase()"
+                  >{{ api.method }}</span>
                   <span class="api-url">{{ api.url }}</span>
-                  <el-button size="small" @click="testSingleAPI(api)">测试</el-button>
+                  <el-button
+                    size="small"
+                    @click="testSingleAPI(api)"
+                  >
+                    测试
+                  </el-button>
                 </div>
               </div>
             </el-collapse-item>

@@ -3,14 +3,16 @@
     <!-- 表单标题 -->
     <div class="form-header">
       <h2>{{ title }}</h2>
-      <p v-if="subtitle">{{ subtitle }}</p>
+      <p v-if="subtitle">
+        {{ subtitle }}
+      </p>
     </div>
 
     <!-- 表单内容 -->
     <el-form 
+      ref="formRef" 
       :model="formData" 
       :rules="rules" 
-      ref="formRef" 
       @submit.prevent="handleSubmit"
     >
       <!-- 动态渲染表单项 -->
@@ -36,8 +38,8 @@
         <el-button 
           type="primary" 
           :loading="loading" 
-          @click="handleSubmit"
           style="width: 100%"
+          @click="handleSubmit"
         >
           {{ submitText }}
         </el-button>
@@ -45,9 +47,18 @@
     </el-form>
 
     <!-- 底部链接 -->
-    <div class="form-links" v-if="links && links.length">
-      <div v-for="link in links" :key="link.text" class="link-item">
-        <router-link :to="link.to">{{ link.text }}</router-link>
+    <div
+      v-if="links && links.length"
+      class="form-links"
+    >
+      <div
+        v-for="link in links"
+        :key="link.text"
+        class="link-item"
+      >
+        <router-link :to="link.to">
+          {{ link.text }}
+        </router-link>
       </div>
     </div>
   </div>

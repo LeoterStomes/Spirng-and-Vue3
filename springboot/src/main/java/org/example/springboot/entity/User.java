@@ -70,7 +70,7 @@ public class User {
     @Schema(description = "生日")
     private LocalDate birthday;
 
-    @Schema(description = "用户类型 1:普通用户 2:管理员")
+    @Schema(description = "用户类型 1:普通用户 2:管理员 3:医生")
     @TableField("user_type")
     private Integer userType;
 
@@ -97,6 +97,13 @@ public class User {
      */
     public boolean isUser() {
         return UserType.USER.getCode().equals(this.userType);
+    }
+
+    /**
+     * 是否为医生
+     */
+    public boolean isDoctor() {
+        return UserType.DOCTOR.getCode().equals(this.userType);
     }
 
     /**

@@ -8,15 +8,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.dao.DuplicateKeyException;
 
 import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.HashMap;
-import java.util.stream.Collectors;
 
 import org.example.springboot.entity.User;
 import org.example.springboot.mapper.UserMapper;
@@ -28,7 +26,6 @@ import org.example.springboot.enumClass.UserStatus;
 import org.example.springboot.exception.BusinessException;
 import org.example.springboot.exception.ServiceException;
 import org.example.springboot.util.JwtTokenUtils;
-import jakarta.annotation.Resource;
 import org.example.springboot.service.convert.UserConvert;
 
 /**
@@ -120,9 +117,34 @@ public class UserService {
                 throw new BusinessException("邮箱已被注册");
             }
 
-            // 验证用户类型
-            if (!UserType.isValidCode(registerDTO.getUserType())) {
+            // 检查手机号是否存在（手机号可选，但若填写则必须唯一）
+            if (StringUtils.hasText(registerDTO.getPhone())) {
+                LambdaQueryWrapper<User> phoneQuery = new LambdaQueryWrapper<>();
+                phoneQuery.eq(User::getPhone, registerDTO.getPhone());
+                if (userMapper.selectCount(phoneQuery) > 0) {
+                    throw new BusinessException("手机号已被注册");
+                }
+            }
+
+            // 验证用户类型（公开注册仅允许普通用户/医生，禁止自注册管理员）
+            Integer registerUserType = registerDTO.getUserType();
+            if (registerUserType == null) {
+                registerUserType = UserType.USER.getCode();
+                registerDTO.setUserType(registerUserType);
+            }
+            if (!UserType.isValidCode(registerUserType)) {
                 throw new BusinessException("无效的用户类型");
+            }
+            if (UserType.ADMIN.getCode().equals(registerUserType)) {
+                Integer currentRole;
+                try {
+                    currentRole = JwtTokenUtils.getCurrentUserRole();
+                } catch (Exception ex) {
+                    currentRole = null;
+                }
+                if (!UserType.ADMIN.getCode().equals(currentRole)) {
+                    throw new BusinessException("仅管理员可创建管理员账号");
+                }
             }
 
             // 创建用户
@@ -136,6 +158,19 @@ public class UserService {
 
         } catch (BusinessException e) {
             throw e;
+        } catch (DuplicateKeyException e) {
+            log.warn("注册唯一约束冲突: {}", e.getMessage());
+            String message = e.getMessage();
+            if (message != null && message.contains("phone")) {
+                throw new BusinessException("手机号已被注册");
+            }
+            if (message != null && message.contains("email")) {
+                throw new BusinessException("邮箱已被注册");
+            }
+            if (message != null && message.contains("username")) {
+                throw new BusinessException("用户名已存在");
+            }
+            throw new BusinessException("注册信息重复，请更换后重试");
         } catch (Exception e) {
             log.error("用户注册失败", e);
             throw new ServiceException("注册失败，请稍后重试");
@@ -493,6 +528,26 @@ public class UserService {
 
 
 
+
+    /**
+     * 更新用户角色
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserRole(Long userId, Integer newUserType) {
+        if (!UserType.isValidCode(newUserType)) {
+            throw new BusinessException("无效的用户类型");
+        }
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(User::getId, userId)
+                .set(User::getUserType, newUserType)
+                .set(User::getUpdatedAt, LocalDateTime.now());
+        userMapper.update(null, updateWrapper);
+        log.info("用户角色更新成功: {} -> {}", user.getUsername(), UserType.fromCode(newUserType).getDescription());
+    }
 
     /**
      * 通过邮箱重置密码

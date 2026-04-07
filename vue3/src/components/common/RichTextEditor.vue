@@ -4,37 +4,43 @@
     <div class="editor-container">
       <WangToolbar 
         :editor="editorRef" 
-        :defaultConfig="toolbarConfig" 
+        :default-config="toolbarConfig" 
         mode="default" 
         class="editor-toolbar"
       />
       <WangEditor
         v-model="content"
-        :defaultConfig="editorConfig"
+        :default-config="editorConfig"
         mode="default"
         class="wang-editor"
-        @onCreated="handleEditorCreated"
-        @onChange="handleEditorChange"
-        @onDestroyed="handleEditorDestroyed"
+        @on-created="handleEditorCreated"
+        @on-change="handleEditorChange"
+        @on-destroyed="handleEditorDestroyed"
       />
     </div>
 
     <!-- 字数统计 -->
-    <div v-if="showWordCount" class="editor-footer">
+    <div
+      v-if="showWordCount"
+      class="editor-footer"
+    >
       <div class="word-count">
         <span class="count-text">{{ currentCharCount }} / {{ maxCharCount }}</span>
         <div class="progress-bar">
           <div 
             class="progress-fill" 
             :style="{ width: Math.min((currentCharCount / maxCharCount) * 100, 100) + '%' }"
-          ></div>
+          />
         </div>
       </div>
     </div>
 
     <!-- 安全提示 -->
-    <div v-if="showSecurityTip" class="security-tip">
-      <i class="fas fa-shield-alt"></i>
+    <div
+      v-if="showSecurityTip"
+      class="security-tip"
+    >
+      <i class="fas fa-shield-alt" />
       内容将进行智能审核
     </div>
   </div>

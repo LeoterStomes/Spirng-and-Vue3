@@ -1,116 +1,149 @@
 <template>
   <div class="login-container">
     <div class="form-container">
-        <!-- 返回首页链接 -->
-        <div class="back-home">
-          <router-link to="/" class="back-home-link">
-            <i class="fas fa-arrow-left"></i>返回首页
-          </router-link>
-        </div>
+      <!-- 返回首页链接 -->
+      <div class="back-home">
+        <router-link
+          to="/"
+          class="back-home-link"
+        >
+          <i class="fas fa-arrow-left" />返回首页
+        </router-link>
+      </div>
         
-        <div class="form-header">
-          <h2 class="form-title">登录您的账户</h2>
-          <p class="form-subtitle">请输入您的登录信息</p>
+      <div class="form-header">
+        <h2 class="form-title">
+          登录您的账户
+        </h2>
+        <p class="form-subtitle">
+          请输入您的登录信息
+        </p>
+      </div>
+
+      <form
+        class="login-form"
+        @submit.prevent="handleLogin"
+      >
+        <!-- 用户名/邮箱输入 -->
+        <div class="form-field">
+          <label
+            for="username"
+            class="field-label"
+          >
+            <i class="fas fa-user label-icon" />用户名或邮箱
+          </label>
+          <input 
+            id="username" 
+            v-model="loginForm.username"
+            name="username" 
+            type="text" 
+            required 
+            class="form-input"
+            placeholder="请输入用户名或邮箱"
+          >
         </div>
 
-        <form class="login-form" @submit.prevent="handleLogin">
-          <!-- 用户名/邮箱输入 -->
-          <div class="form-field">
-            <label for="username" class="field-label">
-              <i class="fas fa-user label-icon"></i>用户名或邮箱
-            </label>
+        <!-- 密码输入 -->
+        <div class="form-field">
+          <label
+            for="password"
+            class="field-label"
+          >
+            <i class="fas fa-lock label-icon" />密码
+          </label>
+          <div class="password-wrapper">
             <input 
-              id="username" 
-              v-model="loginForm.username"
-              name="username" 
-              type="text" 
+              id="password" 
+              v-model="loginForm.password"
+              name="password" 
+              :type="showPassword ? 'text' : 'password'"
               required 
-              class="form-input"
-              placeholder="请输入用户名或邮箱"
+              class="form-input password-input"
+              placeholder="请输入密码"
             >
-          </div>
-
-          <!-- 密码输入 -->
-          <div class="form-field">
-            <label for="password" class="field-label">
-              <i class="fas fa-lock label-icon"></i>密码
-            </label>
-            <div class="password-wrapper">
-              <input 
-                id="password" 
-                v-model="loginForm.password"
-                name="password" 
-                :type="showPassword ? 'text' : 'password'"
-                required 
-                class="form-input password-input"
-                placeholder="请输入密码"
-              >
-              <button 
-                type="button" 
-                class="password-toggle"
-                @click="togglePasswordVisibility"
-              >
-                <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="toggle-icon"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- 记住我和忘记密码 -->
-          <div class="form-options">
-            <div class="remember-section">
-              <input 
-                id="remember-me" 
-                v-model="rememberMe"
-                name="remember-me" 
-                type="checkbox" 
-                class="checkbox-input"
-              >
-              <label for="remember-me" class="checkbox-label">记住我</label>
-            </div>
-          </div>
-
-          <!-- 登录按钮 -->
-          <div class="button-section">
             <button 
-              type="submit" 
-              :disabled="loading"
-              class="login-button"
+              type="button" 
+              class="password-toggle"
+              @click="togglePasswordVisibility"
             >
-              <span class="button-icon">
-                <i v-if="!loading" class="fas fa-sign-in-alt"></i>
-                <i v-else class="fas fa-spinner fa-spin"></i>
-              </span>
-              {{ loading ? '登录中...' : '登录账户' }}
+              <i
+                :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                class="toggle-icon"
+              />
             </button>
           </div>
+        </div>
 
-          <!-- 注册链接 -->
-          <div class="register-section">
-            <p class="register-text">
-              还没有账户？
-              <router-link to="/auth/register" class="register-link">
-                立即注册
-              </router-link>
-            </p>
+        <!-- 记住我和忘记密码 -->
+        <div class="form-options">
+          <div class="remember-section">
+            <input 
+              id="remember-me" 
+              v-model="rememberMe"
+              name="remember-me" 
+              type="checkbox" 
+              class="checkbox-input"
+            >
+            <label
+              for="remember-me"
+              class="checkbox-label"
+            >记住我</label>
           </div>
-        </form>
+        </div>
 
-        <!-- 安全提示 -->
-        <div class="security-notice">
-          <div class="notice-content">
-            <div class="notice-icon">
-              <i class="fas fa-shield-alt"></i>
-            </div>
-            <div class="notice-text">
-              <h3 class="notice-title">安全提示</h3>
-              <div class="notice-description">
-                <p>为了保护您的隐私和数据安全，请不要在公共设备上保存登录信息。</p>
-              </div>
+        <!-- 登录按钮 -->
+        <div class="button-section">
+          <button 
+            type="submit" 
+            :disabled="loading"
+            class="login-button"
+          >
+            <span class="button-icon">
+              <i
+                v-if="!loading"
+                class="fas fa-sign-in-alt"
+              />
+              <i
+                v-else
+                class="fas fa-spinner fa-spin"
+              />
+            </span>
+            {{ loading ? '登录中...' : '登录账户' }}
+          </button>
+        </div>
+
+        <!-- 注册链接 -->
+        <div class="register-section">
+          <p class="register-text">
+            还没有账户？
+            <router-link
+              to="/auth/register"
+              class="register-link"
+            >
+              立即注册
+            </router-link>
+          </p>
+        </div>
+      </form>
+
+      <!-- 安全提示 -->
+      <div class="security-notice">
+        <div class="notice-content">
+          <div class="notice-icon">
+            <i class="fas fa-shield-alt" />
+          </div>
+          <div class="notice-text">
+            <h3 class="notice-title">
+              安全提示
+            </h3>
+            <div class="notice-description">
+              <p>为了保护您的隐私和数据安全，请不要在公共设备上保存登录信息。</p>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -214,6 +247,9 @@ const handleLogin = async () => {
         if (data.userInfo.userType === 2) { // 2代表管理员
           await router.isReady()
           router.push(route.query.redirect || '/back/dashboard')
+        } else if (data.userInfo.userType === 3) { // 3代表医生
+          await router.isReady()
+          router.push(route.query.redirect || '/doctor/dashboard')
         } else {
           // 普通用户登录，直接跳转到前台
           const redirect = route.query.redirect || '/'

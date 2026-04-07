@@ -250,6 +250,25 @@ public class UserController {
     }
 
     /**
+     * 更新用户角色（管理员功能）
+     */
+    @Operation(summary = "更新用户角色")
+    @PutMapping("/{id}/role")
+    public Result<Void> updateUserRole(
+            @Parameter(description = "用户ID") @PathVariable Long id,
+            @Parameter(description = "用户类型 1:普通用户 2:管理员 3:医生") @RequestParam Integer userType) {
+
+        Integer currentUserRole = JwtTokenUtils.getCurrentUserRole();
+        if (!UserType.ADMIN.getCode().equals(currentUserRole)) {
+            return Result.error("权限不足，仅管理员可操作");
+        }
+
+        log.info("管理员更新用户角色: userId={}, newRole={}", id, userType);
+        userService.updateUserRole(id, userType);
+        return Result.success();
+    }
+
+    /**
      * 删除用户（管理员功能）
      */
     @Operation(summary = "删除用户")

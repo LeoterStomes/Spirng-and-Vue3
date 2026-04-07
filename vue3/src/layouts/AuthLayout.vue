@@ -7,10 +7,13 @@
         class="bg-slide"
         :class="{ active: idx === currentSlide }"
         :style="{ backgroundImage: `url(${img})` }"
-      ></div>
+      />
     </div>
-    <div class="bg-overlay"></div>
-    <div class="snow-layer" aria-hidden="true">
+    <div class="bg-overlay" />
+    <div
+      class="snow-layer"
+      aria-hidden="true"
+    >
       <span
         v-for="flake in snowflakes"
         :key="flake.id"
@@ -79,6 +82,20 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
+.auth-layout::before {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 999px;
+  left: -140px;
+  top: -120px;
+  background: rgba(91, 123, 255, 0.28);
+  filter: blur(48px);
+  z-index: 1;
+  pointer-events: none;
+}
+
 .bg-slides {
   position: absolute;
   inset: 0;
@@ -141,10 +158,10 @@ onUnmounted(() => {
 .right-section {
   width: 100%;
   max-width: 520px;
-  background: rgba(255, 255, 255, 0.26);
-  border: 1px solid rgba(255, 255, 255, 0.36);
+  background: rgba(255, 255, 255, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 20px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(14px);
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.28);
   padding: 1.8rem 1.4rem;
 }

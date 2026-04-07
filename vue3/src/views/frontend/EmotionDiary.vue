@@ -5,15 +5,18 @@
       <div class="header-content">
         <div class="header-left">
           <div class="breathing-animation">
-            <i class="fas fa-heart"></i>
+            <i class="fas fa-heart" />
           </div>
           <div class="header-text">
             <h2>情绪日记</h2>
           </div>
         </div>
         <div class="header-right">
-          <el-button type="primary" @click="showHistoryDialog = true">
-            <i class="fas fa-calendar"></i>
+          <el-button
+            type="primary"
+            @click="showHistoryDialog = true"
+          >
+            <i class="fas fa-calendar" />
             查看历史记录
           </el-button>
         </div>
@@ -27,11 +30,13 @@
           <!-- 情绪评分卡片 -->
           <div class="diary-card">
             <h3 class="card-title">
-              <i class="fas fa-smile"></i>今日情绪评分
+              <i class="fas fa-smile" />今日情绪评分
             </h3>
             
             <div class="mood-score-section">
-              <p class="mood-label">您今天的整体情绪状态如何？(1-10分)</p>
+              <p class="mood-label">
+                您今天的整体情绪状态如何？(1-10分)
+              </p>
               
               <div class="mood-selectors">
                 <span class="mood-range-label">很糟糕</span>
@@ -49,7 +54,10 @@
                 <span class="mood-range-label">非常好</span>
               </div>
               
-              <div class="selected-mood" v-if="diaryForm.moodScore">
+              <div
+                v-if="diaryForm.moodScore"
+                class="selected-mood"
+              >
                 <span class="current-selection">
                   当前选择：{{ diaryForm.moodScore }}分 - {{ getMoodDescription(diaryForm.moodScore) }}
                 </span>
@@ -60,7 +68,7 @@
           <!-- 主要情绪选择 -->
           <div class="diary-card">
             <h3 class="card-title">
-              <i class="fas fa-palette"></i>主要情绪
+              <i class="fas fa-palette" />主要情绪
             </h3>
             
             <div class="emotion-grid">
@@ -71,8 +79,13 @@
                 :class="{ selected: diaryForm.dominantEmotion === emotion.name }"
                 @click="selectEmotion(emotion.name)"
               >
-                <i :class="emotion.icon" :style="{ color: emotion.color }"></i>
-                <div class="emotion-name">{{ emotion.name }}</div>
+                <i
+                  :class="emotion.icon"
+                  :style="{ color: emotion.color }"
+                />
+                <div class="emotion-name">
+                  {{ emotion.name }}
+                </div>
               </div>
             </div>
           </div>
@@ -80,7 +93,7 @@
           <!-- 详细记录 -->
           <div class="diary-card">
             <h3 class="card-title">
-              <i class="fas fa-edit"></i>详细记录
+              <i class="fas fa-edit" />详细记录
             </h3>
             
             <div class="detail-form">
@@ -114,23 +127,59 @@
               <div class="life-indicators">
                 <div class="indicator-group">
                   <label class="form-label">睡眠质量</label>
-                  <el-select v-model="diaryForm.sleepQuality" placeholder="请选择">
-                    <el-option label="很差" :value="1" />
-                    <el-option label="较差" :value="2" />
-                    <el-option label="一般" :value="3" />
-                    <el-option label="良好" :value="4" />
-                    <el-option label="优秀" :value="5" />
+                  <el-select
+                    v-model="diaryForm.sleepQuality"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      label="很差"
+                      :value="1"
+                    />
+                    <el-option
+                      label="较差"
+                      :value="2"
+                    />
+                    <el-option
+                      label="一般"
+                      :value="3"
+                    />
+                    <el-option
+                      label="良好"
+                      :value="4"
+                    />
+                    <el-option
+                      label="优秀"
+                      :value="5"
+                    />
                   </el-select>
                 </div>
                 
                 <div class="indicator-group">
                   <label class="form-label">压力水平</label>
-                  <el-select v-model="diaryForm.stressLevel" placeholder="请选择">
-                    <el-option label="很低" :value="1" />
-                    <el-option label="较低" :value="2" />
-                    <el-option label="中等" :value="3" />
-                    <el-option label="较高" :value="4" />
-                    <el-option label="很高" :value="5" />
+                  <el-select
+                    v-model="diaryForm.stressLevel"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      label="很低"
+                      :value="1"
+                    />
+                    <el-option
+                      label="较低"
+                      :value="2"
+                    />
+                    <el-option
+                      label="中等"
+                      :value="3"
+                    />
+                    <el-option
+                      label="较高"
+                      :value="4"
+                    />
+                    <el-option
+                      label="很高"
+                      :value="5"
+                    />
                   </el-select>
                 </div>
               </div>
@@ -142,10 +191,10 @@
                 </el-button>
                 <el-button 
                   type="primary" 
-                  @click="saveDiary"
                   :loading="saving"
+                  @click="saveDiary"
                 >
-                  <i class="fas fa-save"></i>
+                  <i class="fas fa-save" />
                   提交记录
                 </el-button>
               </div>
@@ -158,17 +207,24 @@
           <!-- 情绪趋势 -->
           <div class="stat-card">
             <h4 class="stat-title">
-              <i class="fas fa-chart-line"></i>7天情绪趋势
+              <i class="fas fa-chart-line" />7天情绪趋势
             </h4>
-            <div class="trend-chart" ref="trendChartContainer">
-              <canvas ref="trendChart" width="300" height="200"></canvas>
+            <div
+              ref="trendChartContainer"
+              class="trend-chart"
+            >
+              <canvas
+                ref="trendChart"
+                width="300"
+                height="200"
+              />
             </div>
           </div>
 
           <!-- 情绪统计 -->
           <div class="stat-card">
             <h4 class="stat-title">
-              <i class="fas fa-chart-pie"></i>本周情绪分布
+              <i class="fas fa-chart-pie" />本周情绪分布
             </h4>
             <div class="emotion-stats">
               <template v-if="emotionStats.length > 0">
@@ -177,15 +233,23 @@
                   :key="stat.emotion"
                   class="stat-item"
                 >
-                  <div class="stat-color" :style="{ backgroundColor: stat.color }"></div>
+                  <div
+                    class="stat-color"
+                    :style="{ backgroundColor: stat.color }"
+                  />
                   <span class="stat-label">{{ stat.emotion }}</span>
                   <span class="stat-value">{{ stat.percentage }}%</span>
                 </div>
               </template>
-              <div v-else class="no-emotion-data">
-                <i class="fas fa-chart-pie"></i>
+              <div
+                v-else
+                class="no-emotion-data"
+              >
+                <i class="fas fa-chart-pie" />
                 <p>暂无情绪数据</p>
-                <p class="tip">请先记录情绪日记以查看统计数据</p>
+                <p class="tip">
+                  请先记录情绪日记以查看统计数据
+                </p>
               </div>
             </div>
           </div>
@@ -193,7 +257,7 @@
           <!-- AI分析建议 -->
           <div class="stat-card analysis-card">
             <h4 class="stat-title">
-              <i class="fas fa-lightbulb"></i>AI智能分析
+              <i class="fas fa-lightbulb" />AI智能分析
             </h4>
             <div class="analysis-content">
               <div v-if="statistics.suggestions && statistics.suggestions.length > 0">
@@ -202,63 +266,93 @@
                   :key="index"
                   class="suggestion-item"
                 >
-                  <i class="fas fa-circle"></i>
+                  <i class="fas fa-circle" />
                   {{ suggestion }}
                 </div>
               </div>
-              <div v-else class="no-analysis">
+              <div
+                v-else
+                class="no-analysis"
+              >
                 暂无分析数据，请继续记录情绪日记
               </div>
             </div>
           </div>
 
           <!-- 今日AI情绪分析 -->
-          <div class="stat-card ai-emotion-card" v-if="currentDiaryId">
+          <div
+            v-if="currentDiaryId"
+            class="stat-card ai-emotion-card"
+          >
             <h4 class="stat-title">
-              <i class="fas fa-brain"></i>今日AI情绪分析
+              <i class="fas fa-brain" />今日AI情绪分析
               <el-button 
                 type="text" 
                 size="small" 
-                @click="refreshTodayAnalysisStatus"
                 :loading="aiAnalysisLoading"
+                @click="refreshTodayAnalysisStatus"
               >
-                <i class="fas fa-sync-alt"></i>
+                <i class="fas fa-sync-alt" />
               </el-button>
             </h4>
             <div class="ai-analysis-content">
-              <div v-if="aiAnalysis" class="analysis-result">
+              <div
+                v-if="aiAnalysis"
+                class="analysis-result"
+              >
                 <div class="emotion-header">
                   <span class="emotion-icon">{{ aiAnalysis.icon }}</span>
                   <span class="emotion-label">{{ aiAnalysis.label }}</span>
                   <span class="emotion-score">{{ aiAnalysis.emotionScore }}分</span>
                 </div>
                 
-                <div class="risk-level" :class="getRiskLevelClass(aiAnalysis.riskLevel)">
+                <div
+                  class="risk-level"
+                  :class="getRiskLevelClass(aiAnalysis.riskLevel)"
+                >
                   风险等级：{{ getRiskLevelText(aiAnalysis.riskLevel) }}
                 </div>
                 
-                <div class="ai-suggestion" v-if="aiAnalysis.suggestion">
+                <div
+                  v-if="aiAnalysis.suggestion"
+                  class="ai-suggestion"
+                >
                   <h5>AI建议：</h5>
                   <p>{{ aiAnalysis.suggestion }}</p>
                 </div>
                 
-                <div class="improvement-suggestions" v-if="aiAnalysis.improvementSuggestions && aiAnalysis.improvementSuggestions.length > 0">
+                <div
+                  v-if="aiAnalysis.improvementSuggestions && aiAnalysis.improvementSuggestions.length > 0"
+                  class="improvement-suggestions"
+                >
                   <h5>改善建议：</h5>
                   <ul>
-                    <li v-for="suggestion in aiAnalysis.improvementSuggestions" :key="suggestion">
+                    <li
+                      v-for="suggestion in aiAnalysis.improvementSuggestions"
+                      :key="suggestion"
+                    >
                       {{ suggestion }}
                     </li>
                   </ul>
                 </div>
               </div>
-              <div v-else-if="aiAnalysisLoading" class="loading-analysis">
-                <i class="fas fa-spinner fa-spin"></i>
+              <div
+                v-else-if="aiAnalysisLoading"
+                class="loading-analysis"
+              >
+                <i class="fas fa-spinner fa-spin" />
                 正在分析中...
               </div>
-              <div v-else class="no-ai-analysis">
+              <div
+                v-else
+                class="no-ai-analysis"
+              >
                 <p>AI分析尚未完成</p>
-                <el-button size="small" @click="triggerAnalysis">
-                  <i class="fas fa-play"></i>开始分析
+                <el-button
+                  size="small"
+                  @click="triggerAnalysis"
+                >
+                  <i class="fas fa-play" />开始分析
                 </el-button>
               </div>
             </div>
@@ -266,14 +360,22 @@
 
           <!-- 快速操作 -->
           <div class="stat-card">
-            <h4 class="stat-title">快速操作</h4>
+            <h4 class="stat-title">
+              快速操作
+            </h4>
             <div class="quick-actions">
-              <el-button class="action-btn" @click="$router.push('/consultation')">
-                <i class="fas fa-comments"></i>
+              <el-button
+                class="action-btn"
+                @click="$router.push('/consultation')"
+              >
+                <i class="fas fa-comments" />
                 AI情绪咨询
               </el-button>
-              <el-button class="action-btn" @click="showHistoryDialog = true">
-                <i class="fas fa-calendar"></i>
+              <el-button
+                class="action-btn"
+                @click="showHistoryDialog = true"
+              >
+                <i class="fas fa-calendar" />
                 查看历史记录
               </el-button>
             </div>
@@ -281,7 +383,9 @@
 
           <!-- 每日提醒 -->
           <div class="stat-card tip-card">
-            <h4 class="stat-title">💡 每日小贴士</h4>
+            <h4 class="stat-title">
+              💡 每日小贴士
+            </h4>
             <p class="tip-content">
               坚持记录情绪日记有助于提高情绪觉察能力，建议每天花5-10分钟进行记录。
             </p>
@@ -291,7 +395,12 @@
     </div>
 
     <!-- 历史记录对话框 -->
-    <el-dialog v-model="showHistoryDialog" title="情绪日记历史记录" width="80%" top="5vh">
+    <el-dialog
+      v-model="showHistoryDialog"
+      title="情绪日记历史记录"
+      width="80%"
+      top="5vh"
+    >
       <div class="history-content">
         <!-- 查询条件 -->
         <div class="history-filters">
@@ -303,7 +412,12 @@
             end-placeholder="结束日期"
             @change="loadHistoryData"
           />
-          <el-select v-model="historyEmotionFilter" placeholder="情绪筛选" clearable @change="loadHistoryData">
+          <el-select
+            v-model="historyEmotionFilter"
+            placeholder="情绪筛选"
+            clearable
+            @change="loadHistoryData"
+          >
             <el-option 
               v-for="emotion in emotionOptions" 
               :key="emotion.name"
@@ -320,7 +434,9 @@
             :key="diary.id"
             class="history-item"
           >
-            <div class="history-date">{{ diary.diaryDate }}</div>
+            <div class="history-date">
+              {{ diary.diaryDate }}
+            </div>
             <div class="history-mood">
               <span class="mood-score">{{ diary.moodScore }}分</span>
               <span class="mood-emotion">{{ diary.dominantEmotion || '未记录' }}</span>
@@ -336,7 +452,7 @@
                 size="small"
                 effect="plain"
               >
-                <i class="fas fa-clock"></i>
+                <i class="fas fa-clock" />
                 分析中
               </el-tag>
               <el-tag 
@@ -345,7 +461,7 @@
                 size="small"
                 effect="plain"
               >
-                <i class="fas fa-check-circle"></i>
+                <i class="fas fa-check-circle" />
                 已完成
               </el-tag>
               <el-tag 
@@ -354,7 +470,7 @@
                 size="small"
                 effect="plain"
               >
-                <i class="fas fa-exclamation-circle"></i>
+                <i class="fas fa-exclamation-circle" />
                 分析失败
               </el-tag>
               <el-tag 
@@ -363,14 +479,30 @@
                 size="small"
                 effect="plain"
               >
-                <i class="fas fa-minus-circle"></i>
+                <i class="fas fa-minus-circle" />
                 未分析
               </el-tag>
             </div>
             <div class="history-actions">
-              <el-button size="small" @click="viewDiaryDetail(diary.id)">查看详情</el-button>
-              <el-button size="small" @click="editDiary(diary)">编辑</el-button>
-              <el-button size="small" type="danger" @click="deleteDiary(diary.id)">删除</el-button>
+              <el-button
+                size="small"
+                @click="viewDiaryDetail(diary.id)"
+              >
+                查看详情
+              </el-button>
+              <el-button
+                size="small"
+                @click="editDiary(diary)"
+              >
+                编辑
+              </el-button>
+              <el-button
+                size="small"
+                type="danger"
+                @click="deleteDiary(diary.id)"
+              >
+                删除
+              </el-button>
             </div>
           </div>
         </div>
@@ -954,13 +1086,16 @@ onMounted(() => {
 <style scoped>
 .emotion-diary-page {
   min-height: calc(100vh - 60px);
-  background: #f5f7fb;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 34%),
+    radial-gradient(circle at 100% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 34%),
+    #f5f7fb;
 }
 
 .header-section {
-  background: #ffffff;
+  background: linear-gradient(135deg, #ffffff 0%, #f6fbff 100%);
   color: #111827;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #dbeafe;
   padding: 2rem 0;
 }
 
@@ -981,7 +1116,7 @@ onMounted(() => {
 
 .breathing-animation {
   font-size: 2.2rem;
-  color: #2563eb;
+  color: #4f46e5;
 }
 
 .header-text h2 {
@@ -1015,17 +1150,17 @@ onMounted(() => {
 }
 
 .diary-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.94);
   border-radius: 14px;
   padding: 1.5rem;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.08);
+  border: 1px solid #dbeafe;
   transition: all 0.3s ease;
 }
 
 .diary-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.08);
+  box-shadow: 0 14px 30px rgba(79, 70, 229, 0.1);
 }
 
 .card-title {
@@ -1039,7 +1174,7 @@ onMounted(() => {
 }
 
 .card-title i {
-  color: #2563eb;
+  color: #4f46e5;
 }
 
 .mood-score-section .mood-label {
@@ -1083,6 +1218,11 @@ onMounted(() => {
   background-size: 1000% 100%;
 }
 
+.mood-selector:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+}
+
 .mood-selector:nth-child(1) { background-position: 0% 0%; }
 .mood-selector:nth-child(2) { background-position: 11% 0%; }
 .mood-selector:nth-child(3) { background-position: 22% 0%; }
@@ -1107,7 +1247,7 @@ onMounted(() => {
 .current-selection {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #2563eb;
+  color: #4f46e5;
 }
 
 .emotion-grid {
@@ -1132,9 +1272,10 @@ onMounted(() => {
 }
 
 .emotion-card.selected {
-  border-color: #2563eb;
-  background: #eff6ff;
+  border-color: #4f46e5;
+  background: #eef2ff;
   transform: translateY(-3px);
+  box-shadow: 0 12px 22px rgba(79, 70, 229, 0.16);
 }
 
 .emotion-card i {
@@ -1184,6 +1325,17 @@ onMounted(() => {
   margin-top: 1rem;
 }
 
+.action-buttons :deep(.el-button--primary) {
+  background: linear-gradient(135deg, #5b7bff 0%, #4f46e5 100%);
+  border: none;
+  box-shadow: 0 10px 22px rgba(79, 70, 229, 0.24);
+}
+
+.action-buttons :deep(.el-button--primary:hover) {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(79, 70, 229, 0.3);
+}
+
 .statistics-section {
   display: flex;
   flex-direction: column;
@@ -1191,11 +1343,17 @@ onMounted(() => {
 }
 
 .stat-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.94);
   border-radius: 14px;
   padding: 1.25rem;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.08);
+  border: 1px solid #dcfce7;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(16, 185, 129, 0.14);
 }
 
 .stat-title {
@@ -1209,7 +1367,7 @@ onMounted(() => {
 }
 
 .stat-title i {
-  color: #2563eb;
+  color: #10b981;
 }
 
 .trend-chart {
@@ -1250,6 +1408,9 @@ onMounted(() => {
   text-align: center;
   padding: 2rem 1rem;
   color: #9CA3AF;
+  border: 1px dashed rgba(148, 163, 184, 0.5);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.65);
 }
 
 .no-emotion-data i {
@@ -1269,8 +1430,8 @@ onMounted(() => {
 }
 
 .analysis-card {
-  background: #f8fbff;
-  border: 1px solid #dbeafe;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
 }
 
 .analysis-content {

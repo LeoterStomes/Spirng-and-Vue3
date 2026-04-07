@@ -1,77 +1,109 @@
 <template>
   <div class="data-analytics-container">
-
     <!-- 系统概览卡片 -->
-    <div class="overview-cards" v-loading="loading">
+    <div
+      v-loading="loading"
+      class="overview-cards"
+    >
       <div class="overview-card">
         <div class="card-icon users">
-          <i class="fas fa-users"></i>
+          <i class="fas fa-users" />
         </div>
         <div class="card-content">
-          <div class="card-title">总用户数</div>
-          <div class="card-value">{{ formatNumber(systemOverview.totalUsers) }}</div>
-          <div class="card-subtitle">活跃用户: {{ formatNumber(systemOverview.activeUsers) }}</div>
+          <div class="card-title">
+            总用户数
+          </div>
+          <div class="card-value">
+            {{ formatNumber(systemOverview.totalUsers) }}
+          </div>
+          <div class="card-subtitle">
+            活跃用户: {{ formatNumber(systemOverview.activeUsers) }}
+          </div>
         </div>
       </div>
 
       <div class="overview-card">
         <div class="card-icon diaries">
-          <i class="fas fa-heart"></i>
+          <i class="fas fa-heart" />
         </div>
         <div class="card-content">
-          <div class="card-title">情绪日记</div>
-          <div class="card-value">{{ formatNumber(systemOverview.totalDiaries) }}</div>
-          <div class="card-subtitle">今日新增: {{ formatNumber(systemOverview.todayNewDiaries) }}</div>
+          <div class="card-title">
+            情绪日记
+          </div>
+          <div class="card-value">
+            {{ formatNumber(systemOverview.totalDiaries) }}
+          </div>
+          <div class="card-subtitle">
+            今日新增: {{ formatNumber(systemOverview.todayNewDiaries) }}
+          </div>
         </div>
       </div>
 
       <div class="overview-card">
         <div class="card-icon sessions">
-          <i class="fas fa-comments"></i>
+          <i class="fas fa-comments" />
         </div>
         <div class="card-content">
-          <div class="card-title">咨询会话</div>
-          <div class="card-value">{{ formatNumber(systemOverview.totalSessions) }}</div>
-          <div class="card-subtitle">今日新增: {{ formatNumber(systemOverview.todayNewSessions) }}</div>
+          <div class="card-title">
+            咨询会话
+          </div>
+          <div class="card-value">
+            {{ formatNumber(systemOverview.totalSessions) }}
+          </div>
+          <div class="card-subtitle">
+            今日新增: {{ formatNumber(systemOverview.todayNewSessions) }}
+          </div>
         </div>
       </div>
 
       <div class="overview-card">
         <div class="card-icon mood">
-          <i class="fas fa-smile"></i>
+          <i class="fas fa-smile" />
         </div>
         <div class="card-content">
-          <div class="card-title">平均情绪</div>
-          <div class="card-value">{{ systemOverview.avgMoodScore || '0.0' }}/10</div>
-          <div class="card-subtitle">情绪健康指数</div>
+          <div class="card-title">
+            平均情绪
+          </div>
+          <div class="card-value">
+            {{ systemOverview.avgMoodScore || '0.0' }}/10
+          </div>
+          <div class="card-subtitle">
+            情绪健康指数
+          </div>
         </div>
       </div>
     </div>
 
-     <!-- 情绪可视化中心 -->
-     <div class="chart-section">
-       <div class="visualization-toggle">
-         <el-button-group>
-           <el-button 
-             :type="visualizationMode === 'classic' ? 'primary' : 'default'"
-             @click="visualizationMode = 'classic'"
-           >
-             <i class="fas fa-cubes"></i>
-             经典热力图
-           </el-button>
-           <el-button 
-             :type="visualizationMode === 'hub' ? 'primary' : 'default'"
-             @click="visualizationMode = 'hub'"
-           >
-             <i class="fas fa-magic"></i>
-             多元可视化
-           </el-button>
-         </el-button-group>
-       </div>
+    <!-- 情绪可视化中心 -->
+    <div class="chart-section">
+      <div class="visualization-toggle">
+        <el-button-group>
+          <el-button 
+            :type="visualizationMode === 'classic' ? 'primary' : 'default'"
+            @click="visualizationMode = 'classic'"
+          >
+            <i class="fas fa-cubes" />
+            经典热力图
+          </el-button>
+          <el-button 
+            :type="visualizationMode === 'hub' ? 'primary' : 'default'"
+            @click="visualizationMode = 'hub'"
+          >
+            <i class="fas fa-magic" />
+            多元可视化
+          </el-button>
+        </el-button-group>
+      </div>
        
-       <EmotionHeatmap3D v-if="visualizationMode === 'classic'" :heatmapData="emotionHeatmap" />
-       <EmotionVisualizationHub v-if="visualizationMode === 'hub'" :heatmapData="{ ...emotionHeatmap, emotionTrend: emotionTrend }" />
-     </div>
+      <EmotionHeatmap3D
+        v-if="visualizationMode === 'classic'"
+        :heatmap-data="emotionHeatmap"
+      />
+      <EmotionVisualizationHub
+        v-if="visualizationMode === 'hub'"
+        :heatmap-data="{ ...emotionHeatmap, emotionTrend: emotionTrend }"
+      />
+    </div>
 
     <!-- 图表区域 -->
     <div class="charts-grid">
@@ -79,12 +111,15 @@
       <div class="chart-card">
         <div class="chart-header">
           <h3>
-            <i class="fas fa-line-chart"></i>
+            <i class="fas fa-line-chart" />
             情绪趋势分析
           </h3>
         </div>
         <div class="chart-content">
-          <div ref="emotionTrendChartRef" style="width: 100%; height: 300px;"></div>
+          <div
+            ref="emotionTrendChartRef"
+            style="width: 100%; height: 300px;"
+          />
         </div>
       </div>
 
@@ -92,26 +127,41 @@
       <div class="chart-card">
         <div class="chart-header">
           <h3>
-            <i class="fas fa-chart-pie"></i>
+            <i class="fas fa-chart-pie" />
             咨询会话统计
           </h3>
         </div>
         <div class="chart-content">
           <div class="consultation-stats">
             <div class="stat-item">
-              <div class="stat-label">总会话数</div>
-              <div class="stat-value">{{ formatNumber(consultationStats.totalSessions) }}</div>
+              <div class="stat-label">
+                总会话数
+              </div>
+              <div class="stat-value">
+                {{ formatNumber(consultationStats.totalSessions) }}
+              </div>
             </div>
             <div class="stat-item">
-              <div class="stat-label">平均时长</div>
-              <div class="stat-value">{{ consultationStats.avgDurationMinutes || '0' }}分钟</div>
+              <div class="stat-label">
+                平均时长
+              </div>
+              <div class="stat-value">
+                {{ consultationStats.avgDurationMinutes || '0' }}分钟
+              </div>
             </div>
             <div class="stat-item">
-              <div class="stat-label">活跃用户</div>
-              <div class="stat-value">{{ formatNumber(systemOverview.activeUsers) }}</div>
+              <div class="stat-label">
+                活跃用户
+              </div>
+              <div class="stat-value">
+                {{ formatNumber(systemOverview.activeUsers) }}
+              </div>
             </div>
           </div>
-          <div ref="consultationChartRef" style="width: 100%; height: 300px;"></div>
+          <div
+            ref="consultationChartRef"
+            style="width: 100%; height: 300px;"
+          />
         </div>
       </div>
 
@@ -119,20 +169,26 @@
       <div class="chart-card full-width">
         <div class="chart-header">
           <h3>
-            <i class="fas fa-user-friends"></i>
+            <i class="fas fa-user-friends" />
             用户活跃度趋势
           </h3>
         </div>
         <div class="chart-content">
-          <div ref="userActivityChartRef" style="width: 100%; height: 300px;"></div>
+          <div
+            ref="userActivityChartRef"
+            style="width: 100%; height: 300px;"
+          />
         </div>
       </div>
     </div>
 
     <!-- 情绪标签云 -->
-    <div class="emotion-tags-section" v-if="consultationStats.topEmotionTags">
+    <div
+      v-if="consultationStats.topEmotionTags"
+      class="emotion-tags-section"
+    >
       <h3>
-        <i class="fas fa-tags"></i>
+        <i class="fas fa-tags" />
         高频情绪标签
       </h3>
       <div class="emotion-tags-cloud">

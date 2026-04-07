@@ -2,29 +2,34 @@
   <div class="emotion-heatmap-container">
     <div class="heatmap-header">
       <h3 class="heatmap-title">
-        <i class="fas fa-heart"></i>
+        <i class="fas fa-heart" />
         情绪时光热力图
       </h3>
-      <div class="heatmap-subtitle">探索你的情绪节律，发现内心的美好时光</div>
+      <div class="heatmap-subtitle">
+        探索你的情绪节律，发现内心的美好时光
+      </div>
       <div class="heatmap-info">
         <div class="info-item">
-          <i class="fas fa-calendar-alt"></i>
+          <i class="fas fa-calendar-alt" />
           <span>{{ dateRange }}</span>
         </div>
         <div class="info-item">
-          <i class="fas fa-star"></i>
+          <i class="fas fa-star" />
           <span>最活跃时段: {{ peakEmotionTime }}</span>
         </div>
       </div>
     </div>
     
     <div class="heatmap-content">
-      <div ref="heatmapContainer" class="heatmap-3d"></div>
+      <div
+        ref="heatmapContainer"
+        class="heatmap-3d"
+      />
     </div>
 
     <div class="emotion-distribution">
       <h4 class="distribution-title">
-        <i class="fas fa-rainbow"></i>
+        <i class="fas fa-rainbow" />
         情绪花园
       </h4>
       <div class="emotion-garden">
@@ -46,14 +51,18 @@
           @mouseleave="clearEmotionHighlight()"
         >
           <div class="flower-petals">
-            <div class="petal" v-for="i in 6" :key="i"></div>
+            <div
+              v-for="i in 6"
+              :key="i"
+              class="petal"
+            />
           </div>
           <div class="flower-center">
             <span class="emotion-name">{{ emotion }}</span>
             <span class="emotion-count">{{ count }}</span>
           </div>
           <div class="visibility-indicator">
-            <i :class="emotionVisibility[emotion] ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+            <i :class="emotionVisibility[emotion] ? 'fas fa-eye' : 'fas fa-eye-slash'" />
           </div>
         </div>
       </div>

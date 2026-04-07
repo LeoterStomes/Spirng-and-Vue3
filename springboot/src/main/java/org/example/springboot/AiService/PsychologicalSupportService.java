@@ -6,8 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.springboot.DTO.response.ConsultationMessageResponseDTO;
 import org.example.springboot.DTO.command.ConsultationSessionCreateDTO;
 import org.example.springboot.entity.ConsultationSession;
+import org.example.springboot.entity.PatientProfile;
+import org.example.springboot.mapper.ConsultationSessionMapper;
+import org.example.springboot.mapper.PatientProfileMapper;
 import org.example.springboot.service.ConsultationMessageService;
 import org.example.springboot.service.ConsultationSessionService;
+import org.example.springboot.service.KnowledgeArticleService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.AssistantMessage;
@@ -23,6 +28,7 @@ import reactor.core.publisher.Flux;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * 流式心理疏导智能对话机器人服务
@@ -45,6 +51,14 @@ public class PsychologicalSupportService {
 
     @Autowired
     private ConsultationMessageService consultationMessageService;
+    @Autowired
+    private PatientProfileMapper patientProfileMapper;
+    @Autowired
+    private ConsultationSessionMapper consultationSessionMapper;
+    @Autowired
+    private KnowledgeArticleService knowledgeArticleService;
+    @Autowired
+    private WebSearchFallbackService webSearchFallbackService;
 
     /**
      * 开始新的心理疏导会话
@@ -186,9 +200,14 @@ public class PsychologicalSupportService {
                 });
 
                 StringBuilder fullResponse = new StringBuilder();
-                Prompt prompt = new Prompt(List.of(
-                        new SystemMessage(PromptManage.PSYCHOLOGICAL_SUPPORT_SYSTEM_PROMPT)
-                ));
+                String personalizedPrompt = buildPersonalizedSupportPrompt(dbSession.getUserId());
+                String localKnowledge = knowledgeArticleService.buildKnowledgeContextForAi(userMessage, 3);
+                String webFallback = "";
+                if (!org.springframework.util.StringUtils.hasText(localKnowledge)) {
+                    webFallback = webSearchFallbackService.searchWebSummary(userMessage);
+                }
+                String finalPrompt = PromptManage.buildKnowledgeFirstPrompt(personalizedPrompt, localKnowledge, webFallback);
+                Prompt prompt = new Prompt(List.of(new SystemMessage(finalPrompt)));
 
                 // 使用ChatClient进行对话，ChatMemory会自动管理上下文
                 chatClient.prompt(prompt)
@@ -298,6 +317,40 @@ public class PsychologicalSupportService {
      */
     private String generateConversationId(String sessionId) {
         return "conversation_" + sessionId;
+    }
+
+    /**
+     * 构建个性化系统提示词：基础提示词 + 患者档案 + 历史摘要
+     */
+    private String buildPersonalizedSupportPrompt(Long userId) {
+        try {
+            LambdaQueryWrapper<PatientProfile> profileQ = new LambdaQueryWrapper<>();
+            profileQ.eq(PatientProfile::getUserId, userId).last("LIMIT 1");
+            PatientProfile profile = patientProfileMapper.selectOne(profileQ);
+
+            LambdaQueryWrapper<ConsultationSession> sessionQ = new LambdaQueryWrapper<>();
+            sessionQ.eq(ConsultationSession::getUserId, userId)
+                    .isNotNull(ConsultationSession::getLastEmotionAnalysis)
+                    .orderByDesc(ConsultationSession::getStartedAt)
+                    .last("LIMIT 3");
+            List<ConsultationSession> recentSessions = consultationSessionMapper.selectList(sessionQ);
+            String historySummary = recentSessions.stream()
+                    .map(s -> {
+                        String title = s.getSessionTitle() == null ? "未命名会话" : s.getSessionTitle();
+                        String emotion = s.getLastEmotionAnalysis() == null ? "无情绪记录" : s.getLastEmotionAnalysis();
+                        return "会话《" + title + "》: " + emotion;
+                    })
+                    .collect(Collectors.joining("\n"));
+
+            return PromptManage.buildPersonalizedPrompt(
+                    PromptManage.PSYCHOLOGICAL_SUPPORT_SYSTEM_PROMPT,
+                    profile,
+                    historySummary
+            );
+        } catch (Exception e) {
+            log.warn("构建个性化提示词失败，回退基础提示词: {}", e.getMessage());
+            return PromptManage.PSYCHOLOGICAL_SUPPORT_SYSTEM_PROMPT;
+        }
     }
 
 

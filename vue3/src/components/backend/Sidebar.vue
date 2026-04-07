@@ -1,79 +1,161 @@
 <template>
-  <div class="sidebar-container" :class="{ 'is-collapsed': isCollapsed }">
+  <div
+    class="sidebar-container"
+    :class="{ 'is-collapsed': isCollapsed }"
+  >
     <!-- 品牌Logo区域 -->
     <div class="brand-section">
       <div class="brand-logo">
-        <i class="fas fa-robot brand-icon"></i>
-        <div class="brand-info" v-show="!isCollapsed">
-          <h1 class="brand-title">心理健康AI助手</h1>
-          <p class="brand-subtitle">管理后台</p>
+        <i class="fas fa-robot brand-icon" />
+        <div
+          v-show="!isCollapsed"
+          class="brand-info"
+        >
+          <h1 class="brand-title">
+            心理健康AI助手
+          </h1>
+          <p class="brand-subtitle">
+            管理后台
+          </p>
         </div>
       </div>
     </div>
 
     <!-- 管理员信息卡片 -->
-    <div class="admin-card" v-show="!isCollapsed">
+    <div
+      v-show="!isCollapsed"
+      class="admin-card"
+    >
       <div class="admin-avatar">
-        <el-avatar :size="48" :src="adminAvatar">
+        <el-avatar
+          :size="48"
+          :src="adminAvatar"
+        >
           {{ adminInfo?.name?.charAt(0)?.toUpperCase() || 'A' }}
         </el-avatar>
       </div>
       <div class="admin-info">
-        <h3 class="admin-name">{{ adminInfo?.name || '管理员' }}</h3>
-        <p class="admin-role">系统管理员</p>
+        <h3 class="admin-name">
+          {{ adminInfo?.name || '管理员' }}
+        </h3>
+        <p class="admin-role">
+          系统管理员
+        </p>
       </div>
     </div>
 
     <!-- 导航菜单 -->
     <div class="menu-wrapper">
       <nav class="sidebar-nav">
-        <router-link to="/back/dashboard" class="nav-item" :class="{ active: activeMenu === '/back/dashboard' }">
-          <i class="fas fa-chart-bar nav-icon"></i>
-          <span class="nav-text" v-show="!isCollapsed">数据分析</span>
+        <router-link
+          to="/back/dashboard"
+          class="nav-item"
+          :class="{ active: activeMenu === '/back/dashboard' }"
+        >
+          <i class="fas fa-chart-bar nav-icon" />
+          <span
+            v-show="!isCollapsed"
+            class="nav-text"
+          >数据分析</span>
         </router-link>
         
-        <router-link to="/back/user" class="nav-item" :class="{ active: activeMenu === '/back/user' }">
-          <i class="fas fa-users nav-icon"></i>
-          <span class="nav-text" v-show="!isCollapsed">用户管理</span>
+        <router-link
+          to="/back/user"
+          class="nav-item"
+          :class="{ active: activeMenu === '/back/user' }"
+        >
+          <i class="fas fa-users nav-icon" />
+          <span
+            v-show="!isCollapsed"
+            class="nav-text"
+          >用户管理</span>
         </router-link>
         
-        <router-link to="/back/knowledge" class="nav-item" :class="{ active: activeMenu === '/back/knowledge' }">
-          <i class="fas fa-book nav-icon"></i>
-          <span class="nav-text" v-show="!isCollapsed">知识文章</span>
+        <router-link
+          to="/back/knowledge"
+          class="nav-item"
+          :class="{ active: activeMenu === '/back/knowledge' }"
+        >
+          <i class="fas fa-book nav-icon" />
+          <span
+            v-show="!isCollapsed"
+            class="nav-text"
+          >知识文章</span>
         </router-link>
         
-        <router-link to="/back/knowledge-category" class="nav-item" :class="{ active: activeMenu === '/back/knowledge-category' }">
-          <i class="fas fa-folder nav-icon"></i>
-          <span class="nav-text" v-show="!isCollapsed">分类管理</span>
+        <router-link
+          to="/back/knowledge-category"
+          class="nav-item"
+          :class="{ active: activeMenu === '/back/knowledge-category' }"
+        >
+          <i class="fas fa-folder nav-icon" />
+          <span
+            v-show="!isCollapsed"
+            class="nav-text"
+          >分类管理</span>
         </router-link>
         
-        <router-link to="/back/consultations" class="nav-item" :class="{ active: activeMenu === '/back/consultations' }">
-          <i class="fas fa-comments nav-icon"></i>
-          <span class="nav-text" v-show="!isCollapsed">咨询记录</span>
+        <router-link
+          to="/back/consultations"
+          class="nav-item"
+          :class="{ active: activeMenu === '/back/consultations' }"
+        >
+          <i class="fas fa-comments nav-icon" />
+          <span
+            v-show="!isCollapsed"
+            class="nav-text"
+          >咨询记录</span>
         </router-link>
         
-        <router-link to="/back/emotion-diary" class="nav-item" :class="{ active: activeMenu === '/back/emotion-diary' }">
-          <i class="fas fa-heart nav-icon"></i>
-          <span class="nav-text" v-show="!isCollapsed">情绪日记</span>
+        <router-link
+          to="/back/emotion-diary"
+          class="nav-item"
+          :class="{ active: activeMenu === '/back/emotion-diary' }"
+        >
+          <i class="fas fa-heart nav-icon" />
+          <span
+            v-show="!isCollapsed"
+            class="nav-text"
+          >情绪日记</span>
         </router-link>
         
-        <router-link to="/back/ai-analysis-queue" class="nav-item" :class="{ active: activeMenu === '/back/ai-analysis-queue' }">
-          <i class="fas fa-tasks nav-icon"></i>
-          <span class="nav-text" v-show="!isCollapsed">AI分析队列</span>
+        <router-link
+          to="/back/ai-analysis-queue"
+          class="nav-item"
+          :class="{ active: activeMenu === '/back/ai-analysis-queue' }"
+        >
+          <i class="fas fa-tasks nav-icon" />
+          <span
+            v-show="!isCollapsed"
+            class="nav-text"
+          >AI分析队列</span>
         </router-link>
         
-        <router-link to="/back/profile" class="nav-item" :class="{ active: activeMenu === '/back/profile' }">
-          <i class="fas fa-user-cog nav-icon"></i>
-          <span class="nav-text" v-show="!isCollapsed">个人信息</span>
+        <router-link
+          to="/back/profile"
+          class="nav-item"
+          :class="{ active: activeMenu === '/back/profile' }"
+        >
+          <i class="fas fa-user-cog nav-icon" />
+          <span
+            v-show="!isCollapsed"
+            class="nav-text"
+          >个人信息</span>
         </router-link>
       </nav>
     </div>
 
     <!-- 底部退出登录 -->
     <div class="logout-section">
-      <button @click="handleLogout" class="logout-btn">
-        <i class="fas fa-sign-out-alt logout-icon"></i>
-        <span class="logout-text" v-show="!isCollapsed">退出登录</span>
+      <button
+        class="logout-btn"
+        @click="handleLogout"
+      >
+        <i class="fas fa-sign-out-alt logout-icon" />
+        <span
+          v-show="!isCollapsed"
+          class="logout-text"
+        >退出登录</span>
       </button>
     </div>
   </div>

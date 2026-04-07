@@ -5,7 +5,7 @@
       <div class="header-content">
         <div class="header-left">
           <div class="breathing-animation">
-            <i class="fas fa-book-open"></i>
+            <i class="fas fa-book-open" />
           </div>
           <div class="header-text">
             <h2>心理健康文章</h2>
@@ -20,27 +20,36 @@
                 placeholder="搜索心理健康知识..."
                 size="large"
                 clearable
+                class="search-input"
                 @keyup.enter="handleSearch"
                 @clear="handleSearch"
                 @focus="showSearchHistory = true"
                 @blur="setTimeout(() => showSearchHistory = false, 200)"
-                class="search-input"
               >
                 <template #suffix>
                   <el-button 
                     type="primary" 
-                    @click="handleSearch"
                     :icon="Search"
                     class="search-btn"
+                    @click="handleSearch"
                   />
                 </template>
               </el-input>
               
               <!-- 搜索历史下拉 -->
-              <div v-if="showSearchHistory && searchHistory.length > 0" class="search-history">
+              <div
+                v-if="showSearchHistory && searchHistory.length > 0"
+                class="search-history"
+              >
                 <div class="history-header">
                   <span>搜索历史</span>
-                  <el-button type="text" size="small" @click="clearSearchHistory">清除</el-button>
+                  <el-button
+                    type="text"
+                    size="small"
+                    @click="clearSearchHistory"
+                  >
+                    清除
+                  </el-button>
                 </div>
                 <div class="history-list">
                   <div 
@@ -49,14 +58,27 @@
                     class="history-item"
                     @click="selectHistoryItem(item)"
                   >
-                    <i class="fas fa-history"></i>
+                    <i class="fas fa-history" />
                     <span class="history-text">{{ item }}</span>
-                    <i class="fas fa-times remove-btn" @click.stop="removeHistoryItem(item)"></i>
+                    <i
+                      class="fas fa-times remove-btn"
+                      @click.stop="removeHistoryItem(item)"
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <el-button
+            v-if="isLoggedIn"
+            class="import-btn"
+            type="primary"
+            plain
+            @click="showImportDialog = true"
+          >
+            <i class="fas fa-file-import" />
+            导入本地知识
+          </el-button>
         </div>
       </div>
     </div>
@@ -68,7 +90,9 @@
           <aside class="sidebar">
             <!-- 知识分类 -->
             <div class="category-section">
-              <h3 class="section-title">知识分类</h3>
+              <h3 class="section-title">
+                知识分类
+              </h3>
               <div class="category-list">
                 <div 
                   v-for="category in categories"
@@ -77,7 +101,7 @@
                   :class="{ active: selectedCategoryId === category.id }"
                   @click="selectCategory(category.id)"
                 >
-                  <i :class="category.icon"></i>
+                  <i :class="category.icon" />
                   <span>{{ category.categoryName }}</span>
                   <span class="count">({{ category.articleCount || 0 }})</span>
                 </div>
@@ -87,7 +111,7 @@
             <!-- 推荐文章 -->
             <div class="recommend-section">
               <h3 class="section-title">
-                <i class="fas fa-star"></i>
+                <i class="fas fa-star" />
                 推荐阅读
               </h3>
               <div class="recommend-list">
@@ -99,7 +123,7 @@
                 >
                   <h4>{{ article.title }}</h4>
                   <p class="read-count">
-                    <i class="fas fa-eye"></i>
+                    <i class="fas fa-eye" />
                     阅读量：{{ formatReadCount(article.readCount) }}
                   </p>
                 </div>
@@ -109,7 +133,7 @@
             <!-- 每日提示 -->
             <div class="daily-tip">
               <h3 class="section-title">
-                <i class="fas fa-lightbulb"></i>
+                <i class="fas fa-lightbulb" />
                 每日心理小贴士
               </h3>
               <p class="tip-content">
@@ -126,12 +150,21 @@
                 <span class="filter-label">排序方式：</span>
                 <el-select 
                   v-model="searchForm.sortField" 
-                  @change="handleSearch"
                   placeholder="选择排序方式"
+                  @change="handleSearch"
                 >
-                  <el-option label="最新发布" value="publishedAt" />
-                  <el-option label="最多阅读" value="readCount" />
-                  <el-option label="相关度" value="relevance" />
+                  <el-option
+                    label="最新发布"
+                    value="publishedAt"
+                  />
+                  <el-option
+                    label="最多阅读"
+                    value="readCount"
+                  />
+                  <el-option
+                    label="相关度"
+                    value="relevance"
+                  />
                 </el-select>
               </div>
               <div class="filter-right">
@@ -142,7 +175,10 @@
             </div>
 
             <!-- 文章列表 -->
-            <div class="article-list" v-loading="loading">
+            <div
+              v-loading="loading"
+              class="article-list"
+            >
               <ArticleCard
                 v-for="article in articles"
                 :key="article.id"
@@ -151,43 +187,103 @@
               />
 
               <!-- 空状态 -->
-              <div v-if="!loading && articles.length === 0" class="empty-state">
-                <i class="fas fa-search"></i>
+              <div
+                v-if="!loading && articles.length === 0"
+                class="empty-state"
+              >
+                <i class="fas fa-search" />
                 <p>暂无相关文章</p>
-                <p class="empty-tip">尝试调整搜索条件或浏览其他分类</p>
+                <p class="empty-tip">
+                  尝试调整搜索条件或浏览其他分类
+                </p>
               </div>
             </div>
 
             <!-- 分页 -->
-            <div class="pagination-wrapper" v-if="total > 0">
+            <div
+              v-if="total > 0"
+              class="pagination-wrapper"
+            >
               <el-pagination
                 :current-page="searchForm.currentPage"
                 :page-size="searchForm.size"
                 :page-sizes="[6, 12, 18, 24]"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="total"
+                background
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                background
               />
             </div>
           </main>
         </div>
       </div>
     </div>
+
+    <el-dialog
+      v-model="showImportDialog"
+      title="导入本地知识库"
+      width="620px"
+      :close-on-click-modal="false"
+    >
+      <div class="import-form">
+        <el-input
+          v-model="importForm.title"
+          placeholder="请输入知识标题"
+          maxlength="200"
+          show-word-limit
+        />
+        <el-input
+          v-model="importForm.tags"
+          placeholder="标签（逗号分隔，可选）"
+        />
+        <div class="import-file-row">
+          <input
+            ref="importFileInput"
+            type="file"
+            accept=".txt"
+            style="display: none"
+            @change="handleImportFileChange"
+          >
+          <el-button @click="triggerImportFileSelect">
+            选择 TXT 文件
+          </el-button>
+          <span class="import-file-name">{{ importFileName || '未选择文件' }}</span>
+        </div>
+        <el-input
+          v-model="importForm.content"
+          type="textarea"
+          :rows="9"
+          placeholder="可直接粘贴知识文本，或选择TXT文件自动填充"
+          maxlength="20000"
+          show-word-limit
+        />
+      </div>
+      <template #footer>
+        <el-button @click="showImportDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          :loading="importingKnowledge"
+          @click="submitKnowledgeImport"
+        >
+          导入并发布
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import ArticleCard from '@/components/frontend/ArticleCard.vue'
-import { getArticlePage } from '@/api/knowledgeArticle'
+import { getArticlePage, importKnowledgeText } from '@/api/knowledgeArticle'
 import { getCategoryTree } from '@/api/knowledgeCategory'
-import { favoriteArticle, unfavoriteArticle, checkFavoriteStatus } from '@/api/userFavorite'
-import { formatDate } from '@/utils/dateUtils'
+import { checkFavoriteStatus } from '@/api/userFavorite'
 
 const router = useRouter()
 
@@ -206,6 +302,15 @@ const total = ref(0)
 const selectedCategoryId = ref(null)
 const searchHistory = ref([])
 const showSearchHistory = ref(false)
+const showImportDialog = ref(false)
+const importingKnowledge = ref(false)
+const importFileInput = ref(null)
+const importFileName = ref('')
+const importForm = reactive({
+  title: '',
+  tags: '',
+  content: ''
+})
 
 // 搜索表单
 const searchForm = reactive({
@@ -409,47 +514,6 @@ const handleFavoriteChanged = (article) => {
   console.log('文章收藏状态变化:', article.id, article.isFavorited)
 }
 
-const toggleFavorite = (article) => {
-  if (!isLoggedIn.value) {
-    ElMessageBox.confirm('需要登录才能收藏文章，是否前往登录？', '提示', {
-      confirmButtonText: '去登录',
-      cancelButtonText: '取消',
-      type: 'info'
-    }).then(() => {
-      router.push('/auth/login')
-    }).catch(() => {})
-    return
-  }
-
-  if (article.isFavorited) {
-    // 取消收藏
-    unfavoriteArticle(article.id, {
-      successMsg: '已取消收藏',
-      onSuccess: () => {
-        article.isFavorited = false
-        article.favoriteCount = Math.max(0, (article.favoriteCount || 1) - 1)
-      },
-      onError: (error) => {
-        console.error('取消收藏失败:', error)
-        ElMessage.error('取消收藏失败')
-      }
-    })
-  } else {
-    // 添加收藏
-    favoriteArticle(article.id, {
-      successMsg: '收藏成功',
-      onSuccess: () => {
-        article.isFavorited = true
-        article.favoriteCount = (article.favoriteCount || 0) + 1
-      },
-      onError: (error) => {
-        console.error('收藏失败:', error)
-        ElMessage.error('收藏失败')
-      }
-    })
-  }
-}
-
 // 工具方法
 const getCategoryIcon = (categoryName) => {
   const iconMap = {
@@ -465,43 +529,11 @@ const getCategoryIcon = (categoryName) => {
   return iconMap[categoryName] || 'fas fa-bookmark'
 }
 
-const getCategoryTagType = (categoryName) => {
-  const typeMap = {
-    '情绪管理': 'warning',
-    '焦虑抑郁': 'info',
-    '工作压力': 'danger',
-    '人际关系': 'success',
-    '睡眠健康': 'primary',
-    '儿童心理': '',
-    '创伤康复': 'warning',
-    '放松技巧': 'success'
-  }
-  return typeMap[categoryName] || ''
-}
-
-const getReadTime = (content) => {
-  if (!content) return 5
-  // 估算阅读时间：假设每分钟300个字符
-  const wordCount = content.length
-  return Math.max(1, Math.ceil(wordCount / 300))
-}
-
-const getAutoSummary = (content) => {
-  if (!content) return ''
-  // 移除HTML标签，取前150个字符作为摘要
-  const plainText = content.replace(/<[^>]+>/g, '')
-  return plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText
-}
-
 const formatReadCount = (count) => {
   if (!count) return '0'
   if (count < 1000) return count.toString()
   if (count < 10000) return (count / 1000).toFixed(1) + 'k'
   return (count / 10000).toFixed(1) + 'w'
-}
-
-const handleImageError = (event) => {
-  event.target.src = defaultCover
 }
 
 const handleSizeChange = (size) => {
@@ -513,6 +545,58 @@ const handleSizeChange = (size) => {
 const handleCurrentChange = (page) => {
   searchForm.currentPage = page
   fetchArticles()
+}
+
+const triggerImportFileSelect = () => {
+  importFileInput.value?.click()
+}
+
+const handleImportFileChange = (event) => {
+  const file = event.target.files?.[0]
+  if (!file) return
+  importFileName.value = file.name
+  const reader = new FileReader()
+  reader.onload = () => {
+    const text = String(reader.result || '')
+    importForm.content = text
+    if (!importForm.title.trim()) {
+      importForm.title = file.name.replace(/\.txt$/i, '')
+    }
+  }
+  reader.readAsText(file, 'utf-8')
+}
+
+const resetImportForm = () => {
+  importForm.title = ''
+  importForm.tags = ''
+  importForm.content = ''
+  importFileName.value = ''
+  if (importFileInput.value) {
+    importFileInput.value.value = ''
+  }
+}
+
+const submitKnowledgeImport = async () => {
+  const title = importForm.title.trim()
+  const content = importForm.content.trim()
+  if (!title || !content) {
+    ElMessage.warning('请先填写标题与内容')
+    return
+  }
+  importingKnowledge.value = true
+  try {
+    await importKnowledgeText({
+      title,
+      content,
+      tags: importForm.tags.trim() || '本地知识'
+    })
+    showImportDialog.value = false
+    resetImportForm()
+    fetchArticles()
+    fetchRecommendArticles()
+  } finally {
+    importingKnowledge.value = false
+  }
 }
 
 // 生命周期
@@ -527,15 +611,18 @@ onMounted(() => {
 <style scoped>
 .knowledge-page {
   min-height: 100vh;
-  background: #f5f7fb;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(91, 123, 255, 0.1) 0%, transparent 32%),
+    radial-gradient(circle at 100% 0%, rgba(34, 197, 94, 0.08) 0%, transparent 34%),
+    #f5f7fb;
 }
 
 /* 页面头部样式 */
 .header-section {
-  background: #ffffff;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(247, 250, 255, 0.95) 100%);
   color: #111827;
   padding: 2rem 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .header-content {
@@ -567,10 +654,32 @@ onMounted(() => {
 .header-right {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
 }
 
 .search-container {
   min-width: 360px;
+}
+
+.import-btn {
+  border-radius: 10px;
+}
+
+.import-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.import-file-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.import-file-name {
+  color: #64748b;
+  font-size: 13px;
 }
 
 .search-wrapper {
@@ -607,14 +716,15 @@ onMounted(() => {
 
 .search-btn {
   border: none;
-  background: #2563eb;
+  background: linear-gradient(135deg, #5b7bff 0%, #4f46e5 100%);
   color: white;
   border-radius: 0.75rem;
   transition: all 0.3s ease;
 }
 
 .search-btn:hover {
-  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.26);
 }
 
 /* 搜索历史样式 */
@@ -716,11 +826,12 @@ onMounted(() => {
 .category-section,
 .recommend-section,
 .daily-tip {
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   padding: 1.5rem;
+  backdrop-filter: blur(8px);
 }
 
 .section-title {
@@ -751,8 +862,8 @@ onMounted(() => {
 }
 
 .category-item:hover {
-  background: #f3f4f6;
-  color: #374151;
+  background: rgba(91, 123, 255, 0.12);
+  color: #1f2937;
 }
 
 .category-item.active {
@@ -820,16 +931,17 @@ onMounted(() => {
 }
 
 .filter-bar {
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   padding: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
+  backdrop-filter: blur(8px);
 }
 
 .filter-left {
@@ -962,6 +1074,11 @@ onMounted(() => {
   .search-container {
     min-width: 300px;
     width: 100%;
+  }
+
+  .header-right {
+    width: 100%;
+    flex-direction: column;
   }
   
   .filter-bar {

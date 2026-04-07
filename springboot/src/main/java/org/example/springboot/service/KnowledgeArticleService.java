@@ -24,6 +24,7 @@ import org.example.springboot.mapper.KnowledgeCategoryMapper;
 import org.example.springboot.mapper.UserMapper;
 import org.example.springboot.mapper.UserFavoriteMapper;
 import org.example.springboot.DTO.command.ArticleCreateDTO;
+import org.example.springboot.DTO.command.KnowledgeImportTextDTO;
 import org.example.springboot.DTO.command.ArticleUpdateDTO;
 import org.example.springboot.DTO.query.ArticleListQueryDTO;
 import org.example.springboot.DTO.response.ArticleResponseDTO;
@@ -119,6 +120,84 @@ public class KnowledgeArticleService {
             log.error("创建知识文章失败", e);
             throw new ServiceException("创建文章失败，请稍后重试");
         }
+    }
+
+    /**
+     * 导入纯文本到本地知识库（直接发布）
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ArticleResponseDTO importPlainTextKnowledge(KnowledgeImportTextDTO dto, Long authorId) {
+        if (!StringUtils.hasText(dto.getTitle()) || !StringUtils.hasText(dto.getContent())) {
+            throw new BusinessException("标题和内容不能为空");
+        }
+
+        Long targetCategoryId = dto.getCategoryId();
+        if (targetCategoryId == null) {
+            LambdaQueryWrapper<KnowledgeCategory> categoryQuery = new LambdaQueryWrapper<>();
+            categoryQuery.eq(KnowledgeCategory::getStatus, 1)
+                    .orderByAsc(KnowledgeCategory::getSortOrder)
+                    .orderByAsc(KnowledgeCategory::getId)
+                    .last("LIMIT 1");
+            KnowledgeCategory firstEnabledCategory = categoryMapper.selectOne(categoryQuery);
+            if (firstEnabledCategory == null) {
+                throw new BusinessException("请先创建并启用至少一个知识分类");
+            }
+            targetCategoryId = firstEnabledCategory.getId();
+        }
+
+        ArticleCreateDTO createDTO = new ArticleCreateDTO();
+        createDTO.setCategoryId(targetCategoryId);
+        createDTO.setTitle(dto.getTitle().trim());
+        createDTO.setSummary(StringUtils.hasText(dto.getSummary()) ? dto.getSummary().trim() : null);
+        createDTO.setContent(dto.getContent().trim());
+        createDTO.setTags(StringUtils.hasText(dto.getTags()) ? dto.getTags().trim() : "本地知识导入");
+        createDTO.setStatus(ArticleStatus.PUBLISHED.getCode());
+
+        return createArticle(createDTO, authorId);
+    }
+
+    /**
+     * 基于关键词检索本地知识片段（优先用于AI回答）
+     */
+    public String buildKnowledgeContextForAi(String keyword, int maxCount) {
+        if (!StringUtils.hasText(keyword)) {
+            return "";
+        }
+        int limit = Math.max(1, Math.min(maxCount, 6));
+
+        LambdaQueryWrapper<KnowledgeArticle> query = new LambdaQueryWrapper<>();
+        query.eq(KnowledgeArticle::getStatus, ArticleStatus.PUBLISHED.getCode())
+                .and(wrapper -> wrapper
+                        .like(KnowledgeArticle::getTitle, keyword)
+                        .or().like(KnowledgeArticle::getSummary, keyword)
+                        .or().like(KnowledgeArticle::getTags, keyword)
+                        .or().like(KnowledgeArticle::getContent, keyword)
+                )
+                .orderByDesc(KnowledgeArticle::getReadCount)
+                .orderByDesc(KnowledgeArticle::getPublishedAt)
+                .last("LIMIT " + limit);
+
+        List<KnowledgeArticle> articles = articleMapper.selectList(query);
+        if (articles == null || articles.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder context = new StringBuilder();
+        for (int i = 0; i < articles.size(); i++) {
+            KnowledgeArticle article = articles.get(i);
+            String summary = StringUtils.hasText(article.getSummary()) ? article.getSummary() : article.getAutoSummary();
+            String snippet = summary == null ? "" : summary.trim();
+            if (snippet.length() > 220) {
+                snippet = snippet.substring(0, 220) + "...";
+            }
+            context.append(i + 1)
+                    .append(". 《")
+                    .append(article.getTitle())
+                    .append("》")
+                    .append(StringUtils.hasText(snippet) ? " - " + snippet : "")
+                    .append("\n");
+        }
+        return context.toString().trim();
     }
 
     /**
@@ -366,7 +445,6 @@ public class KnowledgeArticleService {
 
             // 日期范围查询
             if (StringUtils.hasText(queryDTO.getStartDate()) || StringUtils.hasText(queryDTO.getEndDate())) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 if (StringUtils.hasText(queryDTO.getStartDate())) {
                     LocalDateTime startDateTime = LocalDateTime.parse(queryDTO.getStartDate() + " 00:00:00", 
                                                                      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

@@ -5,8 +5,8 @@
     width="900px"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
-    @close="handleClose"
     class="article-edit-dialog"
+    @close="handleClose"
   >
     <el-form
       ref="formRef"
@@ -17,7 +17,10 @@
     >
       <div class="form-grid">
         <div class="form-left">
-          <el-form-item label="文章标题" prop="title">
+          <el-form-item
+            label="文章标题"
+            prop="title"
+          >
             <el-input
               v-model="form.title"
               placeholder="请输入文章标题"
@@ -27,7 +30,10 @@
             />
           </el-form-item>
           
-          <el-form-item label="所属分类" prop="categoryId">
+          <el-form-item
+            label="所属分类"
+            prop="categoryId"
+          >
             <el-select 
               v-model="form.categoryId" 
               placeholder="请选择分类"
@@ -43,7 +49,10 @@
             </el-select>
           </el-form-item>
           
-          <el-form-item label="文章摘要" prop="summary">
+          <el-form-item
+            label="文章摘要"
+            prop="summary"
+          >
             <el-input
               v-model="form.summary"
               type="textarea"
@@ -84,14 +93,28 @@
                 accept="image/*"
                 class="cover-uploader"
               >
-                <img v-if="form.coverImage" :src="form.coverImage" class="cover-image" />
-                <div v-else class="cover-placeholder">
-                  <i class="fas fa-plus"></i>
+                <img
+                  v-if="form.coverImage"
+                  :src="form.coverImage"
+                  class="cover-image"
+                >
+                <div
+                  v-else
+                  class="cover-placeholder"
+                >
+                  <i class="fas fa-plus" />
                   <p>点击上传封面</p>
                 </div>
               </el-upload>
-              <div class="cover-actions" v-if="form.coverImage">
-                <el-button type="danger" size="small" @click="removeCover">
+              <div
+                v-if="form.coverImage"
+                class="cover-actions"
+              >
+                <el-button
+                  type="danger"
+                  size="small"
+                  @click="removeCover"
+                >
                   移除封面
                 </el-button>
               </div>
@@ -100,10 +123,17 @@
         </div>
         
         <div class="form-right">
-          <el-form-item label="发布状态" prop="status">
+          <el-form-item
+            label="发布状态"
+            prop="status"
+          >
             <el-radio-group v-model="form.status">
-              <el-radio-button :label="0">草稿</el-radio-button>
-              <el-radio-button :label="1">立即发布</el-radio-button>
+              <el-radio-button :label="0">
+                草稿
+              </el-radio-button>
+              <el-radio-button :label="1">
+                立即发布
+              </el-radio-button>
             </el-radio-group>
           </el-form-item>
           
@@ -117,8 +147,12 @@
         </div>
       </div>
       
-      <el-form-item label="文章内容" prop="content">
+      <el-form-item
+        label="文章内容"
+        prop="content"
+      >
         <RichTextEditor
+          ref="richTextEditorRef"
           v-model="form.content"
           :show-security-tip="false"
           placeholder="请输入文章内容，支持富文本格式\n\n可以使用加粗、斜体、列表、标题等格式来丰富文章内容。"
@@ -134,15 +168,20 @@
           min-height="400px"
           @change="handleContentChange"
           @created="handleEditorCreated"
-          ref="richTextEditorRef"
         />
       </el-form-item>
     </el-form>
 
     <!-- 预览区域 -->
-    <div v-if="showPreview" class="preview-section">
+    <div
+      v-if="showPreview"
+      class="preview-section"
+    >
       <h3>内容预览</h3>
-      <div class="preview-content" v-html="formatContent(form.content)"></div>
+      <div
+        class="preview-content"
+        v-html="formatContent(form.content)"
+      />
     </div>
 
     <template #footer>
@@ -150,11 +189,13 @@
         <el-button @click="togglePreview">
           {{ showPreview ? '隐藏预览' : '预览效果' }}
         </el-button>
-        <el-button @click="handleClose">取消</el-button>
+        <el-button @click="handleClose">
+          取消
+        </el-button>
         <el-button 
           type="primary" 
-          @click="handleSubmit"
           :loading="submitting"
+          @click="handleSubmit"
         >
           {{ isEdit ? '保存修改' : '创建文章' }}
         </el-button>

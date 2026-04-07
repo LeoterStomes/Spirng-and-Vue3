@@ -1,189 +1,268 @@
 <template>
   <div class="register-container">
     <div class="form-container">
-        <!-- 返回首页链接 -->
-        <div class="back-home">
-          <router-link to="/" class="back-home-link">
-            <i class="fas fa-arrow-left"></i>返回首页
-          </router-link>
-        </div>
+      <!-- 返回首页链接 -->
+      <div class="back-home">
+        <router-link
+          to="/"
+          class="back-home-link"
+        >
+          <i class="fas fa-arrow-left" />返回首页
+        </router-link>
+      </div>
         
-        <div class="form-header">
-          <h2 class="form-title">创建您的账户</h2>
-          <p class="form-subtitle">请填写注册信息</p>
+      <div class="form-header">
+        <h2 class="form-title">
+          创建您的账户
+        </h2>
+        <p class="form-subtitle">
+          请填写注册信息
+        </p>
+      </div>
+
+      <form
+        class="register-form"
+        @submit.prevent="handleRegister"
+      >
+        <!-- 用户名输入 -->
+        <div class="form-field">
+          <label
+            for="username"
+            class="field-label"
+          >
+            <i class="fas fa-user label-icon" />用户名
+          </label>
+          <input 
+            id="username" 
+            v-model="registerForm.username"
+            name="username" 
+            type="text" 
+            required 
+            class="form-input"
+            placeholder="请输入用户名"
+          >
         </div>
 
-        <form class="register-form" @submit.prevent="handleRegister">
-          <!-- 用户名输入 -->
-          <div class="form-field">
-            <label for="username" class="field-label">
-              <i class="fas fa-user label-icon"></i>用户名
-            </label>
+        <!-- 邮箱输入 -->
+        <div class="form-field">
+          <label
+            for="email"
+            class="field-label"
+          >
+            <i class="fas fa-envelope label-icon" />邮箱
+          </label>
+          <input 
+            id="email" 
+            v-model="registerForm.email"
+            name="email" 
+            type="email" 
+            required 
+            class="form-input"
+            placeholder="请输入邮箱"
+          >
+        </div>
+
+        <!-- 昵称输入 -->
+        <div class="form-field">
+          <label
+            for="nickname"
+            class="field-label"
+          >
+            <i class="fas fa-user-tag label-icon" />昵称
+          </label>
+          <input 
+            id="nickname" 
+            v-model="registerForm.nickname"
+            name="nickname" 
+            type="text" 
+            class="form-input"
+            placeholder="请输入昵称（可选）"
+          >
+        </div>
+        <!-- 手机号输入 -->
+        <div class="form-field">
+          <label
+            for="phone"
+            class="field-label"
+          >
+            <i class="fas fa-phone label-icon" />手机号
+          </label>
+          <input 
+            id="phone" 
+            v-model="registerForm.phone"
+            name="phone" 
+            type="tel" 
+            class="form-input"
+            placeholder="请输入手机号（可选）"
+          >
+        </div>
+
+        <!-- 账号类型 -->
+        <div class="form-field">
+          <label
+            for="userType"
+            class="field-label"
+          >
+            <i class="fas fa-id-badge label-icon" />账号类型
+          </label>
+          <select
+            id="userType"
+            v-model.number="registerForm.userType"
+            class="form-select"
+          >
+            <option :value="1">
+              普通用户
+            </option>
+            <option :value="3">
+              医生
+            </option>
+          </select>
+          <p class="field-tip">
+            选择“医生”后，将进入医生工作台功能。
+          </p>
+        </div>
+
+        <!-- 密码输入 -->
+        <div class="form-field">
+          <label
+            for="password"
+            class="field-label"
+          >
+            <i class="fas fa-lock label-icon" />密码
+          </label>
+          <div class="password-wrapper">
             <input 
-              id="username" 
-              v-model="registerForm.username"
-              name="username" 
-              type="text" 
+              id="password" 
+              v-model="registerForm.password"
+              name="password" 
+              :type="showPassword ? 'text' : 'password'"
               required 
-              class="form-input"
-              placeholder="请输入用户名"
+              class="form-input password-input"
+              placeholder="请输入密码"
             >
-          </div>
-
-          <!-- 邮箱输入 -->
-          <div class="form-field">
-            <label for="email" class="field-label">
-              <i class="fas fa-envelope label-icon"></i>邮箱
-            </label>
-            <input 
-              id="email" 
-              v-model="registerForm.email"
-              name="email" 
-              type="email" 
-              required 
-              class="form-input"
-              placeholder="请输入邮箱"
-            >
-          </div>
-
-          <!-- 昵称输入 -->
-          <div class="form-field">
-            <label for="nickname" class="field-label">
-              <i class="fas fa-user-tag label-icon"></i>昵称
-            </label>
-            <input 
-              id="nickname" 
-              v-model="registerForm.nickname"
-              name="nickname" 
-              type="text" 
-              class="form-input"
-              placeholder="请输入昵称（可选）"
-            >
-          </div>
-          <!-- 手机号输入 -->
-          <div class="form-field">
-            <label for="phone" class="field-label">
-              <i class="fas fa-phone label-icon"></i>手机号
-            </label>
-            <input 
-              id="phone" 
-              v-model="registerForm.phone"
-              name="phone" 
-              type="tel" 
-              class="form-input"
-              placeholder="请输入手机号（可选）"
-            >
-          </div>
-
-          <!-- 密码输入 -->
-          <div class="form-field">
-            <label for="password" class="field-label">
-              <i class="fas fa-lock label-icon"></i>密码
-            </label>
-            <div class="password-wrapper">
-              <input 
-                id="password" 
-                v-model="registerForm.password"
-                name="password" 
-                :type="showPassword ? 'text' : 'password'"
-                required 
-                class="form-input password-input"
-                placeholder="请输入密码"
-              >
-              <button 
-                type="button" 
-                class="password-toggle"
-                @click="togglePasswordVisibility"
-              >
-                <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="toggle-icon"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- 确认密码输入 -->
-          <div class="form-field">
-            <label for="confirmPassword" class="field-label">
-              <i class="fas fa-lock label-icon"></i>确认密码
-            </label>
-            <div class="password-wrapper">
-              <input 
-                id="confirmPassword" 
-                v-model="registerForm.confirmPassword"
-                name="confirmPassword" 
-                :type="showConfirmPassword ? 'text' : 'password'"
-                required 
-                class="form-input password-input"
-                placeholder="请再次输入密码"
-              >
-              <button 
-                type="button" 
-                class="password-toggle"
-                @click="toggleConfirmPasswordVisibility"
-              >
-                <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="toggle-icon"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- 用户协议 -->
-          <div class="agreement-section">
-            <input 
-              id="agree-terms" 
-              v-model="agreeTerms"
-              name="agree-terms" 
-              type="checkbox" 
-              class="checkbox-input"
-            >
-            <label for="agree-terms" class="checkbox-label">
-              我已阅读并同意 
-              <a href="#" class="agreement-link">用户协议</a> 
-              和 
-              <a href="#" class="agreement-link">隐私政策</a>
-            </label>
-          </div>
-
-          <!-- 注册按钮 -->
-          <div class="button-section">
             <button 
-              type="submit" 
-              :disabled="loading || !agreeTerms"
-              class="register-button"
+              type="button" 
+              class="password-toggle"
+              @click="togglePasswordVisibility"
             >
-              <span class="button-icon">
-                <i v-if="!loading" class="fas fa-user-plus"></i>
-                <i v-else class="fas fa-spinner fa-spin"></i>
-              </span>
-              {{ loading ? '注册中...' : '创建账户' }}
+              <i
+                :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                class="toggle-icon"
+              />
             </button>
           </div>
+        </div>
 
-          <!-- 登录链接 -->
-          <div class="login-section">
-            <p class="login-text">
-              已有账户？
-              <router-link to="/auth/login" class="login-link">
-                立即登录
-              </router-link>
-            </p>
+        <!-- 确认密码输入 -->
+        <div class="form-field">
+          <label
+            for="confirmPassword"
+            class="field-label"
+          >
+            <i class="fas fa-lock label-icon" />确认密码
+          </label>
+          <div class="password-wrapper">
+            <input 
+              id="confirmPassword" 
+              v-model="registerForm.confirmPassword"
+              name="confirmPassword" 
+              :type="showConfirmPassword ? 'text' : 'password'"
+              required 
+              class="form-input password-input"
+              placeholder="请再次输入密码"
+            >
+            <button 
+              type="button" 
+              class="password-toggle"
+              @click="toggleConfirmPasswordVisibility"
+            >
+              <i
+                :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                class="toggle-icon"
+              />
+            </button>
           </div>
-        </form>
+        </div>
 
-        <!-- 安全承诺 -->
-        <div class="security-notice">
-          <div class="notice-content">
-            <div class="notice-icon">
-              <i class="fas fa-shield-alt"></i>
-            </div>
-            <div class="notice-text">
-              <h3 class="notice-title">安全承诺</h3>
-              <div class="notice-description">
-                <p>我们采用行业标准的加密技术保护您的个人信息和隐私数据安全。</p>
-              </div>
+        <!-- 用户协议 -->
+        <div class="agreement-section">
+          <input 
+            id="agree-terms" 
+            v-model="agreeTerms"
+            name="agree-terms" 
+            type="checkbox" 
+            class="checkbox-input"
+          >
+          <label
+            for="agree-terms"
+            class="checkbox-label"
+          >
+            我已阅读并同意 
+            <a
+              href="#"
+              class="agreement-link"
+            >用户协议</a> 
+            和 
+            <a
+              href="#"
+              class="agreement-link"
+            >隐私政策</a>
+          </label>
+        </div>
+
+        <!-- 注册按钮 -->
+        <div class="button-section">
+          <button 
+            type="submit" 
+            :disabled="loading || !agreeTerms"
+            class="register-button"
+          >
+            <span class="button-icon">
+              <i
+                v-if="!loading"
+                class="fas fa-user-plus"
+              />
+              <i
+                v-else
+                class="fas fa-spinner fa-spin"
+              />
+            </span>
+            {{ loading ? '注册中...' : '创建账户' }}
+          </button>
+        </div>
+
+        <!-- 登录链接 -->
+        <div class="login-section">
+          <p class="login-text">
+            已有账户？
+            <router-link
+              to="/auth/login"
+              class="login-link"
+            >
+              立即登录
+            </router-link>
+          </p>
+        </div>
+      </form>
+
+      <!-- 安全承诺 -->
+      <div class="security-notice">
+        <div class="notice-content">
+          <div class="notice-icon">
+            <i class="fas fa-shield-alt" />
+          </div>
+          <div class="notice-text">
+            <h3 class="notice-title">
+              安全承诺
+            </h3>
+            <div class="notice-description">
+              <p>我们采用行业标准的加密技术保护您的个人信息和隐私数据安全。</p>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -292,12 +371,12 @@ const handleRegister = async () => {
     
     // 除去不需要的字段，发送包含confirmPassword的数据到后端进行二次验证
     const registerData = {
-      username: cleanedForm.username,
-      email: cleanedForm.email,
+      username: cleanedForm.username.trim(),
+      email: cleanedForm.email.trim(),
       password: cleanedForm.password,
       confirmPassword: cleanedForm.confirmPassword,
-      nickname: cleanedForm.nickname,
-      phone: cleanedForm.phone,
+      nickname: cleanedForm.nickname?.trim() || null,
+      phone: cleanedForm.phone?.trim() || null,
       gender: cleanedForm.gender,
       userType: cleanedForm.userType
     }
@@ -418,6 +497,31 @@ const handleRegister = async () => {
   background-color: white;
   transition: all 0.4s ease-in-out;
   box-sizing: border-box;
+}
+
+.form-select {
+  appearance: none;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  color: #111827;
+  background-color: white;
+  transition: all 0.4s ease-in-out;
+  box-sizing: border-box;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1), 0 10px 25px rgba(74, 144, 226, 0.2);
+  transform: translateY(-2px);
+}
+
+.field-tip {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  color: #6b7280;
 }
 
 .form-input::placeholder {

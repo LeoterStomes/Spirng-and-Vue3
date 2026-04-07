@@ -10,7 +10,7 @@
         @error="handleImageError"
       >
       <div class="image-overlay">
-        <i class="fas fa-eye"></i>
+        <i class="fas fa-eye" />
       </div>
     </div>
     
@@ -26,7 +26,9 @@
         <span class="read-time">{{ getReadTime(article.content) }}分钟阅读</span>
       </div>
       
-      <h3 class="article-title">{{ article.title }}</h3>
+      <h3 class="article-title">
+        {{ article.title }}
+      </h3>
       
       <p class="article-summary">
         {{ article.summary || getAutoSummary(article.content) }}
@@ -34,16 +36,16 @@
       
       <div class="article-footer">
         <div class="author-info">
-          <i class="fas fa-user-md"></i>
+          <i class="fas fa-user-md" />
           <span>{{ article.authorName || '心理健康助手' }}</span>
           <span class="separator">·</span>
-          <i class="fas fa-calendar"></i>
+          <i class="fas fa-calendar" />
           <span>{{ formatDate(article.publishedAt) }}</span>
         </div>
         
         <div class="article-stats">
           <span class="stat-item">
-            <i class="fas fa-eye"></i>
+            <i class="fas fa-eye" />
             {{ formatReadCount(article.readCount) }}
           </span>
           <span 
@@ -51,7 +53,7 @@
             :class="{ favorited: article.isFavorited }"
             @click.stop="toggleFavorite"
           >
-            <i :class="article.isFavorited ? 'fas fa-heart' : 'far fa-heart'"></i>
+            <i :class="article.isFavorited ? 'fas fa-heart' : 'far fa-heart'" />
             {{ article.favoriteCount || 0 }}
           </span>
         </div>

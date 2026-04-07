@@ -1,6 +1,9 @@
 <template>
-  <div class="markdown-content" :class="{ 'ai-markdown': isAiMessage }">
-    <div v-html="renderedContent"></div>
+  <div
+    class="markdown-content"
+    :class="{ 'ai-markdown': isAiMessage }"
+  >
+    <div v-html="renderedContent" />
   </div>
 </template>
 

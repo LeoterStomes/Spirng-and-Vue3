@@ -4,7 +4,7 @@
       <div class="header-content">
         <div class="header-left">
           <div class="breathing-animation">
-            <i class="fas fa-clipboard-check"></i>
+            <i class="fas fa-clipboard-check" />
           </div>
           <div class="header-text">
             <h2>心理测试</h2>
@@ -18,9 +18,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <!-- 测试选择 -->
-          <el-card class="card-section" shadow="never">
+          <el-card
+            class="card-section"
+            shadow="never"
+          >
             <h3 class="card-title">
-              <i class="fas fa-layer-group"></i>
+              <i class="fas fa-layer-group" />
               请选择要做的测试
             </h3>
 
@@ -31,9 +34,15 @@
                 shadow="never"
                 @click="testType = 'DEPRESSION'"
               >
-                <div class="test-icon"><i class="fas fa-heartbeat"></i></div>
-                <div class="test-name">抑郁倾向测试（简化版）</div>
-                <div class="test-desc">帮助你初步了解情绪状态与风险水平。</div>
+                <div class="test-icon">
+                  <i class="fas fa-heartbeat" />
+                </div>
+                <div class="test-name">
+                  抑郁倾向测试（简化版）
+                </div>
+                <div class="test-desc">
+                  帮助你初步了解情绪状态与风险水平。
+                </div>
               </el-card>
 
               <el-card
@@ -42,9 +51,15 @@
                 shadow="never"
                 @click="testType = 'PERSONALITY'"
               >
-                <div class="test-icon"><i class="fas fa-user-shield"></i></div>
-                <div class="test-name">人格倾向测试（简化版）</div>
-                <div class="test-desc">帮助你更好理解自己的性格与应对方式。</div>
+                <div class="test-icon">
+                  <i class="fas fa-user-shield" />
+                </div>
+                <div class="test-name">
+                  人格倾向测试（简化版）
+                </div>
+                <div class="test-desc">
+                  帮助你更好理解自己的性格与应对方式。
+                </div>
               </el-card>
 
               <el-card
@@ -53,22 +68,37 @@
                 shadow="never"
                 @click="testType = 'ENNEAGRAM_108'"
               >
-                <div class="test-icon"><i class="fas fa-project-diagram"></i></div>
-                <div class="test-name">九型人格测试（108题）</div>
-                <div class="test-desc">根据108题统计九种人格记号数，识别主要人格倾向。</div>
+                <div class="test-icon">
+                  <i class="fas fa-project-diagram" />
+                </div>
+                <div class="test-name">
+                  九型人格测试（108题）
+                </div>
+                <div class="test-desc">
+                  根据108题统计九种人格记号数，识别主要人格倾向。
+                </div>
               </el-card>
             </div>
 
             <div class="form-group">
               <label class="form-label">报告标题（可选）</label>
-              <el-input v-model="title" placeholder="例如：我的心理状态测评报告" maxlength="200" show-word-limit />
+              <el-input
+                v-model="title"
+                placeholder="例如：我的心理状态测评报告"
+                maxlength="200"
+                show-word-limit
+              />
             </div>
           </el-card>
 
           <!-- 测试表单 -->
-          <el-card class="card-section" shadow="never" style="margin-top: 18px;">
+          <el-card
+            class="card-section"
+            shadow="never"
+            style="margin-top: 18px;"
+          >
             <h3 class="card-title">
-              <i class="fas fa-question-circle"></i>
+              <i class="fas fa-question-circle" />
               {{ testType === 'DEPRESSION' ? '抑郁倾向测试' : (testType === 'PERSONALITY' ? '人格倾向测试' : '九型人格测试（108题）') }}
             </h3>
 
@@ -78,8 +108,13 @@
                 :key="q.id"
                 class="question-item"
               >
-                <div class="question-text">{{ q.text }}</div>
-                <el-radio-group v-model="answers[q.id]" class="radio-group">
+                <div class="question-text">
+                  {{ q.text }}
+                </div>
+                <el-radio-group
+                  v-model="answers[q.id]"
+                  class="radio-group"
+                >
                   <el-radio
                     v-for="opt in q.options"
                     :key="opt.score"
@@ -108,79 +143,153 @@
 
         <el-col :span="12">
           <!-- 报告列表 -->
-          <el-card class="card-section" shadow="never">
+          <el-card
+            class="card-section"
+            shadow="never"
+          >
             <h3 class="card-title">
-              <i class="fas fa-file-alt"></i>
+              <i class="fas fa-file-alt" />
               我的测试报告
             </h3>
 
-            <el-table :data="reportList" style="width: 100%" v-loading="loadingReports" height="360">
-              <el-table-column prop="title" label="标题" />
-              <el-table-column prop="testTypeDisplayName" label="类型" width="140" />
-              <el-table-column prop="statusDisplayName" label="状态" width="120" />
-              <el-table-column label="操作" width="140">
+            <el-table
+              v-loading="loadingReports"
+              :data="reportList"
+              style="width: 100%"
+              height="360"
+            >
+              <el-table-column
+                prop="title"
+                label="标题"
+              />
+              <el-table-column
+                prop="testTypeDisplayName"
+                label="类型"
+                width="140"
+              />
+              <el-table-column
+                prop="statusDisplayName"
+                label="状态"
+                width="120"
+              />
+              <el-table-column
+                label="操作"
+                width="140"
+              >
                 <template #default="scope">
-                  <el-button size="small" @click="selectReport(scope.row)">
+                  <el-button
+                    size="small"
+                    @click="selectReport(scope.row)"
+                  >
                     查看
                   </el-button>
                 </template>
               </el-table-column>
             </el-table>
 
-            <div v-if="!loadingReports && reportList.length === 0" class="empty-hint">
+            <div
+              v-if="!loadingReports && reportList.length === 0"
+              class="empty-hint"
+            >
               暂无报告记录。完成测试后会在这里生成。
             </div>
           </el-card>
 
           <!-- 报告详情 -->
-          <el-card class="card-section" shadow="never" style="margin-top: 18px;">
+          <el-card
+            class="card-section"
+            shadow="never"
+            style="margin-top: 18px;"
+          >
             <h3 class="card-title">
-              <i class="fas fa-book-open"></i>
+              <i class="fas fa-book-open" />
               报告详情
             </h3>
 
             <div v-if="activeReport">
-              <el-descriptions border :column="1">
-                <el-descriptions-item label="标题">{{ activeReport.title || '未命名报告' }}</el-descriptions-item>
-                <el-descriptions-item label="类型">{{ activeReport.testTypeDisplayName || activeReport.testType }}</el-descriptions-item>
-                <el-descriptions-item label="状态">{{ activeReport.statusDisplayName || activeReport.status }}</el-descriptions-item>
-                <el-descriptions-item label="总分" v-if="activeReport.totalScore !== null && activeReport.totalScore !== undefined">
+              <el-descriptions
+                border
+                :column="1"
+              >
+                <el-descriptions-item label="标题">
+                  {{ activeReport.title || '未命名报告' }}
+                </el-descriptions-item>
+                <el-descriptions-item label="类型">
+                  {{ activeReport.testTypeDisplayName || activeReport.testType }}
+                </el-descriptions-item>
+                <el-descriptions-item label="状态">
+                  {{ activeReport.statusDisplayName || activeReport.status }}
+                </el-descriptions-item>
+                <el-descriptions-item
+                  v-if="activeReport.totalScore !== null && activeReport.totalScore !== undefined"
+                  label="总分"
+                >
                   {{ activeReport.totalScore }}
                 </el-descriptions-item>
-                <el-descriptions-item label="风险等级" v-if="activeReport.riskLevel !== null && activeReport.riskLevel !== undefined">
+                <el-descriptions-item
+                  v-if="activeReport.riskLevel !== null && activeReport.riskLevel !== undefined"
+                  label="风险等级"
+                >
                   {{ activeReport.riskLevel }}
                 </el-descriptions-item>
               </el-descriptions>
 
-              <div class="report-block" v-if="activeReport.status === 'COMPLETED'">
-                <h4 class="sub-title">报告摘要</h4>
-                <p class="report-text">{{ activeReport.reportSummary }}</p>
+              <div
+                v-if="activeReport.status === 'COMPLETED'"
+                class="report-block"
+              >
+                <h4 class="sub-title">
+                  报告摘要
+                </h4>
+                <p class="report-text">
+                  {{ activeReport.reportSummary }}
+                </p>
 
-                <h4 class="sub-title" style="margin-top: 14px;">报告正文</h4>
-                <div class="report-text report-content" v-html="formatReportText(activeReport.reportContent)"></div>
+                <h4
+                  class="sub-title"
+                  style="margin-top: 14px;"
+                >
+                  报告正文
+                </h4>
+                <div
+                  class="report-text report-content"
+                  v-html="formatReportText(activeReport.reportContent)"
+                />
 
-                <div class="action-buttons" style="justify-content: flex-end;">
+                <div
+                  class="action-buttons"
+                  style="justify-content: flex-end;"
+                >
                   <el-button
                     type="primary"
-                    @click="startAiChat"
                     :loading="startingAi"
+                    @click="startAiChat"
                   >
                     一键进入AI助手
                   </el-button>
                 </div>
               </div>
 
-              <div class="report-block" v-else>
+              <div
+                v-else
+                class="report-block"
+              >
                 <div class="loading-hint">
                   报告正在生成中，请稍后查看。
                 </div>
-                <div v-if="activeReport.status === 'FAILED'" class="error-hint">
+                <div
+                  v-if="activeReport.status === 'FAILED'"
+                  class="error-hint"
+                >
                   生成失败：{{ activeReport.errorMessage }}
                 </div>
               </div>
             </div>
 
-            <div v-else class="empty-hint">
+            <div
+              v-else
+              class="empty-hint"
+            >
               请选择一份报告查看详情。
             </div>
           </el-card>
@@ -194,6 +303,7 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { sanitizeTextWithBreaks } from '@/utils/sanitizeHtml'
 import {
   submitPsychologicalTest,
   getMyPsychologicalReports,
@@ -448,7 +558,7 @@ const selectReport = async (row) => {
   }
 }
 
-const startPollingReport = (reportId) => {
+const startPollingReport = () => {
   // 防重入
   if (pollTimer.value) clearInterval(pollTimer.value)
 
@@ -472,8 +582,7 @@ const startPollingReport = (reportId) => {
 }
 
 const formatReportText = (text) => {
-  // 前端简单换行渲染
-  return String(text || '').replace(/\n/g, '<br/>')
+  return sanitizeTextWithBreaks(text)
 }
 
 const startAiChat = async () => {
@@ -515,13 +624,16 @@ onBeforeUnmount(() => {
 <style scoped>
 .psychological-test-page {
   min-height: 100vh;
-  background: #f5f7fb;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.08) 0%, transparent 36%),
+    radial-gradient(circle at 90% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 35%),
+    #f5f7fb;
 }
 
 .header-section {
-  background: #ffffff;
-  color: #111827;
-  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #ffffff 0%, #f7f9ff 100%);
+  color: #0f172a;
+  border-bottom: 1px solid #dbeafe;
   padding: 2rem 0;
 }
 
@@ -539,7 +651,7 @@ onBeforeUnmount(() => {
 
 .breathing-animation i {
   font-size: 1.9rem;
-  color: #2563eb;
+  color: #4f46e5;
 }
 
 .header-text h2 {
@@ -562,8 +674,15 @@ onBeforeUnmount(() => {
 
 .card-section {
   border-radius: 14px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  border: 1px solid #dbeafe;
+  box-shadow: 0 10px 26px rgba(59, 130, 246, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.card-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(79, 70, 229, 0.12);
 }
 
 .card-title {
@@ -585,21 +704,26 @@ onBeforeUnmount(() => {
 .test-card {
   cursor: pointer;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #dbeafe;
   padding: 12px;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
   background: #ffffff;
 }
 
+.test-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(79, 70, 229, 0.12);
+}
+
 .test-card.active {
-  border-color: #2563eb;
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.13);
-  background: #f8fbff;
+  border-color: #4f46e5;
+  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.16);
+  background: linear-gradient(135deg, #f8faff 0%, #f7f5ff 100%);
 }
 
 .test-icon i {
   font-size: 1.4rem;
-  color: #2563eb;
+  color: #4f46e5;
 }
 
 .test-name {
@@ -634,8 +758,14 @@ onBeforeUnmount(() => {
 .question-item {
   padding: 12px;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: #fbfdff;
+  border: 1px solid #dbeafe;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.question-item:hover {
+  border-color: rgba(91, 123, 255, 0.4);
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.08);
 }
 
 .question-text {
@@ -677,10 +807,10 @@ onBeforeUnmount(() => {
 }
 
 .report-content {
-  border: 1px solid #e5e7eb;
+  border: 1px solid #dbeafe;
   padding: 12px;
   border-radius: 12px;
-  background: #fbfdff;
+  background: #ffffff;
 }
 
 .loading-hint {
@@ -689,6 +819,7 @@ onBeforeUnmount(() => {
   border: 1px dashed #cbd5e1;
   border-radius: 12px;
   background: #f8fafc;
+  animation: softPulse 1.8s ease-in-out infinite;
 }
 
 .error-hint {
@@ -698,6 +829,11 @@ onBeforeUnmount(() => {
   padding: 12px;
   border-radius: 12px;
   border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+@keyframes softPulse {
+  0%, 100% { opacity: 0.86; }
+  50% { opacity: 1; }
 }
 </style>
 

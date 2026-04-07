@@ -153,3 +153,26 @@ export function batchDeleteArticles(params, config = {}) {
 export function getArticleStatistics(config = {}) {
   return request.get('/knowledge/article/statistics', null, config)
 }
+
+/**
+ * 导入纯文本到本地知识库（自动发布）
+ * 入参：{ title: string, content: string, categoryId?: number, tags?: string, summary?: string }
+ * url地址：/knowledge/article/import-text
+ * 请求方式：POST
+ */
+export function importKnowledgeText(params, config = {}) {
+  return request.post('/knowledge/article/import-text', params, {
+    successMsg: '知识导入成功',
+    ...config
+  })
+}
+
+/**
+ * 获取本地知识检索命中（供调试与预览）
+ * 入参：{ keyword: string, maxCount?: number }
+ * url地址：/knowledge/article/local-context
+ * 请求方式：GET
+ */
+export function getLocalKnowledgeContext(params, config = {}) {
+  return request.get('/knowledge/article/local-context', params, config)
+}

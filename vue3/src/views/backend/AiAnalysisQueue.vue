@@ -4,12 +4,14 @@
     <div class="page-header">
       <div class="header-content">
         <div class="header-left">
-          <h2 class="page-title">AI分析队列管理</h2>
+          <h2 class="page-title">
+            AI分析队列管理
+          </h2>
         </div>
         <div class="header-actions">
           <div class="auto-refresh-controls">
             <span class="refresh-label">
-              <i class="fas fa-sync-alt"></i>自动刷新间隔:
+              <i class="fas fa-sync-alt" />自动刷新间隔:
             </span>
             <el-select
               v-model="refreshInterval"
@@ -18,18 +20,40 @@
               size="small"
               @change="updateRefreshInterval"
             >
-              <el-option label="5秒" :value="5000" />
-              <el-option label="10秒" :value="10000" />
-              <el-option label="30秒" :value="30000" />
-              <el-option label="1分钟" :value="60000" />
-              <el-option label="2分钟" :value="120000" />
+              <el-option
+                label="5秒"
+                :value="5000"
+              />
+              <el-option
+                label="10秒"
+                :value="10000"
+              />
+              <el-option
+                label="30秒"
+                :value="30000"
+              />
+              <el-option
+                label="1分钟"
+                :value="60000"
+              />
+              <el-option
+                label="2分钟"
+                :value="120000"
+              />
             </el-select>
-            <span v-if="countdown > 0" class="countdown-text">
-              <i class="fas fa-clock"></i>{{ Math.ceil(countdown / 1000) }}s后刷新
+            <span
+              v-if="countdown > 0"
+              class="countdown-text"
+            >
+              <i class="fas fa-clock" />{{ Math.ceil(countdown / 1000) }}s后刷新
             </span>
           </div>
-          <el-button type="success" @click="handleRefresh" :loading="loading">
-            <i class="fas fa-sync-alt"></i>立即刷新
+          <el-button
+            type="success"
+            :loading="loading"
+            @click="handleRefresh"
+          >
+            <i class="fas fa-sync-alt" />立即刷新
           </el-button>
         </div>
       </div>
@@ -39,40 +63,97 @@
     <!-- 筛选和搜索 -->
     <div class="search-area">
       <el-form 
-        :model="searchForm" 
         ref="searchFormRef" 
+        :model="searchForm" 
         inline 
         label-width="80px"
-        @submit.prevent="handleSearch"
         class="search-form"
+        @submit.prevent="handleSearch"
       >
         <el-form-item label="任务状态">
-          <el-select v-model="searchForm.status" placeholder="选择状态" clearable>
-            <el-option label="全部" value="" />
-            <el-option label="待处理" value="PENDING" />
-            <el-option label="处理中" value="PROCESSING" />
-            <el-option label="已完成" value="COMPLETED" />
-            <el-option label="失败" value="FAILED" />
+          <el-select
+            v-model="searchForm.status"
+            placeholder="选择状态"
+            clearable
+          >
+            <el-option
+              label="全部"
+              value=""
+            />
+            <el-option
+              label="待处理"
+              value="PENDING"
+            />
+            <el-option
+              label="处理中"
+              value="PROCESSING"
+            />
+            <el-option
+              label="已完成"
+              value="COMPLETED"
+            />
+            <el-option
+              label="失败"
+              value="FAILED"
+            />
           </el-select>
         </el-form-item>
 
         <el-form-item label="任务类型">
-          <el-select v-model="searchForm.taskType" placeholder="选择类型" clearable>
-            <el-option label="全部" value="" />
-            <el-option label="自动触发" value="AUTO" />
-            <el-option label="手动触发" value="MANUAL" />
-            <el-option label="管理员触发" value="ADMIN" />
-            <el-option label="批量触发" value="BATCH" />
+          <el-select
+            v-model="searchForm.taskType"
+            placeholder="选择类型"
+            clearable
+          >
+            <el-option
+              label="全部"
+              value=""
+            />
+            <el-option
+              label="自动触发"
+              value="AUTO"
+            />
+            <el-option
+              label="手动触发"
+              value="MANUAL"
+            />
+            <el-option
+              label="管理员触发"
+              value="ADMIN"
+            />
+            <el-option
+              label="批量触发"
+              value="BATCH"
+            />
           </el-select>
         </el-form-item>
 
         <el-form-item label="优先级">
-          <el-select v-model="searchForm.priority" placeholder="选择优先级" clearable>
-            <el-option label="全部" :value="null" />
-            <el-option label="低" :value="1" />
-            <el-option label="正常" :value="2" />
-            <el-option label="高" :value="3" />
-            <el-option label="紧急" :value="4" />
+          <el-select
+            v-model="searchForm.priority"
+            placeholder="选择优先级"
+            clearable
+          >
+            <el-option
+              label="全部"
+              :value="null"
+            />
+            <el-option
+              label="低"
+              :value="1"
+            />
+            <el-option
+              label="正常"
+              :value="2"
+            />
+            <el-option
+              label="高"
+              :value="3"
+            />
+            <el-option
+              label="紧急"
+              :value="4"
+            />
           </el-select>
         </el-form-item>
 
@@ -83,7 +164,7 @@
             clearable
           >
             <template #prefix>
-              <i class="fas fa-search"></i>
+              <i class="fas fa-search" />
             </template>
           </el-input>
         </el-form-item>
@@ -103,16 +184,28 @@
         </el-form-item>
 
         <el-form-item>
-          <el-checkbox v-model="searchForm.failedOnly">只显示失败</el-checkbox>
+          <el-checkbox v-model="searchForm.failedOnly">
+            只显示失败
+          </el-checkbox>
         </el-form-item>
 
         <el-form-item>
-          <el-checkbox v-model="searchForm.retryableOnly">只显示可重试</el-checkbox>
+          <el-checkbox v-model="searchForm.retryableOnly">
+            只显示可重试
+          </el-checkbox>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="handleSearch" :loading="loading">搜索</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <el-button
+            type="primary"
+            :loading="loading"
+            @click="handleSearch"
+          >
+            搜索
+          </el-button>
+          <el-button @click="handleReset">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -123,7 +216,7 @@
         <template #header>
           <div class="table-header">
             <span class="table-title">
-              <i class="fas fa-tasks"></i>
+              <i class="fas fa-tasks" />
               任务队列 ({{ total }} 个任务)
             </span>
             <div class="table-actions">
@@ -133,30 +226,45 @@
                 :disabled="selectedRows.length === 0"
                 @click="handleBatchRetry"
               >
-                <i class="fas fa-redo"></i>批量重试 ({{ selectedRows.length }})
+                <i class="fas fa-redo" />批量重试 ({{ selectedRows.length }})
               </el-button>
             </div>
           </div>
         </template>
 
         <el-table 
-          :data="tableData" 
-          v-loading="loading"
-          @selection-change="handleSelectionChange"
+          v-loading="loading" 
+          :data="tableData"
           height="600"
           stripe
+          @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="50" fixed="left" />
+          <el-table-column
+            type="selection"
+            width="50"
+            fixed="left"
+          />
           
-          <el-table-column prop="id" label="任务ID" width="80" />
+          <el-table-column
+            prop="id"
+            label="任务ID"
+            width="80"
+          />
 
-          <el-table-column label="日记信息" width="180">
+          <el-table-column
+            label="日记信息"
+            width="180"
+          >
             <template #default="{ row }">
               <div class="diary-info">
-                <p class="diary-id">日记ID: {{ row.diaryId }}</p>
-                <p class="diary-date">{{ row.diaryDate || '-' }}</p>
+                <p class="diary-id">
+                  日记ID: {{ row.diaryId }}
+                </p>
+                <p class="diary-date">
+                  {{ row.diaryDate || '-' }}
+                </p>
                 <p class="user-info">
-                  <i class="fas fa-user"></i>
+                  <i class="fas fa-user" />
                   {{ row.username || 'Unknown' }}
                   <span v-if="row.nickname">({{ row.nickname }})</span>
                 </p>
@@ -164,47 +272,61 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="任务状态" width="120">
+          <el-table-column
+            label="任务状态"
+            width="120"
+          >
             <template #default="{ row }">
               <el-tag 
                 :type="getStatusTagType(row.status)" 
                 size="small"
                 :class="{ 'processing-tag': row.status === 'PROCESSING' }"
               >
-                <i :class="getStatusIcon(row.status)"></i>
+                <i :class="getStatusIcon(row.status)" />
                 {{ row.statusDescription }}
               </el-tag>
             </template>
           </el-table-column>
 
-          <el-table-column label="任务类型" width="120">
+          <el-table-column
+            label="任务类型"
+            width="120"
+          >
             <template #default="{ row }">
               <el-tag 
                 :type="getTaskTypeTagType(row.taskType)" 
                 size="small"
               >
-                <i :class="getTaskTypeIcon(row.taskType)"></i>
+                <i :class="getTaskTypeIcon(row.taskType)" />
                 {{ row.taskTypeDescription }}
               </el-tag>
             </template>
           </el-table-column>
 
-          <el-table-column label="优先级" width="100">
+          <el-table-column
+            label="优先级"
+            width="100"
+          >
             <template #default="{ row }">
               <el-tag 
                 :type="getPriorityTagType(row.priority)" 
                 size="small"
               >
-                <i :class="getPriorityIcon(row.priority)"></i>
+                <i :class="getPriorityIcon(row.priority)" />
                 {{ row.priorityDescription }}
               </el-tag>
             </template>
           </el-table-column>
 
-          <el-table-column label="重试信息" width="120">
+          <el-table-column
+            label="重试信息"
+            width="120"
+          >
             <template #default="{ row }">
               <div class="retry-info">
-                <p class="retry-count">{{ row.retryCount }}/{{ row.maxRetryCount }}</p>
+                <p class="retry-count">
+                  {{ row.retryCount }}/{{ row.maxRetryCount }}
+                </p>
                 <el-tag 
                   v-if="row.canRetry" 
                   type="warning" 
@@ -216,22 +338,49 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="errorMessage" label="错误信息" min-width="200" show-overflow-tooltip />
+          <el-table-column
+            prop="errorMessage"
+            label="错误信息"
+            min-width="200"
+            show-overflow-tooltip
+          />
 
-          <el-table-column label="时间信息" width="160">
+          <el-table-column
+            label="时间信息"
+            width="160"
+          >
             <template #default="{ row }">
               <div class="time-info">
-                <p class="created-time">创建: {{ formatDateTime(row.createdAt) }}</p>
-                <p v-if="row.startedAt" class="started-time">开始: {{ formatDateTime(row.startedAt) }}</p>
-                <p v-if="row.completedAt" class="completed-time">完成: {{ formatDateTime(row.completedAt) }}</p>
-                <p v-if="row.processingTimeMs" class="processing-time">
+                <p class="created-time">
+                  创建: {{ formatDateTime(row.createdAt) }}
+                </p>
+                <p
+                  v-if="row.startedAt"
+                  class="started-time"
+                >
+                  开始: {{ formatDateTime(row.startedAt) }}
+                </p>
+                <p
+                  v-if="row.completedAt"
+                  class="completed-time"
+                >
+                  完成: {{ formatDateTime(row.completedAt) }}
+                </p>
+                <p
+                  v-if="row.processingTimeMs"
+                  class="processing-time"
+                >
                   耗时: {{ formatDuration(row.processingTimeMs) }}
                 </p>
               </div>
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" width="120" fixed="right">
+          <el-table-column
+            label="操作"
+            width="120"
+            fixed="right"
+          >
             <template #default="{ row }">
               <el-button 
                 v-if="row.canRetry"
@@ -239,9 +388,13 @@
                 size="small" 
                 @click="handleRetryTask(row)"
               >
-                <i class="fas fa-redo"></i>重试
+                <i class="fas fa-redo" />重试
               </el-button>
-              <el-tag v-else type="info" size="small">
+              <el-tag
+                v-else
+                type="info"
+                size="small"
+              >
                 {{ row.status === 'COMPLETED' ? '已完成' : '不可重试' }}
               </el-tag>
             </template>

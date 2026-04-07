@@ -5,20 +5,29 @@
       <div class="header-content">
         <div class="header-left">
           <div class="breathing-animation">
-            <i class="fas fa-heart"></i>
+            <i class="fas fa-heart" />
           </div>
           <div class="header-text">
             <h2>我的收藏</h2>
-            <p class="header-subtitle">{{ favoriteCount || 0 }} 篇收藏文章</p>
+            <p class="header-subtitle">
+              {{ favoriteCount || 0 }} 篇收藏文章
+            </p>
           </div>
         </div>
         <div class="header-right">
-          <el-button type="primary" @click="refreshList" class="refresh-btn">
-            <i class="fas fa-sync-alt"></i>
+          <el-button
+            type="primary"
+            class="refresh-btn"
+            @click="refreshList"
+          >
+            <i class="fas fa-sync-alt" />
             刷新列表
           </el-button>
-          <el-button @click="goToKnowledge" class="knowledge-btn">
-            <i class="fas fa-book-open"></i>
+          <el-button
+            class="knowledge-btn"
+            @click="goToKnowledge"
+          >
+            <i class="fas fa-book-open" />
             浏览知识库
           </el-button>
         </div>
@@ -28,32 +37,47 @@
     <div class="favorites-content">
       <div class="content-container">
         <!-- 文章列表 -->
-        <div class="article-list" v-loading="loading">
+        <div
+          v-loading="loading"
+          class="article-list"
+        >
           <!-- 文章网格 -->
-          <div v-if="articles.length > 0" class="articles-grid">
+          <div
+            v-if="articles.length > 0"
+            class="articles-grid"
+          >
             <div
               v-for="article in articles"
               :key="article.id"
               class="article-card"
             >
-              <div class="article-cover" @click="viewArticle(article.id)">
+              <div
+                class="article-cover"
+                @click="viewArticle(article.id)"
+              >
                 <img
                   v-if="article.coverImage"
                   :src="article.coverImage"
                   :alt="article.title"
                   @error="handleImageError"
-                />
-                <div v-else class="default-cover">
-                  <i class="fas fa-file-alt"></i>
+                >
+                <div
+                  v-else
+                  class="default-cover"
+                >
+                  <i class="fas fa-file-alt" />
                 </div>
                 <div class="cover-overlay">
-                  <i class="fas fa-eye"></i>
+                  <i class="fas fa-eye" />
                   <span>查看详情</span>
                 </div>
               </div>
               
               <div class="article-content">
-                <h3 class="article-title" @click="viewArticle(article.id)">
+                <h3
+                  class="article-title"
+                  @click="viewArticle(article.id)"
+                >
                   {{ article.title }}
                 </h3>
                 
@@ -64,11 +88,11 @@
                 <div class="article-meta">
                   <div class="meta-info">
                     <span class="meta-item">
-                      <i class="fas fa-calendar"></i>
+                      <i class="fas fa-calendar" />
                       收藏于 {{ formatDateString(article.favoriteTime) }}
                     </span>
                     <span class="meta-item">
-                      <i class="fas fa-eye"></i>
+                      <i class="fas fa-eye" />
                       {{ formatReadCount(article.readCount) }} 次阅读
                     </span>
                   </div>
@@ -79,7 +103,7 @@
                       size="small"
                       @click="viewArticle(article.id)"
                     >
-                      <i class="fas fa-eye"></i>
+                      <i class="fas fa-eye" />
                       查看
                     </el-button>
                     <el-button
@@ -87,7 +111,7 @@
                       size="small"
                       @click="confirmRemoveFavorite(article)"
                     >
-                      <i class="fas fa-heart-broken"></i>
+                      <i class="fas fa-heart-broken" />
                       取消收藏
                     </el-button>
                   </div>
@@ -97,24 +121,34 @@
           </div>
 
           <!-- 空状态 -->
-          <div v-if="!loading && articles.length === 0" class="empty-state">
-            <i class="fas fa-heart-broken"></i>
+          <div
+            v-if="!loading && articles.length === 0"
+            class="empty-state"
+          >
+            <i class="fas fa-heart-broken" />
             <p>暂无收藏文章</p>
-            <p class="empty-tip">您还没有收藏任何文章，快去<router-link to="/knowledge">知识库</router-link>收藏感兴趣的内容吧！</p>
+            <p class="empty-tip">
+              您还没有收藏任何文章，快去<router-link to="/knowledge">
+                知识库
+              </router-link>收藏感兴趣的内容吧！
+            </p>
           </div>
         </div>
 
         <!-- 分页 -->
-        <div class="pagination-wrapper" v-if="total > 0">
+        <div
+          v-if="total > 0"
+          class="pagination-wrapper"
+        >
           <el-pagination
             :current-page="searchParams.currentPage"
             :page-size="searchParams.size"
             :page-sizes="[6, 12, 18, 24]"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total"
+            background
             @size-change="handleSizeChange"
             @current-change="handlePageChange"
-            background
           />
         </div>
       </div>
@@ -283,12 +317,15 @@ onMounted(() => {
 <style scoped>
 .favorites-page {
   min-height: 100vh;
-  background: #f8fafc;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(91, 123, 255, 0.1) 0%, transparent 34%),
+    radial-gradient(circle at 100% 0%, rgba(245, 158, 11, 0.1) 0%, transparent 34%),
+    #f8fafc;
 }
 
 /* 页面头部样式 */
 .header-section {
-  background: linear-gradient(135deg, #f59e0b 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #5b7bff 0%, #4f46e5 55%, #f59e0b 100%);
   color: white;
   padding: 3rem 0;
 }
@@ -387,17 +424,19 @@ onMounted(() => {
 
 /* 文章卡片 */
 .article-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 26px rgba(79, 70, 229, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   transition: all 0.3s ease;
   cursor: pointer;
+  backdrop-filter: blur(6px);
 }
 
 .article-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 18px 34px rgba(79, 70, 229, 0.16);
 }
 
 /* 文章封面 */
@@ -422,7 +461,7 @@ onMounted(() => {
 .default-cover {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #f59e0b, #8b5cf6);
+  background: linear-gradient(135deg, #5b7bff, #4f46e5);
   display: flex;
   align-items: center;
   justify-content: center;

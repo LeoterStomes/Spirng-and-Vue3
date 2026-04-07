@@ -3,7 +3,9 @@
     <div class="page-header">
       <div class="header-content">
         <div class="header-left">
-          <h2 class="page-title">咨询记录管理</h2>
+          <h2 class="page-title">
+            咨询记录管理
+          </h2>
         </div>
         <div class="header-actions">
           <!-- 可以在这里添加操作按钮 -->
@@ -21,14 +23,39 @@
         @submit.prevent="fetchSessions"
       >
         <el-form-item label="情绪标签">
-          <el-select v-model="queryForm.emotionTag" placeholder="选择情绪" clearable>
-            <el-option label="全部情绪" value=""></el-option>
-            <el-option label="焦虑" value="焦虑"></el-option>
-            <el-option label="抑郁" value="抑郁"></el-option>
-            <el-option label="压力" value="压力"></el-option>
-            <el-option label="愤怒" value="愤怒"></el-option>
-            <el-option label="孤独" value="孤独"></el-option>
-            <el-option label="迷茫" value="迷茫"></el-option>
+          <el-select
+            v-model="queryForm.emotionTag"
+            placeholder="选择情绪"
+            clearable
+          >
+            <el-option
+              label="全部情绪"
+              value=""
+            />
+            <el-option
+              label="焦虑"
+              value="焦虑"
+            />
+            <el-option
+              label="抑郁"
+              value="抑郁"
+            />
+            <el-option
+              label="压力"
+              value="压力"
+            />
+            <el-option
+              label="愤怒"
+              value="愤怒"
+            />
+            <el-option
+              label="孤独"
+              value="孤独"
+            />
+            <el-option
+              label="迷茫"
+              value="迷茫"
+            />
           </el-select>
         </el-form-item>
         
@@ -41,8 +68,8 @@
             end-placeholder="结束日期"
             format="YYYY-MM-DD"
             value-format="YYYY-MM-DD"
-            @change="handleDateRangeChange"
             clearable
+            @change="handleDateRangeChange"
           />
         </el-form-item>
         
@@ -50,19 +77,26 @@
           <el-input
             v-model="queryForm.keyword"
             placeholder="搜索用户或内容"
+            clearable
             @clear="fetchSessions"
             @keyup.enter="fetchSessions"
-            clearable
           >
             <template #prefix>
-              <i class="fas fa-search"></i>
+              <i class="fas fa-search" />
             </template>
           </el-input>
         </el-form-item>
         
         <el-form-item>
-          <el-button type="primary" @click="fetchSessions">搜索</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <el-button
+            type="primary"
+            @click="fetchSessions"
+          >
+            搜索
+          </el-button>
+          <el-button @click="handleReset">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -70,30 +104,49 @@
     <!-- 会话记录列表 -->
     <el-card class="table-card">
       <el-table 
-        :data="sessionList" 
-        v-loading="loading"
+        v-loading="loading" 
+        :data="sessionList"
         stripe
         style="width: 100%"
       >
-        <el-table-column prop="userNickname" label="用户信息" width="150">
+        <el-table-column
+          prop="userNickname"
+          label="用户信息"
+          width="150"
+        >
           <template #default="scope">
             <div class="user-info">
-              <el-avatar :src="scope.row.userAvatar" :size="32">
-                <i class="fas fa-user"></i>
+              <el-avatar
+                :src="scope.row.userAvatar"
+                :size="32"
+              >
+                <i class="fas fa-user" />
               </el-avatar>
               <div class="user-details">
-                <div class="user-name">{{ scope.row.userNickname || '未知用户' }}</div>
-                <div class="user-id">ID: {{ scope.row.userId }}</div>
+                <div class="user-name">
+                  {{ scope.row.userNickname || '未知用户' }}
+                </div>
+                <div class="user-id">
+                  ID: {{ scope.row.userId }}
+                </div>
               </div>
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column prop="sessionTitle" label="会话内容" min-width="200">
+        <el-table-column
+          prop="sessionTitle"
+          label="会话内容"
+          min-width="200"
+        >
           <template #default="scope">
             <div class="session-content">
-              <div class="session-title">{{ scope.row.sessionTitle || '未命名会话' }}</div>
-              <div class="session-preview">{{ scope.row.lastMessageContent || '暂无消息' }}</div>
+              <div class="session-title">
+                {{ scope.row.sessionTitle || '未命名会话' }}
+              </div>
+              <div class="session-preview">
+                {{ scope.row.lastMessageContent || '暂无消息' }}
+              </div>
               <div class="session-meta">
                 消息数：{{ scope.row.messageCount || 0 }} | 时长：{{ scope.row.durationMinutes || 0 }}分钟
               </div>
@@ -102,13 +155,21 @@
         </el-table-column>
 
 
-        <el-table-column prop="messageCount" label="消息数" width="100">
+        <el-table-column
+          prop="messageCount"
+          label="消息数"
+          width="100"
+        >
           <template #default="scope">
             <span class="message-count">{{ scope.row.messageCount || 0 }}条</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="startedAt" label="时间" width="180">
+        <el-table-column
+          prop="startedAt"
+          label="时间"
+          width="180"
+        >
           <template #default="scope">
             <div class="time-info">
               <div>{{ formatDateTime(scope.row.startedAt) }}</div>
@@ -119,17 +180,21 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="80" fixed="right">
+        <el-table-column
+          label="操作"
+          width="80"
+          fixed="right"
+        >
           <template #default="scope">
             <div class="action-buttons">
               <el-button 
                 type="primary" 
                 size="small" 
                 text
-                @click="viewSessionDetail(scope.row)"
                 title="查看详情"
+                @click="viewSessionDetail(scope.row)"
               >
-                <i class="fas fa-eye"></i>
+                <i class="fas fa-eye" />
                 详情
               </el-button>
             </div>
@@ -158,7 +223,10 @@
       width="70%"
       :close-on-click-modal="false"
     >
-      <div v-if="selectedSession" class="session-detail">
+      <div
+        v-if="selectedSession"
+        class="session-detail"
+      >
         <!-- 会话基本信息 -->
         <div class="detail-header">
           <div class="detail-row">
@@ -184,7 +252,10 @@
           <div class="messages-header">
             <h4>对话记录</h4>
           </div>
-          <div class="messages-list" v-loading="loadingMessages">
+          <div
+            v-loading="loadingMessages"
+            class="messages-list"
+          >
             <div
               v-for="message in sessionMessages"
               :key="message.id"
@@ -193,14 +264,19 @@
             >
               <div class="message-header">
                 <span class="sender">
-                  <i :class="message.senderType === 1 ? 'fas fa-user' : 'fas fa-robot'"></i>
+                  <i :class="message.senderType === 1 ? 'fas fa-user' : 'fas fa-robot'" />
                   {{ message.senderType === 1 ? '用户' : 'AI助手' }}
                 </span>
                 <span class="time">{{ formatTime(message.createdAt) }}</span>
               </div>
-              <div class="message-content">{{ message.content }}</div>
+              <div class="message-content">
+                {{ message.content }}
+              </div>
             </div>
-            <div v-if="!sessionMessages.length && !loadingMessages" class="no-messages">
+            <div
+              v-if="!sessionMessages.length && !loadingMessages"
+              class="no-messages"
+            >
               暂无对话记录
             </div>
           </div>
@@ -208,7 +284,9 @@
       </div>
       
       <template #footer>
-        <el-button @click="showDetailDialog = false">关闭</el-button>
+        <el-button @click="showDetailDialog = false">
+          关闭
+        </el-button>
       </template>
     </el-dialog>
   </div>

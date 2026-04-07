@@ -4,10 +4,12 @@
     <div class="visualization-selector">
       <div class="selector-header">
         <h3 class="selector-title">
-          <i class="fas fa-eye"></i>
+          <i class="fas fa-eye" />
           情绪可视化中心
         </h3>
-        <div class="selector-subtitle">选择最适合的数据展示方式</div>
+        <div class="selector-subtitle">
+          选择最适合的数据展示方式
+        </div>
       </div>
       
       <div class="mode-tabs">
@@ -18,66 +20,79 @@
           :class="{ active: currentMode === mode.key }"
           @click="switchMode(mode.key)"
         >
-          <i :class="mode.icon"></i>
+          <i :class="mode.icon" />
           <span>{{ mode.name }}</span>
-          <div class="mode-description">{{ mode.description }}</div>
+          <div class="mode-description">
+            {{ mode.description }}
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 可视化内容区域 -->
     <div class="visualization-content">
-
-
       <!-- 情绪日历视图 -->
-      <div v-if="currentMode === 'calendar'" class="visualization-panel">
+      <div
+        v-if="currentMode === 'calendar'"
+        class="visualization-panel"
+      >
         <div class="panel-header">
-          <h4><i class="fas fa-calendar-alt"></i> 情绪日历</h4>
-          <div class="panel-info">记录每一天的情绪轨迹，发现生活中的美好时光</div>
+          <h4><i class="fas fa-calendar-alt" /> 情绪日历</h4>
+          <div class="panel-info">
+            记录每一天的情绪轨迹，发现生活中的美好时光
+          </div>
         </div>
         <div class="calendar-container">
           <!-- 日历控制栏 -->
           <div class="calendar-controls">
             <div class="calendar-header">
-              <button @click="previousMonth" class="nav-btn prev">
-                <i class="fas fa-chevron-left"></i>
+              <button
+                class="nav-btn prev"
+                @click="previousMonth"
+              >
+                <i class="fas fa-chevron-left" />
               </button>
               <div class="month-info">
-                <h5 class="month-title">{{ currentMonthYear }}</h5>
+                <h5 class="month-title">
+                  {{ currentMonthYear }}
+                </h5>
                 <div class="month-stats">
                   本月记录 {{ monthlyEmotionCount }} 天 · 平均心情 {{ monthlyAvgMood }}/10
                 </div>
               </div>
-              <button @click="nextMonth" class="nav-btn next">
-                <i class="fas fa-chevron-right"></i>
+              <button
+                class="nav-btn next"
+                @click="nextMonth"
+              >
+                <i class="fas fa-chevron-right" />
               </button>
             </div>
             
             <!-- 情绪图例 -->
             <div class="emotion-legend">
               <div class="legend-title">
-                <i class="fas fa-palette"></i>
+                <i class="fas fa-palette" />
                 心情色彩
               </div>
               <div class="legend-items">
                 <div class="legend-item">
-                  <div class="legend-color excellent"></div>
+                  <div class="legend-color excellent" />
                   <span>极佳 (9-10)</span>
                 </div>
                 <div class="legend-item">
-                  <div class="legend-color good"></div>
+                  <div class="legend-color good" />
                   <span>良好 (7-8)</span>
                 </div>
                 <div class="legend-item">
-                  <div class="legend-color normal"></div>
+                  <div class="legend-color normal" />
                   <span>一般 (5-6)</span>
                 </div>
                 <div class="legend-item">
-                  <div class="legend-color low"></div>
+                  <div class="legend-color low" />
                   <span>较低 (3-4)</span>
                 </div>
                 <div class="legend-item">
-                  <div class="legend-color poor"></div>
+                  <div class="legend-color poor" />
                   <span>不佳 (1-2)</span>
                 </div>
               </div>
@@ -87,7 +102,11 @@
           <!-- 日历主体 -->
           <div class="calendar-grid">
             <div class="weekday-header">
-              <div class="weekday" v-for="day in weekdays" :key="day">
+              <div
+                v-for="day in weekdays"
+                :key="day"
+                class="weekday"
+              >
                 <span class="weekday-text">{{ day }}</span>
               </div>
             </div>
@@ -110,23 +129,45 @@
                 @click="showDateDetail(date)"
               >
                 <div class="date-content">
-                  <div class="date-number">{{ date.day }}</div>
-                  <div v-if="date.emotionData" class="emotion-display">
-                    <div class="emotion-score">{{ date.emotionData.avgMoodScore?.toFixed(1) }}</div>
-                    <div class="emotion-emoji">{{ getEmotionEmoji(date.emotionData.dominantEmotion, date.emotionData.avgMoodScore) }}</div>
-                    <div class="emotion-name">{{ date.emotionData.dominantEmotion }}</div>
+                  <div class="date-number">
+                    {{ date.day }}
                   </div>
-                  <div v-else class="no-data">
-                    <div class="no-data-icon">·</div>
+                  <div
+                    v-if="date.emotionData"
+                    class="emotion-display"
+                  >
+                    <div class="emotion-score">
+                      {{ date.emotionData.avgMoodScore?.toFixed(1) }}
+                    </div>
+                    <div class="emotion-emoji">
+                      {{ getEmotionEmoji(date.emotionData.dominantEmotion, date.emotionData.avgMoodScore) }}
+                    </div>
+                    <div class="emotion-name">
+                      {{ date.emotionData.dominantEmotion }}
+                    </div>
+                  </div>
+                  <div
+                    v-else
+                    class="no-data"
+                  >
+                    <div class="no-data-icon">
+                      ·
+                    </div>
                   </div>
                   
                   <!-- 特殊标记 -->
-                  <div v-if="date.isToday" class="today-marker">
-                    <i class="fas fa-star"></i>
+                  <div
+                    v-if="date.isToday"
+                    class="today-marker"
+                  >
+                    <i class="fas fa-star" />
                   </div>
                   
                   <!-- 多条记录指示器 -->
-                  <div v-if="date.emotionData && date.emotionData.recordCount > 1" class="record-count">
+                  <div
+                    v-if="date.emotionData && date.emotionData.recordCount > 1"
+                    class="record-count"
+                  >
                     {{ date.emotionData.recordCount }}
                   </div>
                 </div>
@@ -137,36 +178,60 @@
           <!-- 月度情绪总结 -->
           <div class="monthly-summary">
             <div class="summary-title">
-              <i class="fas fa-chart-line"></i>
+              <i class="fas fa-chart-line" />
               本月情绪概览
             </div>
             <div class="summary-cards">
               <div class="summary-card best-day">
-                <div class="card-icon">🌟</div>
+                <div class="card-icon">
+                  🌟
+                </div>
                 <div class="card-content">
-                  <div class="card-label">最佳一天</div>
-                  <div class="card-value">{{ bestDayOfMonth }}</div>
+                  <div class="card-label">
+                    最佳一天
+                  </div>
+                  <div class="card-value">
+                    {{ bestDayOfMonth }}
+                  </div>
                 </div>
               </div>
               <div class="summary-card most-emotion">
-                <div class="card-icon">{{ mostFrequentEmotionEmoji }}</div>
+                <div class="card-icon">
+                  {{ mostFrequentEmotionEmoji }}
+                </div>
                 <div class="card-content">
-                  <div class="card-label">主要情绪</div>
-                  <div class="card-value">{{ mostFrequentEmotion }}</div>
+                  <div class="card-label">
+                    主要情绪
+                  </div>
+                  <div class="card-value">
+                    {{ mostFrequentEmotion }}
+                  </div>
                 </div>
               </div>
               <div class="summary-card active-days">
-                <div class="card-icon">📝</div>
+                <div class="card-icon">
+                  📝
+                </div>
                 <div class="card-content">
-                  <div class="card-label">记录天数</div>
-                  <div class="card-value">{{ monthlyEmotionCount }}天</div>
+                  <div class="card-label">
+                    记录天数
+                  </div>
+                  <div class="card-value">
+                    {{ monthlyEmotionCount }}天
+                  </div>
                 </div>
               </div>
               <div class="summary-card mood-trend">
-                <div class="card-icon">{{ moodTrendIcon }}</div>
+                <div class="card-icon">
+                  {{ moodTrendIcon }}
+                </div>
                 <div class="card-content">
-                  <div class="card-label">情绪趋势</div>
-                  <div class="card-value">{{ moodTrendText }}</div>
+                  <div class="card-label">
+                    情绪趋势
+                  </div>
+                  <div class="card-value">
+                    {{ moodTrendText }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -176,27 +241,44 @@
 
 
       <!-- 流式图表 -->
-      <div v-if="currentMode === 'stream'" class="visualization-panel">
+      <div
+        v-if="currentMode === 'stream'"
+        class="visualization-panel"
+      >
         <div class="panel-header">
-          <h4><i class="fas fa-water"></i> 情绪流动图</h4>
-          <div class="panel-info">展示情绪随时间的流动变化</div>
+          <h4><i class="fas fa-water" /> 情绪流动图</h4>
+          <div class="panel-info">
+            展示情绪随时间的流动变化
+          </div>
         </div>
         <div class="stream-container">
-          <div ref="streamChart" class="stream-chart"></div>
+          <div
+            ref="streamChart"
+            class="stream-chart"
+          />
           <div class="stream-controls">
             <div class="control-group">
               <label>时间粒度:</label>
-              <select v-model="streamGranularity" @change="updateStreamChart">
-                <option value="hour">小时</option>
-                <option value="day">天</option>
-                <option value="week">周</option>
+              <select
+                v-model="streamGranularity"
+                @change="updateStreamChart"
+              >
+                <option value="hour">
+                  小时
+                </option>
+                <option value="day">
+                  天
+                </option>
+                <option value="week">
+                  周
+                </option>
               </select>
             </div>
             <div class="control-group">
               <label>平滑度:</label>
               <input 
-                type="range" 
                 v-model="streamSmoothing" 
+                type="range" 
                 min="0" 
                 max="1" 
                 step="0.1"
@@ -215,7 +297,10 @@
       width="600px"
       class="emotion-detail-dialog"
     >
-      <div v-if="selectedEmotionData" class="emotion-detail-content">
+      <div
+        v-if="selectedEmotionData"
+        class="emotion-detail-content"
+      >
         <div class="detail-header">
           <div class="detail-date">
             {{ formatDetailDate(selectedEmotionData.date) }}
@@ -227,31 +312,61 @@
         </div>
         <div class="detail-metrics">
           <div class="metric-item primary">
-            <div class="metric-icon">😊</div>
+            <div class="metric-icon">
+              😊
+            </div>
             <div class="metric-content">
-              <div class="metric-label">情绪评分</div>
-              <div class="metric-value">{{ selectedEmotionData.avgMoodScore?.toFixed(1) || '0.0' }}/10</div>
+              <div class="metric-label">
+                情绪评分
+              </div>
+              <div class="metric-value">
+                {{ selectedEmotionData.avgMoodScore?.toFixed(1) || '0.0' }}/10
+              </div>
             </div>
           </div>
           <div class="metric-item">
-            <div class="metric-icon">📝</div>
+            <div class="metric-icon">
+              📝
+            </div>
             <div class="metric-content">
-              <div class="metric-label">记录次数</div>
-              <div class="metric-value">{{ selectedEmotionData.recordCount || 0 }}次</div>
+              <div class="metric-label">
+                记录次数
+              </div>
+              <div class="metric-value">
+                {{ selectedEmotionData.recordCount || 0 }}次
+              </div>
             </div>
           </div>
-          <div class="metric-item" v-if="selectedEmotionData.positiveRatio !== undefined">
-            <div class="metric-icon">🌟</div>
+          <div
+            v-if="selectedEmotionData.positiveRatio !== undefined"
+            class="metric-item"
+          >
+            <div class="metric-icon">
+              🌟
+            </div>
             <div class="metric-content">
-              <div class="metric-label">积极情绪占比</div>
-              <div class="metric-value">{{ (selectedEmotionData.positiveRatio ).toFixed(1) }}%</div>
+              <div class="metric-label">
+                积极情绪占比
+              </div>
+              <div class="metric-value">
+                {{ (selectedEmotionData.positiveRatio ).toFixed(1) }}%
+              </div>
             </div>
           </div>
-          <div class="metric-item" v-if="selectedEmotionData.negativeRatio !== undefined">
-            <div class="metric-icon">⚡</div>
+          <div
+            v-if="selectedEmotionData.negativeRatio !== undefined"
+            class="metric-item"
+          >
+            <div class="metric-icon">
+              ⚡
+            </div>
             <div class="metric-content">
-              <div class="metric-label">消极情绪占比</div>
-              <div class="metric-value">{{ (selectedEmotionData.negativeRatio ).toFixed(1) }}%</div>
+              <div class="metric-label">
+                消极情绪占比
+              </div>
+              <div class="metric-value">
+                {{ (selectedEmotionData.negativeRatio ).toFixed(1) }}%
+              </div>
             </div>
           </div>
         </div>

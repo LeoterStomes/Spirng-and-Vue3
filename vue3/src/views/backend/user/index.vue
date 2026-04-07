@@ -4,14 +4,22 @@
     <div class="page-header">
       <div class="header-content">
         <div class="header-left">
-          <h2 class="page-title">用户管理</h2>
+          <h2 class="page-title">
+            用户管理
+          </h2>
         </div>
         <div class="header-actions">
-          <el-button type="primary"  @click="handleAddUser">
-            <i class="fas fa-user-plus"></i>添加用户
+          <el-button
+            type="primary"
+            @click="handleAddUser"
+          >
+            <i class="fas fa-user-plus" />添加用户
           </el-button>
-          <el-button type="success"    @click="handleExportData">
-            <i class="fas fa-download"></i>导出数据
+          <el-button
+            type="success"
+            @click="handleExportData"
+          >
+            <i class="fas fa-download" />导出数据
           </el-button>
         </div>
       </div>
@@ -20,7 +28,11 @@
 
     <!-- 搜索和筛选 -->
     <div class="search-section">
-      <el-form :model="searchForm" :inline="true" class="search-form">
+      <el-form
+        :model="searchForm"
+        :inline="true"
+        class="search-form"
+      >
         <el-form-item>
           <el-input
             v-model="searchForm.keyword"
@@ -33,21 +45,50 @@
         </el-form-item>
         
         <el-form-item>
-          <el-select v-model="searchForm.status" placeholder="用户状态" clearable class="search-select">
-            <el-option label="正常" :value="1" />
-            <el-option label="禁用" :value="0" />
+          <el-select
+            v-model="searchForm.status"
+            placeholder="用户状态"
+            clearable
+            class="search-select"
+          >
+            <el-option
+              label="正常"
+              :value="1"
+            />
+            <el-option
+              label="禁用"
+              :value="0"
+            />
           </el-select>
         </el-form-item>
         
         <el-form-item>
-          <el-select v-model="searchForm.userType" placeholder="用户类型" clearable class="search-select">
-            <el-option label="普通用户" :value="1" />
-            <el-option label="管理员" :value="2" />
+          <el-select
+            v-model="searchForm.userType"
+            placeholder="用户类型"
+            clearable
+            class="search-select"
+          >
+            <el-option
+              label="普通用户"
+              :value="1"
+            />
+            <el-option
+              label="管理员"
+              :value="2"
+            />
+            <el-option
+              label="医生"
+              :value="3"
+            />
           </el-select>
         </el-form-item>
         
         <el-form-item>
-          <el-button type="primary" @click="handleSearch">
+          <el-button
+            type="primary"
+            @click="handleSearch"
+          >
             搜索
           </el-button>
           <el-button @click="handleReset">
@@ -61,7 +102,9 @@
     <div class="table-section">
       <div class="table-header">
         <div class="table-header-content">
-          <h3 class="table-title">用户列表</h3>
+          <h3 class="table-title">
+            用户列表
+          </h3>
           <div class="table-header-actions">
             <span class="table-total">
               共 {{ total }} 条数据
@@ -76,9 +119,17 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column
+          type="selection"
+          width="55"
+          align="center"
+        />
         
-        <el-table-column label="用户信息" min-width="200" fixed="left">
+        <el-table-column
+          label="用户信息"
+          min-width="200"
+          fixed="left"
+        >
           <template #default="scope">
             <div class="user-info">
               <el-avatar
@@ -86,37 +137,56 @@
                 :src="scope.row.avatar"
                 class="user-avatar"
               >
-                <i class="fas fa-user"></i>
+                <i class="fas fa-user" />
               </el-avatar>
               <div class="user-details">
-                <div class="user-name">{{ scope.row.displayName }}</div>
-                <div class="user-id">ID: {{ scope.row.id }}</div>
-                <div class="user-username">@{{ scope.row.username }}</div>
+                <div class="user-name">
+                  {{ scope.row.displayName }}
+                </div>
+                <div class="user-id">
+                  ID: {{ scope.row.id }}
+                </div>
+                <div class="user-username">
+                  @{{ scope.row.username }}
+                </div>
               </div>
             </div>
           </template>
         </el-table-column>
         
-        <el-table-column label="联系方式" min-width="180">
+        <el-table-column
+          label="联系方式"
+          min-width="180"
+        >
           <template #default="scope">
             <div class="contact-info">
               <div class="contact-item">
-                <i class="fas fa-envelope contact-icon"></i>
+                <i class="fas fa-envelope contact-icon" />
                 <span class="contact-text">{{ scope.row.email }}</span>
               </div>
-              <div class="contact-item" v-if="scope.row.phone">
-                <i class="fas fa-phone contact-icon"></i>
+              <div
+                v-if="scope.row.phone"
+                class="contact-item"
+              >
+                <i class="fas fa-phone contact-icon" />
                 <span class="contact-text">{{ scope.row.phone }}</span>
               </div>
-              <div class="contact-item" v-else>
-                <i class="fas fa-phone contact-icon"></i>
+              <div
+                v-else
+                class="contact-item"
+              >
+                <i class="fas fa-phone contact-icon" />
                 <span class="contact-text contact-empty">未填写</span>
               </div>
             </div>
           </template>
         </el-table-column>
         
-        <el-table-column label="个人信息" width="140" align="center">
+        <el-table-column
+          label="个人信息"
+          width="140"
+          align="center"
+        >
           <template #default="scope">
             <div class="personal-info">
               <div class="info-row">
@@ -125,13 +195,13 @@
                   size="small"
                   class="gender-tag"
                 >
-                  <i :class="scope.row.gender === 1 ? 'fas fa-mars' : scope.row.gender === 0 ? 'fas fa-venus' : 'fas fa-question'"></i>
+                  <i :class="scope.row.gender === 1 ? 'fas fa-mars' : scope.row.gender === 0 ? 'fas fa-venus' : 'fas fa-question'" />
                   {{ scope.row.gender === 1 ? '男' : scope.row.gender === 0 ? '女' : '未知' }}
                 </el-tag>
               </div>
               <div class="info-row">
                 <span class="birthday-text">
-                  <i class="fas fa-birthday-cake birthday-icon"></i>
+                  <i class="fas fa-birthday-cake birthday-icon" />
                   {{ scope.row.birthday ? formatDate(scope.row.birthday) : '未填写' }}
                 </span>
               </div>
@@ -139,88 +209,127 @@
           </template>
         </el-table-column>
         
-        <el-table-column label="用户类型" width="100" align="center">
+        <el-table-column
+          label="用户类型"
+          width="100"
+          align="center"
+        >
           <template #default="scope">
             <el-tag
-              :type="scope.row.userType === 2 ? 'danger' : 'primary'"
+              :type="scope.row.userType === 2 ? 'danger' : scope.row.userType === 3 ? 'success' : 'primary'"
               size="small"
               class="type-tag"
             >
-              <i :class="scope.row.userType === 2 ? 'fas fa-crown' : 'fas fa-user'" class="type-icon"></i>
+              <i
+                :class="scope.row.userType === 2 ? 'fas fa-crown' : scope.row.userType === 3 ? 'fas fa-user-md' : 'fas fa-user'"
+                class="type-icon"
+              />
               {{ scope.row.userTypeDisplayName }}
             </el-tag>
           </template>
         </el-table-column>
         
-        <el-table-column label="状态" width="80" align="center">
+        <el-table-column
+          label="状态"
+          width="80"
+          align="center"
+        >
           <template #default="scope">
             <el-tag
               :type="scope.row.status === 1 ? 'success' : 'danger'"
               size="small"
               class="status-tag"
             >
-              <i :class="scope.row.status === 1 ? 'fas fa-check-circle' : 'fas fa-ban'" class="status-icon"></i>
+              <i
+                :class="scope.row.status === 1 ? 'fas fa-check-circle' : 'fas fa-ban'"
+                class="status-icon"
+              />
               {{ scope.row.statusDisplayName }}
             </el-tag>
           </template>
         </el-table-column>
         
-        <el-table-column label="注册时间" width="140" align="center">
+        <el-table-column
+          label="注册时间"
+          width="140"
+          align="center"
+        >
           <template #default="scope">
             <div class="date-info">
               <div class="date-main">
-                <i class="fas fa-calendar-plus date-icon"></i>
+                <i class="fas fa-calendar-plus date-icon" />
                 {{ formatDate(scope.row.createdAt) }}
               </div>
-              <div class="date-sub">{{ formatTime(scope.row.createdAt) }}</div>
+              <div class="date-sub">
+                {{ formatTime(scope.row.createdAt) }}
+              </div>
             </div>
           </template>
         </el-table-column>
         
-        <el-table-column label="最后更新" width="140" align="center">
+        <el-table-column
+          label="最后更新"
+          width="140"
+          align="center"
+        >
           <template #default="scope">
             <div class="date-info">
               <div class="date-main">
-                <i class="fas fa-edit date-icon"></i>
+                <i class="fas fa-edit date-icon" />
                 {{ formatDate(scope.row.updatedAt) }}
               </div>
-              <div class="date-sub">{{ formatTime(scope.row.updatedAt) }}</div>
+              <div class="date-sub">
+                {{ formatTime(scope.row.updatedAt) }}
+              </div>
             </div>
           </template>
         </el-table-column>
         
-        <el-table-column label="操作" width="260" align="center" fixed="right">
+        <el-table-column
+          label="操作"
+          width="340"
+          align="center"
+          fixed="right"
+        >
           <template #default="scope">
             <div class="action-buttons">
               <el-button
                 type="primary"
                 size="small"
-                @click="handleViewUser(scope.row)"
                 title="查看"
+                @click="handleViewUser(scope.row)"
               >
                 查看
               </el-button>
               <el-button
                 type="success"
                 size="small"
-                @click="handleEditUser(scope.row)"
                 title="编辑"
+                @click="handleEditUser(scope.row)"
               >
                 编辑
               </el-button>
               <el-button
                 :type="scope.row.status === 1 ? 'warning' : 'success'"
                 size="small"
-                @click="handleToggleStatus(scope.row)"
                 :title="scope.row.status === 1 ? '禁用' : '启用'"
+                @click="handleToggleStatus(scope.row)"
               >
                 {{ scope.row.status === 1 ? '禁用' : '启用' }}
               </el-button>
               <el-button
+                type="info"
+                size="small"
+                title="切换角色"
+                @click="handleRoleSwitch(scope.row)"
+              >
+                角色
+              </el-button>
+              <el-button
                 type="danger"
                 size="small"
-                @click="handleDeleteUser(scope.row)"
                 title="删除"
+                @click="handleDeleteUser(scope.row)"
               >
                 删除
               </el-button>
@@ -250,23 +359,46 @@
       width="600px"
       :before-close="handleCancelEdit"
     >
-      <el-form :model="editForm" label-width="100px" class="edit-form">
+      <el-form
+        :model="editForm"
+        label-width="100px"
+        class="edit-form"
+      >
         <el-form-item label="邮箱">
-          <el-input v-model="editForm.email" placeholder="请输入邮箱" />
+          <el-input
+            v-model="editForm.email"
+            placeholder="请输入邮箱"
+          />
         </el-form-item>
         
         <el-form-item label="昵称">
-          <el-input v-model="editForm.nickname" placeholder="请输入昵称" />
+          <el-input
+            v-model="editForm.nickname"
+            placeholder="请输入昵称"
+          />
         </el-form-item>
         
         <el-form-item label="手机号">
-          <el-input v-model="editForm.phone" placeholder="请输入手机号" />
+          <el-input
+            v-model="editForm.phone"
+            placeholder="请输入手机号"
+          />
         </el-form-item>
         
         <el-form-item label="性别">
-          <el-select v-model="editForm.gender" placeholder="请选择性别" clearable>
-            <el-option label="男" :value="1" />
-            <el-option label="女" :value="0" />
+          <el-select
+            v-model="editForm.gender"
+            placeholder="请选择性别"
+            clearable
+          >
+            <el-option
+              label="男"
+              :value="1"
+            />
+            <el-option
+              label="女"
+              :value="0"
+            />
           </el-select>
         </el-form-item>
         
@@ -281,24 +413,53 @@
         </el-form-item>
         
         <el-form-item label="用户类型">
-          <el-select v-model="editForm.userType" placeholder="请选择用户类型">
-            <el-option label="普通用户" :value="1" />
-            <el-option label="管理员" :value="2" />
+          <el-select
+            v-model="editForm.userType"
+            placeholder="请选择用户类型"
+          >
+            <el-option
+              label="普通用户"
+              :value="1"
+            />
+            <el-option
+              label="管理员"
+              :value="2"
+            />
+            <el-option
+              label="医生"
+              :value="3"
+            />
           </el-select>
         </el-form-item>
         
         <el-form-item label="用户状态">
-          <el-select v-model="editForm.status" placeholder="请选择用户状态">
-            <el-option label="正常" :value="1" />
-            <el-option label="禁用" :value="0" />
+          <el-select
+            v-model="editForm.status"
+            placeholder="请选择用户状态"
+          >
+            <el-option
+              label="正常"
+              :value="1"
+            />
+            <el-option
+              label="禁用"
+              :value="0"
+            />
           </el-select>
         </el-form-item>
       </el-form>
       
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="handleCancelEdit">取消</el-button>
-          <el-button type="primary" @click="handleSaveEdit">保存</el-button>
+          <el-button @click="handleCancelEdit">
+            取消
+          </el-button>
+          <el-button
+            type="primary"
+            @click="handleSaveEdit"
+          >
+            保存
+          </el-button>
         </div>
       </template>
     </el-dialog>
@@ -310,8 +471,15 @@
       width="600px"
       :before-close="handleCancelAdd"
     >
-      <el-form :model="addForm" label-width="100px" class="add-form">
-        <el-form-item label="用户名" required>
+      <el-form
+        :model="addForm"
+        label-width="100px"
+        class="add-form"
+      >
+        <el-form-item
+          label="用户名"
+          required
+        >
           <el-input 
             v-model="addForm.username" 
             placeholder="请输入用户名（3-50个字符，只能包含字母、数字和下划线）" 
@@ -319,7 +487,10 @@
           />
         </el-form-item>
         
-        <el-form-item label="邮箱" required>
+        <el-form-item
+          label="邮箱"
+          required
+        >
           <el-input 
             v-model="addForm.email" 
             placeholder="请输入邮箱" 
@@ -327,7 +498,10 @@
           />
         </el-form-item>
         
-        <el-form-item label="密码" required>
+        <el-form-item
+          label="密码"
+          required
+        >
           <el-input 
             v-model="addForm.password" 
             placeholder="请输入密码（至少6位）" 
@@ -337,7 +511,10 @@
           />
         </el-form-item>
         
-        <el-form-item label="确认密码" required>
+        <el-form-item
+          label="确认密码"
+          required
+        >
           <el-input 
             v-model="addForm.confirmPassword" 
             placeholder="请再次输入密码" 
@@ -347,17 +524,33 @@
         </el-form-item>
         
         <el-form-item label="昵称">
-          <el-input v-model="addForm.nickname" placeholder="请输入昵称（可选，默认使用用户名）" />
+          <el-input
+            v-model="addForm.nickname"
+            placeholder="请输入昵称（可选，默认使用用户名）"
+          />
         </el-form-item>
         
         <el-form-item label="手机号">
-          <el-input v-model="addForm.phone" placeholder="请输入手机号" />
+          <el-input
+            v-model="addForm.phone"
+            placeholder="请输入手机号"
+          />
         </el-form-item>
         
         <el-form-item label="性别">
-          <el-select v-model="addForm.gender" placeholder="请选择性别" clearable>
-            <el-option label="男" :value="1" />
-            <el-option label="女" :value="0" />
+          <el-select
+            v-model="addForm.gender"
+            placeholder="请选择性别"
+            clearable
+          >
+            <el-option
+              label="男"
+              :value="1"
+            />
+            <el-option
+              label="女"
+              :value="0"
+            />
           </el-select>
         </el-form-item>
         
@@ -371,18 +564,41 @@
           />
         </el-form-item>
         
-        <el-form-item label="用户类型" required>
-          <el-select v-model="addForm.userType" placeholder="请选择用户类型">
-            <el-option label="普通用户" :value="1" />
-            <el-option label="管理员" :value="2" />
+        <el-form-item
+          label="用户类型"
+          required
+        >
+          <el-select
+            v-model="addForm.userType"
+            placeholder="请选择用户类型"
+          >
+            <el-option
+              label="普通用户"
+              :value="1"
+            />
+            <el-option
+              label="管理员"
+              :value="2"
+            />
+            <el-option
+              label="医生"
+              :value="3"
+            />
           </el-select>
         </el-form-item>
       </el-form>
       
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="handleCancelAdd">取消</el-button>
-          <el-button type="primary" @click="handleSaveAdd">添加</el-button>
+          <el-button @click="handleCancelAdd">
+            取消
+          </el-button>
+          <el-button
+            type="primary"
+            @click="handleSaveAdd"
+          >
+            添加
+          </el-button>
         </div>
       </template>
     </el-dialog>
@@ -394,59 +610,88 @@
       direction="rtl"
       size="500px"
     >
-      <div v-if="selectedUser" class="user-detail-content">
+      <div
+        v-if="selectedUser"
+        class="user-detail-content"
+      >
         <div class="user-detail-header">
-          <el-avatar :size="80" :src="selectedUser.avatar" class="detail-avatar">
-            <i class="fas fa-user"></i>
+          <el-avatar
+            :size="80"
+            :src="selectedUser.avatar"
+            class="detail-avatar"
+          >
+            <i class="fas fa-user" />
           </el-avatar>
-          <h3 class="detail-name">{{ selectedUser.displayName }}</h3>
-          <p class="detail-role">{{ selectedUser.userTypeDisplayName }}</p>
+          <h3 class="detail-name">
+            {{ selectedUser.displayName }}
+          </h3>
+          <p class="detail-role">
+            {{ selectedUser.userTypeDisplayName }}
+          </p>
         </div>
         
         <div class="user-info-list">
           <div class="info-item">
             <label class="info-label">用户ID</label>
-            <p class="info-value">{{ selectedUser.id }}</p>
+            <p class="info-value">
+              {{ selectedUser.id }}
+            </p>
           </div>
           
           <div class="info-item">
             <label class="info-label">用户名</label>
-            <p class="info-value">{{ selectedUser.username }}</p>
+            <p class="info-value">
+              {{ selectedUser.username }}
+            </p>
           </div>
           
           <div class="info-item">
             <label class="info-label">昵称</label>
-            <p class="info-value">{{ selectedUser.nickname || '-' }}</p>
+            <p class="info-value">
+              {{ selectedUser.nickname || '-' }}
+            </p>
           </div>
           
           <div class="info-item">
             <label class="info-label">邮箱</label>
-            <p class="info-value">{{ selectedUser.email }}</p>
+            <p class="info-value">
+              {{ selectedUser.email }}
+            </p>
           </div>
           
           <div class="info-item">
             <label class="info-label">手机号</label>
-            <p class="info-value">{{ selectedUser.phone || '-' }}</p>
+            <p class="info-value">
+              {{ selectedUser.phone || '-' }}
+            </p>
           </div>
           
           <div class="info-item">
             <label class="info-label">性别</label>
-            <p class="info-value">{{ selectedUser.genderDisplayName || '-' }}</p>
+            <p class="info-value">
+              {{ selectedUser.genderDisplayName || '-' }}
+            </p>
           </div>
           
           <div class="info-item">
             <label class="info-label">生日</label>
-            <p class="info-value">{{ selectedUser.birthday || '-' }}</p>
+            <p class="info-value">
+              {{ selectedUser.birthday || '-' }}
+            </p>
           </div>
           
           <div class="info-item">
             <label class="info-label">注册时间</label>
-            <p class="info-value">{{ formatDateTime(selectedUser.createdAt) }}</p>
+            <p class="info-value">
+              {{ formatDateTime(selectedUser.createdAt) }}
+            </p>
           </div>
           
           <div class="info-item">
             <label class="info-label">更新时间</label>
-            <p class="info-value">{{ formatDateTime(selectedUser.updatedAt) }}</p>
+            <p class="info-value">
+              {{ formatDateTime(selectedUser.updatedAt) }}
+            </p>
           </div>
           
           <div class="info-item">
@@ -473,7 +718,7 @@ import {
   Edit, 
   Delete 
 } from '@element-plus/icons-vue'
-import { getUserPage, getUserStatistics, updateUserStatus, deleteUser, updateUser, register } from '@/api/user'
+import { getUserPage, getUserStatistics, updateUserStatus, deleteUser, updateUser, updateUserRole, register } from '@/api/user'
 import { formatDate, formatDateTime, formatTime } from '@/utils/dateUtils'
 import { exportUserData } from '@/utils/excelUtils'
 
@@ -700,6 +945,29 @@ const handleToggleStatus = async (row) => {
     })
   } catch {
     // 用户取消操作
+  }
+}
+
+// 切换用户角色（普通用户/医生/管理员）
+const handleRoleSwitch = async (row) => {
+  const roleMap = { 1: '普通用户', 2: '管理员', 3: '医生' }
+  try {
+    const { value } = await ElMessageBox.prompt(
+      `请输入目标角色代码：1=普通用户，2=管理员，3=医生（当前：${roleMap[row.userType] || row.userType}）`,
+      '切换用户角色',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValue: String(row.userType || 1),
+        inputPattern: /^(1|2|3)$/,
+        inputErrorMessage: '只能输入 1、2、3'
+      }
+    )
+    const userType = Number(value)
+    await updateUserRole(row.id, userType, { successMsg: '角色更新成功' })
+    fetchUsers()
+  } catch {
+    // 用户取消
   }
 }
 

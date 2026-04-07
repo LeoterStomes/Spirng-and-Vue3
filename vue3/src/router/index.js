@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import BackendLayout from '@/layouts/BackendLayout.vue'
+import DoctorLayout from '@/layouts/DoctorLayout.vue'
 
 // 后台路由
 export const backendRoutes = [
@@ -62,6 +63,41 @@ export const backendRoutes = [
         name: 'BackendProfile',
         component: () => import('@/views/profile/index.vue'),
         meta: { title: '个人信息', icon: 'UserFilled' }
+      }
+    ]
+  }
+]
+
+// 医生端路由
+export const doctorRoutes = [
+  {
+    path: '/doctor',
+    component: DoctorLayout,
+    redirect: '/doctor/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        name: 'DoctorDashboard',
+        component: () => import('@/views/doctor/DoctorDashboard.vue'),
+        meta: { title: '医生工作台', requiresAuth: true }
+      },
+      {
+        path: 'patients',
+        name: 'DoctorPatients',
+        component: () => import('@/views/doctor/DoctorPatients.vue'),
+        meta: { title: '我的患者', requiresAuth: true }
+      },
+      {
+        path: 'patients/:patientId',
+        name: 'DoctorPatientDetail',
+        component: () => import('@/views/doctor/DoctorPatientDetail.vue'),
+        meta: { title: '患者详情', requiresAuth: true, activeMenu: '/doctor/patients' }
+      },
+      {
+        path: 'profile',
+        name: 'DoctorProfile',
+        component: () => import('@/views/profile/index.vue'),
+        meta: { title: '个人信息', requiresAuth: true }
       }
     ]
   }
@@ -203,6 +239,7 @@ const router = createRouter({
   routes: [
     ...frontendRoutes,
     ...backendRoutes,
+    ...doctorRoutes,
     ...errorRoutes
   ]
 })
@@ -218,7 +255,9 @@ router.beforeEach((to, from, next) => {
   console.log("Current route:", to.path)
   console.log("User status:", {
     isLoggedIn: userStore.isLoggedIn,
-    isUser: userStore.isUser
+    isUser: userStore.isUser,
+    isAdmin: userStore.isAdmin,
+    isDoctor: userStore.isDoctor
   })
 
   // 检查是否需要登录权限
@@ -234,30 +273,50 @@ router.beforeEach((to, from, next) => {
   if (userStore.isLoggedIn) {
     // 处理登录页面访问
     if (to.path === '/login') {
-      next(userStore.isUser ? '/' : '/back/dashboard')
+      if (userStore.isUser) {
+        next('/')
+      } else if (userStore.isDoctor) {
+        next('/doctor/dashboard')
+      } else {
+        next('/back/dashboard')
+      }
       return
     }
 
-    if (!userStore.isUser) {
-      // 非普通用户只能访问后台路由
+    if (userStore.isAdmin) {
+      // 管理员只能访问后台路由
       if (to.path.startsWith('/back')) {
         next()
       } else {
         next('/back/dashboard')
       }
       return
-    } else {
+    }
+
+    if (userStore.isDoctor) {
+      // 医生只能访问医生端路由
+      if (to.path.startsWith('/doctor')) {
+        next()
+      } else {
+        next('/doctor/dashboard')
+      }
+      return
+    }
+
+    if (userStore.isUser) {
       // 普通用户只能访问前台路由
-      if (to.path.startsWith('/back')) {
+      if (to.path.startsWith('/back') || to.path.startsWith('/doctor')) {
         next('/')
       } else {
         next()
       }
       return
     }
+
+    next('/login')
   } else {
     // 未登录用户
-    if (to.path.startsWith('/back')) {
+    if (to.path.startsWith('/back') || to.path.startsWith('/doctor')) {
       next('/login')
       return
     }

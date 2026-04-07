@@ -20,6 +20,9 @@ export * from './psychologicalTest'
 // 情绪日记相关API
 export * from './emotionDiary'
 
+// 医生工作台相关API
+export * from './doctor'
+
 // 可以在这里继续导出其他模块的API
 // export * from './post'
 // export * from './comment'

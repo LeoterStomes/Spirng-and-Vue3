@@ -10,7 +10,8 @@ import lombok.Getter;
 public enum UserType {
     
     USER(1, "普通用户"),
-    ADMIN(2, "管理员");
+    ADMIN(2, "管理员"),
+    DOCTOR(3, "医生");
 
     private final Integer code;
     private final String description;

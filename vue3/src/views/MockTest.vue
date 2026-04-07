@@ -5,7 +5,11 @@
         <h3>🎀 Mock数据测试页面</h3>
       </template>
       
-      <el-space direction="vertical" size="large" style="width: 100%">
+      <el-space
+        direction="vertical"
+        size="large"
+        style="width: 100%"
+      >
         <el-alert 
           :title="`Mock状态: ${mockEnabled ? '✅ 已启用' : '❌ 未启用'}`"
           :type="mockEnabled ? 'success' : 'warning'"
@@ -14,15 +18,29 @@
         
         <el-divider>登录测试</el-divider>
         
-        <el-form :model="loginForm" label-width="100px">
+        <el-form
+          :model="loginForm"
+          label-width="100px"
+        >
           <el-form-item label="用户名">
-            <el-input v-model="loginForm.username" placeholder="admin 或 user001" />
+            <el-input
+              v-model="loginForm.username"
+              placeholder="admin 或 user001"
+            />
           </el-form-item>
           <el-form-item label="密码">
-            <el-input v-model="loginForm.password" type="password" placeholder="123456" />
+            <el-input
+              v-model="loginForm.password"
+              type="password"
+              placeholder="123456"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="testLogin" :loading="loading">
+            <el-button
+              type="primary"
+              :loading="loading"
+              @click="testLogin"
+            >
               测试登录
             </el-button>
           </el-form-item>

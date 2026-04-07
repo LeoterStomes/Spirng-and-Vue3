@@ -52,6 +52,6 @@ public class UserRegisterCommandDTO {
     @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
     private String phone;
 
-    @Schema(description = "用户类型 1:普通用户 2:管理员", example = "1")
+    @Schema(description = "用户类型 1:普通用户 2:管理员(仅管理员可创建) 3:医生", example = "1")
     private Integer userType = 1;
 }

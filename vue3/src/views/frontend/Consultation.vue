@@ -8,12 +8,14 @@
           <div class="ai-assistant-info">
             <div class="assistant-avatar">
               <div class="breathing-circle">
-                <i class="fas fa-robot"></i>
+                <i class="fas fa-robot" />
               </div>
             </div>
-            <h3 class="assistant-name">小暖AI助手</h3>
+            <h3 class="assistant-name">
+              小暖AI助手
+            </h3>
             <div class="online-status">
-              <div class="status-dot"></div>
+              <div class="status-dot" />
               在线服务中
             </div>
           </div>
@@ -22,25 +24,52 @@
           <div class="emotion-garden">
             <div class="garden-header">
               <div class="garden-title">
-                <i class="fas fa-seedling garden-icon"></i>
+                <i class="fas fa-seedling garden-icon" />
                 情绪花园
               </div>
-              <div class="weather-icon">{{ currentEmotion.icon || '😐' }}</div>
+              <div class="weather-icon">
+                {{ currentEmotion.icon || '😐' }}
+              </div>
             </div>
             
             <!-- 情绪花朵 -->
             <div class="emotion-flower">
-              <div class="flower-center" :class="getEmotionFlowerClass(currentEmotion.isNegative)">
-                <div class="emotion-name">{{ currentEmotion.primaryEmotion || '中性' }}</div>
-                <div class="emotion-score">{{ currentEmotion.emotionScore || 50 }}</div>
+              <div
+                class="flower-center"
+                :class="getEmotionFlowerClass(currentEmotion.isNegative)"
+              >
+                <div class="emotion-name">
+                  {{ currentEmotion.primaryEmotion || '中性' }}
+                </div>
+                <div class="emotion-score">
+                  {{ currentEmotion.emotionScore || 50 }}
+                </div>
               </div>
               <div class="flower-petals">
-                <div class="petal petal-1" :class="getPetalClass(currentEmotion.emotionScore)"></div>
-                <div class="petal petal-2" :class="getPetalClass(currentEmotion.emotionScore)"></div>
-                <div class="petal petal-3" :class="getPetalClass(currentEmotion.emotionScore)"></div>
-                <div class="petal petal-4" :class="getPetalClass(currentEmotion.emotionScore)"></div>
-                <div class="petal petal-5" :class="getPetalClass(currentEmotion.emotionScore)"></div>
-                <div class="petal petal-6" :class="getPetalClass(currentEmotion.emotionScore)"></div>
+                <div
+                  class="petal petal-1"
+                  :class="getPetalClass(currentEmotion.emotionScore)"
+                />
+                <div
+                  class="petal petal-2"
+                  :class="getPetalClass(currentEmotion.emotionScore)"
+                />
+                <div
+                  class="petal petal-3"
+                  :class="getPetalClass(currentEmotion.emotionScore)"
+                />
+                <div
+                  class="petal petal-4"
+                  :class="getPetalClass(currentEmotion.emotionScore)"
+                />
+                <div
+                  class="petal petal-5"
+                  :class="getPetalClass(currentEmotion.emotionScore)"
+                />
+                <div
+                  class="petal petal-6"
+                  :class="getPetalClass(currentEmotion.emotionScore)"
+                />
               </div>
             </div>
 
@@ -48,7 +77,10 @@
             <div class="warm-tips">
               <div class="emotion-status-text">
                 <span class="status-label">今天感觉</span>
-                <span class="status-emotion" :class="getEmotionStatusClass(currentEmotion.isNegative)">
+                <span
+                  class="status-emotion"
+                  :class="getEmotionStatusClass(currentEmotion.isNegative)"
+                >
                   {{ getEmotionStatusText(currentEmotion.isNegative) }}
                 </span>
               </div>
@@ -60,15 +92,20 @@
                     :key="i" 
                     class="dot" 
                     :class="{ active: getIntensityDots(currentEmotion.emotionScore) >= i }"
-                  ></span>
+                  />
                 </span>
                 <span class="intensity-text">{{ getIntensityText(currentEmotion.emotionScore) }}</span>
               </div>
             </div>
 
             <!-- 情绪关键词云 -->
-            <div class="emotion-cloud" v-if="currentEmotion.keywords && currentEmotion.keywords.length > 0">
-              <div class="cloud-title">💭 心情关键词</div>
+            <div
+              v-if="currentEmotion.keywords && currentEmotion.keywords.length > 0"
+              class="emotion-cloud"
+            >
+              <div class="cloud-title">
+                💭 心情关键词
+              </div>
               <div class="keywords-cloud">
                 <span 
                   v-for="(keyword, index) in currentEmotion.keywords" 
@@ -82,18 +119,30 @@
             </div>
 
             <!-- 温暖建议卡片 -->
-            <div class="warm-suggestion" v-if="currentEmotion.suggestion">
-              <div class="suggestion-icon">💝</div>
+            <div
+              v-if="currentEmotion.suggestion"
+              class="warm-suggestion"
+            >
+              <div class="suggestion-icon">
+                💝
+              </div>
               <div class="suggestion-content">
-                <div class="suggestion-title">给你的小建议</div>
-                <div class="suggestion-text">{{ currentEmotion.suggestion }}</div>
+                <div class="suggestion-title">
+                  给你的小建议
+                </div>
+                <div class="suggestion-text">
+                  {{ currentEmotion.suggestion }}
+                </div>
               </div>
             </div>
 
             <!-- 治愈行动清单 -->
-            <div class="healing-actions" v-if="currentEmotion.improvementSuggestions && currentEmotion.improvementSuggestions.length > 0">
+            <div
+              v-if="currentEmotion.improvementSuggestions && currentEmotion.improvementSuggestions.length > 0"
+              class="healing-actions"
+            >
               <div class="actions-title">
-                <i class="fas fa-heart healing-heart"></i>
+                <i class="fas fa-heart healing-heart" />
                 治愈小行动
               </div>
               <div class="actions-list">
@@ -103,18 +152,31 @@
                   class="action-item"
                   :style="{ animationDelay: index * 0.1 + 's' }"
                 >
-                  <div class="action-icon">✨</div>
-                  <div class="action-text">{{ action }}</div>
+                  <div class="action-icon">
+                    ✨
+                  </div>
+                  <div class="action-text">
+                    {{ action }}
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- 风险提示 -->
-            <div class="risk-notice" v-if="currentEmotion.isNegative && currentEmotion.riskLevel > 1">
-              <div class="notice-icon">🤗</div>
+            <div
+              v-if="currentEmotion.isNegative && currentEmotion.riskLevel > 1"
+              class="risk-notice"
+            >
+              <div class="notice-icon">
+                🤗
+              </div>
               <div class="notice-content">
-                <div class="notice-title">温馨提醒</div>
-                <div class="notice-text">{{ currentEmotion.riskDescription || '需要更多关注和陪伴' }}</div>
+                <div class="notice-title">
+                  温馨提醒
+                </div>
+                <div class="notice-text">
+                  {{ currentEmotion.riskDescription || '需要更多关注和陪伴' }}
+                </div>
               </div>
             </div>
           </div>
@@ -128,23 +190,26 @@
                   text 
                   size="small" 
                   type="primary"
-                  @click="createNewFrontendSession"
                   title="新建会话"
+                  @click="createNewFrontendSession"
                 >
-                  <i class="fas fa-plus"></i>
+                  <i class="fas fa-plus" />
                 </el-button>
                 <el-button 
                   text 
                   size="small" 
-                  @click="refreshSessionList"
                   :loading="sessionListLoading"
                   title="刷新列表"
+                  @click="refreshSessionList"
                 >
-                  <i class="fas fa-sync-alt"></i>
+                  <i class="fas fa-sync-alt" />
                 </el-button>
               </div>
             </h4>
-            <div class="session-list" v-loading="sessionListLoading">
+            <div
+              v-loading="sessionListLoading"
+              class="session-list"
+            >
               <div 
                 v-for="session in sessionList" 
                 :key="session.id"
@@ -156,17 +221,20 @@
                 @click="switchToSession(session)"
               >
                 <div class="session-info">
-                  <div class="session-title" @dblclick="startEditTitle(session)">
+                  <div
+                    class="session-title"
+                    @dblclick="startEditTitle(session)"
+                  >
                     <span v-if="!session.isEditing">{{ session.sessionTitle || '未命名会话' }}</span>
                     <el-input 
                       v-else
+                      ref="titleInput"
                       v-model="session.editingTitle"
                       size="small"
+                      placeholder="请输入会话标题"
                       @blur="saveSessionTitle(session)"
                       @keyup.enter="saveSessionTitle(session)"
                       @keyup.esc="cancelEditTitle(session)"
-                      ref="titleInput"
-                      placeholder="请输入会话标题"
                     />
                   </div>
                   <div class="session-meta">
@@ -177,11 +245,11 @@
                   </div>
                   <div class="session-stats">
                     <span class="message-count">
-                      <i class="fas fa-comments"></i>
+                      <i class="fas fa-comments" />
                       {{ session.messageCount || 0 }}
                     </span>
                     <span class="duration">
-                      <i class="fas fa-clock"></i>
+                      <i class="fas fa-clock" />
                       {{ session.durationMinutes || 0 }}分钟
                     </span>
                   </div>
@@ -191,36 +259,42 @@
                     text 
                     size="small" 
                     type="primary"
-                    @click.stop="startEditTitle(session)"
                     title="编辑标题"
+                    @click.stop="startEditTitle(session)"
                   >
-                    <i class="fas fa-edit"></i>
+                    <i class="fas fa-edit" />
                   </el-button>
                   <el-button 
                     text 
                     size="small" 
                     type="danger"
-                    @click.stop="confirmDeleteSession(session)"
                     title="删除会话"
+                    @click.stop="confirmDeleteSession(session)"
                   >
-                    <i class="fas fa-trash"></i>
+                    <i class="fas fa-trash" />
                   </el-button>
                 </div>
               </div>
               
               <!-- 空状态 -->
-              <div v-if="sessionList.length === 0 && !sessionListLoading" class="empty-sessions">
-                <i class="fas fa-comments"></i>
+              <div
+                v-if="sessionList.length === 0 && !sessionListLoading"
+                class="empty-sessions"
+              >
+                <i class="fas fa-comments" />
                 <p>暂无会话记录</p>
               </div>
               
               <!-- 加载更多 -->
-              <div v-if="sessionList.length > 0 && hasMoreSessions" class="load-more">
+              <div
+                v-if="sessionList.length > 0 && hasMoreSessions"
+                class="load-more"
+              >
                 <el-button 
                   text 
                   size="small" 
-                  @click="loadMoreSessions"
                   :loading="loadingMore"
+                  @click="loadMoreSessions"
                 >
                   加载更多
                 </el-button>
@@ -231,10 +305,18 @@
 
           <!-- 紧急求助 -->
           <div class="emergency-help">
-            <h4 class="emergency-title">紧急求助</h4>
-            <p class="emergency-desc">如果您正在经历心理危机，请立即寻求专业帮助</p>
-            <el-button type="danger" class="emergency-btn" @click="showEmergencyDialog">
-              <i class="fas fa-phone"></i>
+            <h4 class="emergency-title">
+              紧急求助
+            </h4>
+            <p class="emergency-desc">
+              如果您正在经历心理危机，请立即寻求专业帮助
+            </p>
+            <el-button
+              type="danger"
+              class="emergency-btn"
+              @click="showEmergencyDialog"
+            >
+              <i class="fas fa-phone" />
               危机热线
             </el-button>
           </div>
@@ -246,59 +328,76 @@
           <div class="chat-header">
             <div class="header-left">
               <div class="chat-avatar">
-                <i class="fas fa-heart"></i>
+                <i class="fas fa-heart" />
               </div>
               <div class="chat-info">
                 <div class="chat-title-container">
-                  <h2 v-if="!currentSession || !isEditingHeaderTitle" class="chat-title" @dblclick="startEditHeaderTitle">
+                  <h2
+                    v-if="!currentSession || !isEditingHeaderTitle"
+                    class="chat-title"
+                    @dblclick="startEditHeaderTitle"
+                  >
                     {{ currentSession ? (currentSession.sessionTitle || '未命名会话') : '小暖AI助手' }}
                   </h2>
                   <el-input 
                     v-else
+                    ref="headerTitleInput"
                     v-model="headerTitleEdit"
                     size="large"
+                    placeholder="请输入会话标题"
+                    class="header-title-input"
                     @blur="saveHeaderTitle"
                     @keyup.enter="saveHeaderTitle"
                     @keyup.esc="cancelEditHeaderTitle"
-                    ref="headerTitleInput"
-                    placeholder="请输入会话标题"
-                    class="header-title-input"
                   />
                   <el-button 
                     v-if="currentSession && !isEditingHeaderTitle"
                     text 
                     size="small" 
-                    @click="startEditHeaderTitle"
                     class="edit-title-btn"
                     title="编辑标题"
+                    @click="startEditHeaderTitle"
                   >
-                    <i class="fas fa-edit"></i>
+                    <i class="fas fa-edit" />
                   </el-button>
                 </div>
-                <p class="chat-subtitle">{{ currentSession ? '专业 · 陪伴 · 理解' : '您的贴心AI心理健康助手' }}</p>
+                <p class="chat-subtitle">
+                  {{ currentSession ? '专业 · 陪伴 · 理解' : '您的贴心AI心理健康助手' }}
+                </p>
               </div>
             </div>
             <div class="header-actions">
-              <el-button circle @click="createNewFrontendSession" title="新建会话">
-                <i class="fas fa-plus"></i>
+              <el-button
+                circle
+                title="新建会话"
+                @click="createNewFrontendSession"
+              >
+                <i class="fas fa-plus" />
               </el-button>
-           
             </div>
           </div>
 
           <!-- 聊天消息区域 -->
-          <div class="chat-messages" ref="messagesContainer">
+          <div
+            ref="messagesContainer"
+            class="chat-messages"
+          >
             <!-- 欢迎消息 -->
-            <div v-if="messages.length === 0" class="welcome-message">
+            <div
+              v-if="messages.length === 0"
+              class="welcome-message"
+            >
               <div class="message-item ai-message">
                 <div class="message-avatar">
-                  <i class="fas fa-robot"></i>
+                  <i class="fas fa-robot" />
                 </div>
                 <div class="message-content">
                   <div class="message-bubble">
                     <p>您好！我是小暖，您的AI心理健康助手。很高兴陪伴您，为您提供温暖的心理支持。请告诉我，今天您感觉怎么样？有什么想要分享的吗？</p>
                   </div>
-                  <div class="message-time">刚刚</div>
+                  <div class="message-time">
+                    刚刚
+                  </div>
                 </div>
               </div>
             </div>
@@ -311,22 +410,31 @@
               :class="message.senderType === 1 ? 'user-message' : 'ai-message'"
             >
               <div class="message-avatar">
-                <i :class="message.senderType === 1 ? 'fas fa-user' : 'fas fa-robot'"></i>
+                <i :class="message.senderType === 1 ? 'fas fa-user' : 'fas fa-robot'" />
               </div>
               <div class="message-content">
-                <div class="message-bubble" :class="{ 
-                  'typing': message.senderType === 2 && message.isTyping,
-                  'error': message.isError
-                }">
+                <div
+                  class="message-bubble"
+                  :class="{ 
+                    'typing': message.senderType === 2 && message.isTyping,
+                    'error': message.isError
+                  }"
+                >
                   <!-- AI消息正在输入状态 -->
-                  <div v-if="message.senderType === 2 && message.isTyping && !message.content" class="typing-indicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
+                  <div
+                    v-if="message.senderType === 2 && message.isTyping && !message.content"
+                    class="typing-indicator"
+                  >
+                    <div class="typing-dot" />
+                    <div class="typing-dot" />
+                    <div class="typing-dot" />
                   </div>
                   <!-- AI错误消息 -->
-                  <div v-else-if="message.isError" class="error-message">
-                    <i class="fas fa-exclamation-triangle"></i>
+                  <div
+                    v-else-if="message.isError"
+                    class="error-message"
+                  >
+                    <i class="fas fa-exclamation-triangle" />
                     {{ message.content }}
                   </div>
                   <!-- 使用MarkdownRenderer组件渲染AI消息（仅当消息完整时） -->
@@ -336,8 +444,14 @@
                     :is-ai-message="true"
                   />
                   <!-- 流式输出中的AI消息或用户消息保持原样 -->
-                  <p v-else-if="message.content" v-html="formatMessageContent(message.content)"></p>
-                  <div v-if="message.emotionTag" class="emotion-tag">
+                  <p
+                    v-else-if="message.content"
+                    v-html="formatMessageContent(message.content)"
+                  />
+                  <div
+                    v-if="message.emotionTag"
+                    class="emotion-tag"
+                  >
                     {{ message.emotionTag }}
                   </div>
                 </div>
@@ -346,8 +460,6 @@
                 </div>
               </div>
             </div>
-
-
           </div>
 
           <!-- 消息输入区域 -->
@@ -359,14 +471,17 @@
                 :rows="3"
                 placeholder="请输入您想要分享的内容..."
                 :disabled="isLoading || isAiTyping"
-                @keydown="handleKeyDown"
                 resize="none"
                 class="message-input"
+                @keydown="handleKeyDown"
               >
                 <template #suffix>
                   <div class="input-actions">
-                    <el-button text @click="showEmojiPicker">
-                      <i class="fas fa-smile"></i>
+                    <el-button
+                      text
+                      @click="showEmojiPicker"
+                    >
+                      <i class="fas fa-smile" />
                     </el-button>
                   </div>
                 </template>
@@ -380,10 +495,10 @@
               type="primary" 
               class="send-btn"
               :loading="isLoading || isAiTyping"
-              @click="sendMessage"
               :disabled="!userMessage.trim() || userMessage.length > 500"
+              @click="sendMessage"
             >
-              <i class="fas fa-paper-plane"></i>
+              <i class="fas fa-paper-plane" />
             </el-button>
           </div>
         </div>
@@ -392,28 +507,46 @@
 
 
     <!-- 紧急求助对话框 -->
-    <el-dialog v-model="showEmergency" title="紧急求助" width="500px">
+    <el-dialog
+      v-model="showEmergency"
+      title="紧急求助"
+      width="500px"
+    >
       <div class="emergency-content">
         <div class="emergency-item">
           <h4>24小时心理危机干预热线</h4>
-          <p class="hotline-number">400-161-9995</p>
-          <p class="hotline-desc">免费专业心理咨询服务</p>
+          <p class="hotline-number">
+            400-161-9995
+          </p>
+          <p class="hotline-desc">
+            免费专业心理咨询服务
+          </p>
         </div>
         <div class="emergency-item">
           <h4>全国心理援助热线</h4>
-          <p class="hotline-number">400-1619-995</p>
-          <p class="hotline-desc">24小时免费心理咨询</p>
+          <p class="hotline-number">
+            400-1619-995
+          </p>
+          <p class="hotline-desc">
+            24小时免费心理咨询
+          </p>
         </div>
         <div class="emergency-item">
           <h4>如果您有自杀或自伤想法</h4>
-          <p class="emergency-warning">请立即拨打以上热线或前往最近的医院急诊科</p>
+          <p class="emergency-warning">
+            请立即拨打以上热线或前往最近的医院急诊科
+          </p>
         </div>
       </div>
       <template #footer>
-        <el-button type="primary" @click="showEmergency = false">我知道了</el-button>
+        <el-button
+          type="primary"
+          @click="showEmergency = false"
+        >
+          我知道了
+        </el-button>
       </template>
     </el-dialog>
-
   </div>
 </template>
 
@@ -426,14 +559,13 @@ import {
   getSessionMessages,
   getSessionEmotion,
   getSessionsPage,
-  getSessionDetail,
   deleteSession,
   updateSessionTitle
 } from '@/api/consultationSession'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-import request from '@/utils/request'
 import { useUserStore } from '@/store/user'
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
+import { sanitizeTextWithBreaks } from '@/utils/sanitizeHtml'
 const userStore = useUserStore()
 const route = useRoute()
 // 响应式数据
@@ -1155,26 +1287,6 @@ const getIntensityText = (score) => {
   return '轻微'
 }
 
-const getRiskClass = (level) => {
-  switch (level) {
-    case 0: return 'risk-normal'
-    case 1: return 'risk-attention'
-    case 2: return 'risk-warning'
-    case 3: return 'risk-crisis'
-    default: return 'risk-normal'
-  }
-}
-
-const getRiskText = (level) => {
-  switch (level) {
-    case 0: return '正常'
-    case 1: return '关注'
-    case 2: return '预警'
-    case 3: return '危机'
-    default: return '正常'
-  }
-}
-
 // 治愈风格的工具方法
 const getPetalClass = (score) => {
   if (score >= 61) return 'petal-bloom'
@@ -1401,8 +1513,7 @@ const scrollToBottom = () => {
 }
 
 const formatMessageContent = (content) => {
-  // 简单的换行处理
-  return content.replace(/\n/g, '<br>')
+  return sanitizeTextWithBreaks(content)
 }
 
 const formatTime = (timestamp) => {
@@ -1452,7 +1563,7 @@ const formatTime = (timestamp) => {
 
 .consultation-layout {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 340px 1fr;
   gap: 20px;
   min-height: calc(100vh - 40px);
 }
@@ -2117,16 +2228,19 @@ const formatTime = (timestamp) => {
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .session-item:hover {
-  background: #f8f9ff;
-  border-color: #e6f0ff;
+  background: rgba(91, 123, 255, 0.12);
+  border-color: rgba(91, 123, 255, 0.28);
+  transform: translateY(-1px);
 }
 
 .session-item.active {
-  background: #e6f0ff;
-  border-color: #4096ff;
+  background: rgba(91, 123, 255, 0.2);
+  border-color: #5b7bff;
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.14);
 }
 
 
@@ -2268,10 +2382,10 @@ const formatTime = (timestamp) => {
 
 /* 主聊天区域样式 */
 .chat-main {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 252, 250, 0.98) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
   border-radius: 20px;
-  box-shadow: 0 12px 40px rgba(251, 146, 60, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(251, 146, 60, 0.1);
+  box-shadow: 0 12px 40px rgba(37, 99, 235, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(59, 130, 246, 0.1);
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
@@ -2280,7 +2394,8 @@ const formatTime = (timestamp) => {
 }
 
 .chat-header {
-  background: linear-gradient(135deg, #fb923c 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 55%, #8b5cf6 100%);
+  background-size: 160% 160%;
   color: white;
   padding: 20px 24px;
   display: flex;
@@ -2288,6 +2403,13 @@ const formatTime = (timestamp) => {
   justify-content: space-between;
   position: relative;
   flex-shrink: 0;
+  animation: headerGradientMove 10s ease-in-out infinite;
+}
+
+@keyframes headerGradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .chat-header::before {
@@ -2390,7 +2512,7 @@ const formatTime = (timestamp) => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 252, 248, 0.05) 100%);
+  background: linear-gradient(135deg, #f8fbff 0%, #f9f7ff 100%);
   min-height: 0;
   max-height: calc(100vh - 200px);
   scrollbar-width: thin;
@@ -2418,6 +2540,7 @@ const formatTime = (timestamp) => {
   display: flex;
   align-items: flex-start;
   gap: 12px;
+  animation: fadeInUp 0.25s ease-out;
 }
 
 .user-message {
@@ -2437,13 +2560,13 @@ const formatTime = (timestamp) => {
 }
 
 .ai-message .message-avatar {
-  background: linear-gradient(135deg, #fb923c, #f59e0b);
-  box-shadow: 0 4px 12px rgba(251, 146, 60, 0.3);
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.28);
 }
 
 .user-message .message-avatar {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
-  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+  background: linear-gradient(135deg, #0f172a, #334155);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
 }
 
 .message-content {
@@ -2455,13 +2578,19 @@ const formatTime = (timestamp) => {
 }
 
 .message-bubble {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 252, 248, 0.95) 100%);
-  border-radius: 16px;
+  background: #ffffff;
+  border-radius: 16px 16px 16px 6px;
   padding: 12px 16px;
   position: relative;
   animation: fadeInUp 0.4s ease-out;
-  border: 1px solid rgba(251, 146, 60, 0.1);
-  box-shadow: 0 4px 16px rgba(251, 146, 60, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.message-bubble:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.12);
 }
 
 @keyframes fadeInUp {
@@ -2476,10 +2605,11 @@ const formatTime = (timestamp) => {
 }
 
 .user-message .message-bubble {
-  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #6366f1 100%);
   color: white;
-  border: 1px solid rgba(107, 114, 128, 0.2);
-  box-shadow: 0 4px 16px rgba(107, 114, 128, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+  border-radius: 16px 16px 6px 16px;
 }
 
 .message-bubble p {
@@ -2629,14 +2759,20 @@ const formatTime = (timestamp) => {
 }
 
 .chat-input {
-  border-top: 1px solid rgba(251, 146, 60, 0.1);
+  border-top: 1px solid rgba(59, 130, 246, 0.15);
   padding: 20px 24px;
   display: flex;
   gap: 12px;
   align-items: flex-end;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 252, 248, 0.7) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(243, 247, 255, 0.92) 100%);
   backdrop-filter: blur(10px);
   flex-shrink: 0;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chat-input:focus-within {
+  border-top-color: rgba(91, 123, 255, 0.35);
+  box-shadow: 0 -8px 24px rgba(79, 70, 229, 0.08);
 }
 
 .input-container {
@@ -2666,15 +2802,19 @@ const formatTime = (timestamp) => {
   height: 60px;
   width: 60px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #fb923c 0%, #f59e0b 100%) !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%) !important;
   border: none !important;
-  box-shadow: 0 6px 20px rgba(251, 146, 60, 0.25);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.28);
   transition: all 0.3s ease;
 }
 
 .send-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(251, 146, 60, 0.35);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.34);
+}
+
+.send-btn:active {
+  transform: translateY(0);
 }
 
 /* 对话框样式 */

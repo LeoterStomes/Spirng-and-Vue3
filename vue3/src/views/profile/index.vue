@@ -6,8 +6,12 @@
         <div class="profile-info">
           <div class="avatar-section">
             <div class="avatar-wrapper">
-              <el-avatar :size="96" :src="currentAvatarUrl" @error="() => false">
-                <i class="fas fa-user"></i>
+              <el-avatar
+                :size="96"
+                :src="currentAvatarUrl"
+                @error="() => false"
+              >
+                <i class="fas fa-user" />
               </el-avatar>
               <el-upload
                 class="avatar-upload"
@@ -17,15 +21,30 @@
                 :before-upload="beforeAvatarUpload"
                 :disabled="uploadingAvatar"
               >
-                <el-button size="small" circle type="primary" class="upload-btn" :loading="uploadingAvatar">
-                  <i v-if="!uploadingAvatar" class="fas fa-camera"></i>
+                <el-button
+                  size="small"
+                  circle
+                  type="primary"
+                  class="upload-btn"
+                  :loading="uploadingAvatar"
+                >
+                  <i
+                    v-if="!uploadingAvatar"
+                    class="fas fa-camera"
+                  />
                 </el-button>
               </el-upload>
             </div>
             <div class="user-details">
-              <h2 class="user-name">{{ userProfile.displayName }}</h2>
-              <p class="user-email">{{ userProfile.email }}</p>
-              <p class="join-date">加入时间：{{ formatDate(userProfile.createdAt) }}</p>
+              <h2 class="user-name">
+                {{ userProfile.displayName }}
+              </h2>
+              <p class="user-email">
+                {{ userProfile.email }}
+              </p>
+              <p class="join-date">
+                加入时间：{{ formatDate(userProfile.createdAt) }}
+              </p>
             </div>
           </div>
         </div>
@@ -37,7 +56,9 @@
         <!-- 左侧导航菜单 -->
         <div class="sidebar">
           <div class="nav-card">
-            <h3 class="nav-title">个人中心</h3>
+            <h3 class="nav-title">
+              个人中心
+            </h3>
             <nav class="nav-menu">
               <button 
                 v-for="tab in tabs" 
@@ -45,11 +66,14 @@
                 :class="['tab-item', activeTab === tab.key ? 'active' : '']"
                 @click="activeTab = tab.key"
               >
-                <i :class="tab.icon"></i>{{ tab.label }}
+                <i :class="tab.icon" />{{ tab.label }}
               </button>
             </nav>
-            <el-button class="logout-profile-btn" @click="handleLogout">
-              <i class="fas fa-sign-out-alt"></i>
+            <el-button
+              class="logout-profile-btn"
+              @click="handleLogout"
+            >
+              <i class="fas fa-sign-out-alt" />
               退出登录
             </el-button>
           </div>
@@ -57,11 +81,13 @@
 
         <!-- 主内容区域 -->
         <div class="main-section">
-
           <!-- 个人信息 -->
-          <div v-show="activeTab === 'personal'" class="content-card">
+          <div
+            v-show="activeTab === 'personal'"
+            class="content-card"
+          >
             <h3 class="section-title">
-              <i class="fas fa-user"></i>个人信息
+              <i class="fas fa-user" />个人信息
             </h3>
             
             <el-form 
@@ -72,31 +98,67 @@
               class="user-form"
             >
               <div class="form-grid">
-                <el-form-item label="用户名" prop="username">
-                  <el-input v-model="userForm.username" disabled />
+                <el-form-item
+                  label="用户名"
+                  prop="username"
+                >
+                  <el-input
+                    v-model="userForm.username"
+                    disabled
+                  />
                 </el-form-item>
                 
-                <el-form-item label="昵称" prop="nickname">
-                  <el-input v-model="userForm.nickname" placeholder="请输入昵称" />
+                <el-form-item
+                  label="昵称"
+                  prop="nickname"
+                >
+                  <el-input
+                    v-model="userForm.nickname"
+                    placeholder="请输入昵称"
+                  />
                 </el-form-item>
                 
-                <el-form-item label="邮箱" prop="email">
-                  <el-input v-model="userForm.email" placeholder="请输入邮箱" />
+                <el-form-item
+                  label="邮箱"
+                  prop="email"
+                >
+                  <el-input
+                    v-model="userForm.email"
+                    placeholder="请输入邮箱"
+                  />
                 </el-form-item>
                 
-                <el-form-item label="手机号" prop="phone">
-                  <el-input v-model="userForm.phone" placeholder="请输入手机号" />
+                <el-form-item
+                  label="手机号"
+                  prop="phone"
+                >
+                  <el-input
+                    v-model="userForm.phone"
+                    placeholder="请输入手机号"
+                  />
                 </el-form-item>
                 
-                <el-form-item label="性别" prop="gender">
+                <el-form-item
+                  label="性别"
+                  prop="gender"
+                >
                   <el-radio-group v-model="userForm.gender">
-                    <el-radio :label="0">未知</el-radio>
-                    <el-radio :label="1">男</el-radio>
-                    <el-radio :label="2">女</el-radio>
+                    <el-radio :label="0">
+                      未知
+                    </el-radio>
+                    <el-radio :label="1">
+                      男
+                    </el-radio>
+                    <el-radio :label="2">
+                      女
+                    </el-radio>
                   </el-radio-group>
                 </el-form-item>
                 
-                <el-form-item label="生日" prop="birthday">
+                <el-form-item
+                  label="生日"
+                  prop="birthday"
+                >
                   <el-date-picker
                     v-model="userForm.birthday"
                     type="date"
@@ -107,17 +169,24 @@
               </div>
               
               <el-form-item>
-                <el-button type="primary" :loading="updateLoading" @click="updateUserInfo">
-                  <i class="fas fa-save mr-2"></i>保存修改
+                <el-button
+                  type="primary"
+                  :loading="updateLoading"
+                  @click="updateUserInfo"
+                >
+                  <i class="fas fa-save mr-2" />保存修改
                 </el-button>
               </el-form-item>
             </el-form>
           </div>
 
           <!-- 修改密码 -->
-          <div v-show="activeTab === 'password'" class="content-card">
+          <div
+            v-show="activeTab === 'password'"
+            class="content-card"
+          >
             <h3 class="section-title">
-              <i class="fas fa-key"></i>修改密码
+              <i class="fas fa-key" />修改密码
             </h3>
             
             <el-form 
@@ -127,7 +196,10 @@
               label-width="120px"
               class="password-form"
             >
-              <el-form-item label="原密码" prop="oldPassword">
+              <el-form-item
+                label="原密码"
+                prop="oldPassword"
+              >
                 <el-input 
                   v-model="passwordForm.oldPassword" 
                   type="password" 
@@ -136,7 +208,10 @@
                 />
               </el-form-item>
               
-              <el-form-item label="新密码" prop="newPassword">
+              <el-form-item
+                label="新密码"
+                prop="newPassword"
+              >
                 <el-input 
                   v-model="passwordForm.newPassword" 
                   type="password" 
@@ -145,7 +220,10 @@
                 />
               </el-form-item>
               
-              <el-form-item label="确认密码" prop="confirmPassword">
+              <el-form-item
+                label="确认密码"
+                prop="confirmPassword"
+              >
                 <el-input 
                   v-model="passwordForm.confirmPassword" 
                   type="password" 
@@ -155,13 +233,16 @@
               </el-form-item>
               
               <el-form-item>
-                <el-button type="primary" :loading="passwordLoading" @click="updatePassword">
-                  <i class="fas fa-shield-alt mr-2"></i>修改密码
+                <el-button
+                  type="primary"
+                  :loading="passwordLoading"
+                  @click="updatePassword"
+                >
+                  <i class="fas fa-shield-alt mr-2" />修改密码
                 </el-button>
               </el-form-item>
             </el-form>
           </div>
-
         </div>
       </div>
     </div>
