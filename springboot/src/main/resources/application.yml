@@ -5,9 +5,9 @@ spring:
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/mental_health_assistant?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
-    username: root
-    password: ABCabc66554423
+    url: jdbc:mysql://localhost:3306/mental_health_assistant?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+    username: '数据库账号'
+    password: '数据库密码'
     hikari:
       # 避免数据库暂时不可用时应用直接启动失败（首次请求数据库时再重试连接）
       initialization-fail-timeout: -1
@@ -36,7 +36,7 @@ spring:
           tool-calling:
             enabled: true
         completions-path: /v1/chat/completions
-      api-key: sk-a19334bd6aa048dc97f0b3bc3d072588
+      api-key: 'deepseek api填写处'
       base-url: "https://api.deepseek.com"
   data:
     jdbc:
